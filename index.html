@@ -34,8 +34,10 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .question-area input:focus{border-color:#a78bfa;box-shadow:0 0 20px rgba(167,139,250,.2);}
 .question-area input::placeholder{color:rgba(167,139,250,.4);}.quick-questions{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px;padding:0 4px;}
 .qq-label{font-size:.7em;color:rgba(180,160,220,.35);letter-spacing:1px;line-height:2.2;width:100%;text-align:center;margin-bottom:2px;}
-.qq-btn{font-size:clamp(.7em,1.3vw,.8em);padding:6px 14px;border:1px solid rgba(180,150,220,.12);border-radius:20px;background:rgba(30,20,60,.4);color:rgba(200,180,230,.6);cursor:pointer;font-family:inherit;transition:all .25s;white-space:nowrap;backdrop-filter:blur(4px);}
-.qq-btn:hover{background:rgba(160,130,220,.12);border-color:rgba(200,160,240,.25);color:rgba(220,200,240,.8);}
+cursor:pointer;font-family:inherit;transition:all .25s;white-space:nowrap;backdrop-filter:blur(4px);}
+.qq-label{font-size:.68em;color:rgba(180,160,220,.3);width:100%;text-align:center;margin-bottom:6px;letter-spacing:3px;}
+.qq-btn{font-size:.72em;padding:7px 16px;border:1px solid rgba(180,150,220,.1);border-radius:20px;background:rgba(30,20,60,.3);color:rgba(190,175,220,.5);cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap;backdrop-filter:blur(6px);}
+.qq-btn:hover{background:rgba(160,130,220,.1);border-color:rgba(200,160,240,.22);color:rgba(210,190,235,.7);transform:translateY(-1px);}
 
 /* 抽牌按钮 */
 .draw-btn{padding:14px 36px;background:linear-gradient(135deg,rgba(180,130,240,.15),rgba(140,100,200,.08));border:1px solid rgba(200,160,240,.25);color:#d4c0f0;color:white;border:none;border-radius:16px;font-size:1.1em;cursor:pointer;font-family:inherit;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(124,58,237,.4);letter-spacing:2px;}
@@ -59,7 +61,8 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .selectable-card img{width:100%;height:100%;object-fit:cover;}
 .selectable-card .sc-num{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:.6em;color:rgba(167,139,250,.5);pointer-events:none;}
 .selectable-card:hover{transform:translateY(-3px);box-shadow:0 4px 16px rgba(124,58,237,.3);border-color:rgba(167,139,250,.5);}
-.selectable-card.picked{transform:translateY(-6px) scale(1.04);box-shadow:0 6px 20px rgba(200,160,240,.35);border-color:rgba(200,160,240,.6);}
+.selectable-card.picked{transform:translateY(-6px) scale(1.04);box-shadow:0 6px 20px rgba(200,160,240,.35);border-color:rgba(200,160,240,.6);animation:cardPulse 2s ease-in-out infinite;}
+@keyframes cardPulse{0%,100%{box-shadow:0 6px 20px rgba(200,160,240,.35)}50%{box-shadow:0 6px 30px rgba(200,160,240,.55)}}
 .selectable-card.picked::after{content:'';position:absolute;inset:-2px;border-radius:10px;pointer-events:none;box-shadow:inset 0 0 12px rgba(200,160,240,.2);}
 .summary-overlay{position:fixed;inset:0;background:rgba(5,0,20,.88);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .4s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
 .summary-card{background:linear-gradient(135deg,#1e1040,#110526);border:1px solid rgba(167,139,250,.35);border-radius:20px;padding:max(24px,4vw);max-width:680px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);max-height:85vh;overflow-y:auto;}
@@ -134,7 +137,8 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .share-btn{padding:8px 20px;border:1px solid rgba(180,150,220,.15);border-radius:20px;background:rgba(30,20,60,.4);color:rgba(200,180,230,.5);cursor:pointer;font-size:.78em;font-family:inherit;transition:all .25s;margin:4px;backdrop-filter:blur(4px);}
 .share-btn:hover{background:rgba(160,130,220,.12);border-color:rgba(200,160,240,.25);color:rgba(220,200,240,.7);}
 .reading-card p{font-size:clamp(.88em,2vw,.98em);line-height:1.75;color:rgba(230,220,245,.85);}
-.reading-headline{font-family:'Noto Serif SC',serif;font-size:clamp(1.05em,2.5vw,1.25em);color:rgba(220,200,240,.9);text-align:center;padding:12px 0 16px;margin-bottom:16px;border-bottom:1px solid rgba(180,150,220,.1);font-style:italic;line-height:1.5;letter-spacing:1px;}
+.el-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px;}.el-dot-火{background:#fb923c;box-shadow:0 0 6px #fb923c;}.el-dot-水{background:#60a5fa;box-shadow:0 0 6px #60a5fa;}.el-dot-风{background:#facc15;box-shadow:0 0 6px #facc15;}.el-dot-土{background:#4ade80;box-shadow:0 0 6px #4ade80;}
+.reading-headline{font-family:'Noto Serif SC',serif;font-size:clamp(1.1em,2.5vw,1.3em);color:#e8ddf5;text-align:center;padding:16px 12px 18px;margin-bottom:16px;border-bottom:1px solid rgba(180,150,220,.15);font-style:italic;line-height:1.5;letter-spacing:2px;font-weight:300;}
 .summary-box .q-ref{font-size:1.05em;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed rgba(167,139,250,.25);}
 
 /* 响应式 */
@@ -162,7 +166,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 <body>
 <div class="stars" id="stars"></div>
 <div class="container">
-<div class="header"><h1>🔮 塔罗占卜</h1><p class="subtitle">✦ 聆听宇宙的低语 ✦</p></div>
+<div class="header"><h1>塔罗占卜</h1><p class="subtitle">聆听宇宙的低语</p><button class="fs-btn" onclick="toggleFullscreen()" title="全屏模式">◻</button></div>
 <div class="spread-selector">
 <button class="spread-btn active" data-spread="1">单张</button>
 <button class="spread-btn" data-spread="3">三张</button>
@@ -330,6 +334,7 @@ document.querySelectorAll('.spread-btn').forEach(b=>{
  });
 });
 document.getElementById('drawBtn').addEventListener('click',draw);
+function toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}else{document.exitFullscreen();}}
 document.getElementById('question').addEventListener('keydown',e=>{if(e.key==='Enter')draw();});
 function copyReading(e){var t=document.getElementById('reading').innerText;var b=e?e.target:document.querySelector('.share-btn');if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>{b.textContent='已复制';setTimeout(()=>b.textContent='复制解读',1500);}).catch(()=>{fallbackCopy(t,b);});}else{fallbackCopy(t,b);}}
 function fallbackCopy(text,btn){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');btn.textContent='已复制';}catch(ex){alert('请手动选择文字复制');}setTimeout(()=>{btn.textContent='复制解读';},1500);document.body.removeChild(ta);}
@@ -564,7 +569,7 @@ function showReading(){
   let raw=data&&data.reading?data.reading:bigSummary(q);let parts=[];if(raw.includes('|PART|')){parts=raw.split('|PART|').filter(p=>p.trim());}else{const re=/【(牌面|含义|提醒|行动)】/g;let m,last=0;while((m=re.exec(raw))!==null){if(last>0)parts.push(raw.substring(last,m.index).trim());last=m.index;}if(last>0)parts.push(raw.substring(last).trim());}const icons={'牌面':'◈','含义':'—','提醒':'◆','行动':'→'};let txt;if(parts.length>0){txt=parts.map((p,i)=>{const label=p.match(/^【(牌面|含义|提醒|行动)】/);const l=label?label[1]:'牌面';const content=label?p.substring(label[0].length).trim():p.trim();return'<div class="reading-card" style="animation-delay:'+(i*.12)+'s"><div class="rc-header"><span class="rc-sym">'+(icons[l]||'◈')+'</span> '+l+'</div><p>'+content+'</p></div>';}).join('');}else{txt=raw.replace(/\n/g,'<br>');}
   txt=txt.replace(/\n/g,'<br>');
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
-  h+='<div class="summary-box" style="line-height:2.2">'+txt+'</div>';
+  var els=cards.map(c=>c.el);var domEl=els.sort((a,b)=>els.filter(v=>v===a).length-els.filter(v=>v===b).length).pop();var elDot='<span class="el-dot el-dot-'+domEl+'"></span>';h+='<div class="summary-box" style="line-height:2.2">'+elDot+txt+'</div>';
   h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p><div style="text-align:center;margin-top:8px"><button class="share-btn" onclick="copyReading(event)">复制解读</button> <button class="share-btn" onclick="draw()">重新抽牌</button></div>';
   r.innerHTML=h;
   r.scrollIntoView({behavior:'smooth',block:'start'});
