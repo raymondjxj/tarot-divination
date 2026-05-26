@@ -7,11 +7,11 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
 :root{
-  --card-w:220px;--card-h:340px;--bg:#1a0a2e;--bg2:#0a0015;--purple:#7c3aed;--light:#c4b5fd;--accent:#c084fc;
+  --card-w:220px;--card-h:340px;--bg:#0d041f;--bg2:#060112;--purple:#7c3aed;--light:#c4b5fd;--accent:#c084fc;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 
-body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;background:radial-gradient(ellipse at center,var(--bg) 0%,var(--bg2) 100%);color:#e0d5ff;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;background:radial-gradient(ellipse at center,#0d041f 0%,#060112 100%);color:#e0d5ff;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
 .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
 .star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite;}
 @keyframes twinkle{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
@@ -25,18 +25,21 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 
 /* 牌阵选择 */
 .spread-selector{display:flex;justify-content:center;gap:max(8px,1vw);flex-wrap:wrap;margin:30px 0;}
-.spread-btn{padding:12px 24px;border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.1);color:var(--light);border-radius:12px;cursor:pointer;font-size:clamp(.85em,1.5vw,1em);font-family:inherit;transition:all .3s;backdrop-filter:blur(10px);white-space:nowrap;}
-.spread-btn:hover,.spread-btn.active{background:rgba(167,139,250,.3);border-color:#a78bfa;box-shadow:0 0 20px rgba(167,139,250,.3);transform:translateY(-2px);}
+.spread-btn{padding:12px 24px;border:1px solid rgba(180,150,220,.2);background:rgba(167,139,250,.1);color:var(--light);border-radius:12px;cursor:pointer;font-size:clamp(.85em,1.5vw,1em);font-family:inherit;transition:all .3s;backdrop-filter:blur(10px);white-space:nowrap;}
+.spread-btn:hover,.spread-btn.active{background:rgba(160,130,220,.15);border-color:rgba(200,160,240,.35);box-shadow:0 0 16px rgba(160,130,220,.12);transform:translateY(-2px);}
 
 /* 输入 */
 .question-area{display:flex;gap:12px;margin:20px 0 30px;justify-content:center;flex-wrap:wrap;}
 .question-area input{flex:1;min-width:200px;max-width:400px;padding:14px 20px;background:rgba(255,255,255,.05);border:1px solid rgba(167,139,250,.3);border-radius:16px;color:#e0d5ff;font-size:1em;font-family:inherit;outline:none;transition:all .3s;}
 .question-area input:focus{border-color:#a78bfa;box-shadow:0 0 20px rgba(167,139,250,.2);}
-.question-area input::placeholder{color:rgba(167,139,250,.4);}
+.question-area input::placeholder{color:rgba(167,139,250,.4);}.quick-questions{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px;padding:0 4px;}
+.qq-label{font-size:.7em;color:rgba(180,160,220,.35);letter-spacing:1px;line-height:2.2;width:100%;text-align:center;margin-bottom:2px;}
+.qq-btn{font-size:clamp(.7em,1.3vw,.8em);padding:6px 14px;border:1px solid rgba(180,150,220,.12);border-radius:20px;background:rgba(30,20,60,.4);color:rgba(200,180,230,.6);cursor:pointer;font-family:inherit;transition:all .25s;white-space:nowrap;backdrop-filter:blur(4px);}
+.qq-btn:hover{background:rgba(160,130,220,.12);border-color:rgba(200,160,240,.25);color:rgba(220,200,240,.8);}
 
 /* 抽牌按钮 */
-.draw-btn{padding:14px 36px;background:linear-gradient(135deg,var(--purple),#6d28d9);color:white;border:none;border-radius:16px;font-size:1.1em;cursor:pointer;font-family:inherit;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(124,58,237,.4);letter-spacing:2px;}
-.draw-btn:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(124,58,237,.6);}
+.draw-btn{padding:14px 36px;background:linear-gradient(135deg,rgba(180,130,240,.15),rgba(140,100,200,.08));border:1px solid rgba(200,160,240,.25);color:#d4c0f0;color:white;border:none;border-radius:16px;font-size:1.1em;cursor:pointer;font-family:inherit;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(124,58,237,.4);letter-spacing:2px;}
+.draw-btn:hover{transform:translateY(-2px);box-shadow:0 4px 24px rgba(200,160,100,.15);border-color:rgba(200,160,240,.4);}
 .draw-btn:active{transform:translateY(0);}
 
 /* 卡牌区域 */
@@ -112,12 +115,15 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .modal-content .highlight{color:var(--accent);font-weight:700;}
 
 /* 解读区 */
-.reading{background:rgba(255,255,255,.03);border:1px solid rgba(167,139,250,.2);border-radius:20px;padding:max(20px,3vw);margin-top:30px;display:none;backdrop-filter:blur(10px);}
+.reading{background:rgba(255,255,255,.02);border:1px solid rgba(180,150,220,.12);border-radius:20px;padding:max(20px,3vw);margin-top:30px;display:none;backdrop-filter:blur(10px);}
 .reading.show{display:block;animation:fadeIn .6s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .reading h3{color:var(--accent);font-size:1.4em;margin-bottom:20px;text-align:center;}
 .summary-box{margin-top:24px;padding:24px;background:rgba(167,139,250,.08);border-radius:16px;line-height:2.1;font-size:.95em;}
-.summary-box strong{color:var(--accent);}
+.summary-box strong{color:var(--accent);}.reading-card{background:rgba(30,20,60,.3);border:1px solid rgba(180,150,220,.1);border-radius:14px;padding:16px 18px;margin:10px 0;animation:fadeIn .5s ease both;backdrop-filter:blur(4px);}
+.reading-card .rc-icon{font-size:1.1em;margin-bottom:4px;}
+.reading-card .rc-label{font-size:.72em;color:rgba(200,160,240,.5);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
+.reading-card p{font-size:.92em;line-height:1.85;color:rgba(220,210,240,.8);}
 .summary-box .q-ref{font-size:1.05em;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed rgba(167,139,250,.25);}
 
 /* 响应式 */
@@ -155,6 +161,15 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 <div class="question-area">
 <input type="text" id="question" placeholder="默念你的问题…（可选）">
 <button class="draw-btn" id="drawBtn">✨ 抽牌</button>
+
+<div class="quick-questions">
+  <span class="qq-label">试着问问：</span>
+  <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我们接下来会怎样？</button>
+  <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">他/她现在怎么看我？</button>
+  <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我最近的事业方向如何？</button>
+  <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我应该继续坚持吗？</button>
+  <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">今天宇宙想提醒我什么？</button>
+</div>
 </div>
 <div class="cards-area" id="cardsArea"></div>
 <div class="reading" id="reading"></div>
@@ -164,7 +179,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 /* 星空 */
 (function(){
 const c=document.getElementById('stars');
-for(let i=0;i<100;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';const sz=Math.random()*3+1;s.style.width=sz+'px';s.style.height=sz+'px';s.style.setProperty('--dur',(Math.random()*3+2)+'s');s.style.animationDelay=Math.random()*3+'s';c.appendChild(s);}
+for(let i=0;i<40;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';const sz=Math.random()*3+1;s.style.width=sz+'px';s.style.height=sz+'px';s.style.setProperty('--dur',(Math.random()*3+2)+'s');s.style.animationDelay=Math.random()*3+'s';c.appendChild(s);}
 })();
 
 /* 数据 */
@@ -499,7 +514,7 @@ function showReading(){
  if(et)payload.elementSummary=et;
  fetch('/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
  .then(res=>res.json()).then(data=>{
-  let txt=data&&data.reading?data.reading:bigSummary(q);
+  let raw=data&&data.reading?data.reading:bigSummary(q);let txt=raw.split('|PART|').map((p,i)=>{const icons=['🎴','💫','⚡','🌿'];const labels=['牌面','含义','提醒','行动'];if(i<4)return'<div class="reading-card" style="animation-delay:'+(i*.15)+'s"><div class="rc-icon">'+icons[i]+'</div><div class="rc-label">'+labels[i]+'</div><p>'+p.trim()+'</p></div>';return'<p>'+p.trim()+'</p>';}).join('');if(raw.indexOf('|PART|')<0)txt=raw.replace(/\n/g,'<br>');
   txt=txt.replace(/\n/g,'<br>');
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+txt+'</div>';
