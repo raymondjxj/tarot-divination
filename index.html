@@ -342,12 +342,13 @@ function renderSelectionSpread(pool,needed){
   const fan=document.createElement('div');fan.className='fan-container';fan.id='fanSpread';
   const total=pool.length;
   const w=Math.min(window.innerWidth-40,600);
-  const cx=w/2,cy=70,radius=Math.min(w*.45,220);
+  const cx=w/2,cy=130;
   pool.forEach((c,i)=>{
-    const angle=(-60+i*120/(total-1||1))*Math.PI/180;
-    const x=cx+Math.sin(angle)*radius-36;
-    const y=cy-Math.cos(angle)*radius+30;
-    const rot=angle*180/Math.PI;
+    const spread=Math.min(w*.75,340);
+    const step=spread/(total-1||1);
+    const x=(w-spread)/2+i*step-36;
+    const y=cy;
+    const rot=(i/(total-1||1)-.5)*50;
     const el=document.createElement('div');el.className='fan-card-item';
     el.style.left=x+'px';el.style.top=y+'px';el.style.transform='rotate('+rot+'deg)';
     el.addEventListener('click',()=>{
