@@ -125,7 +125,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 /* 解读区 */
 .reading{background:rgba(255,255,255,.02);border:1px solid rgba(180,150,220,.12);border-radius:20px;padding:max(20px,3vw);margin-top:30px;display:none;backdrop-filter:blur(10px);}
 .reading.show{display:block;animation:fadeIn .6s ease;}
-.fan-container{position:relative;width:100%;height:150px;overflow:visible;margin:0 0 12px}.fan-card-item{position:absolute;width:clamp(48px,8vw,66px);height:clamp(72px,12vw,99px);border-radius:5px;cursor:pointer;transition:transform .35s,opacity .35s;border:2px solid rgba(200,160,240,.2);background:url(/back.png) center/cover;box-shadow:0 3px 10px rgba(0,0,0,.4);transform-origin:bottom center}.fan-card-item:hover{transform:translateY(-8px) scale(1.06)!important;border-color:rgba(200,160,240,.5)!important;box-shadow:0 4px 18px rgba(200,160,240,.3)!important;z-index:20!important}.fan-card-item.picked{animation:takeAway .65s ease-in forwards!important;cursor:default;pointer-events:none}@keyframes takeAway{0%{opacity:1;transform:translateY(0) scale(1)}25%{opacity:1;transform:translateY(-14px) scale(1.04)}55%{opacity:.7;transform:translateY(-70px) scale(.75)}100%{opacity:0;transform:translateY(-150px) scale(.35)}}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fan-container{position:relative;width:100%;height:150px;overflow:visible;margin:0 0 12px}.fan-card-item{position:absolute;width:clamp(48px,8vw,66px);height:clamp(72px,12vw,99px);border-radius:5px;cursor:pointer;transition:transform .35s,opacity .35s;border:2px solid rgba(200,160,240,.2);background:url(/back.png) center/cover;box-shadow:0 3px 10px rgba(0,0,0,.4);transform-origin:bottom center;}.fan-card-item:hover{transform:translateY(-8px) scale(1.06)!important;border-color:rgba(200,160,240,.5)!important;box-shadow:0 4px 18px rgba(200,160,240,.3)!important;z-index:20!important}.fan-card-item.picked{animation:takeAway .65s ease-in forwards!important;cursor:default;pointer-events:none}@keyframes takeAway{0%{opacity:1;transform:translateY(0) scale(1)}25%{opacity:1;transform:translateY(-14px) scale(1.04)}55%{opacity:.7;transform:translateY(-70px) scale(.75)}100%{opacity:0;transform:translateY(-150px) scale(.35)}}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .reading h3{color:var(--accent);font-size:1.4em;margin-bottom:20px;text-align:center;}
 .summary-box{margin-top:24px;padding:24px;background:rgba(167,139,250,.08);border-radius:16px;line-height:2.1;font-size:.95em;}
 .summary-box strong{color:var(--accent);}.reading-card{background:rgba(30,20,60,.3);border:1px solid rgba(180,150,220,.1);border-radius:14px;padding:16px 18px;margin:10px 0;animation:fadeIn .5s ease both;backdrop-filter:blur(4px);}
@@ -350,7 +350,7 @@ function renderSelectionSpread(pool,needed){
     const y=cy;
     const rot=(i/(total-1||1)-.5)*50;
     const el=document.createElement('div');el.className='fan-card-item';
-    el.style.left=x+'px';el.style.top=y+'px';
+    el.style.left=x+'px';el.style.top=y+'px';var wrap=document.createElement('div');wrap.style.cssText='transform:rotate('+rot+'deg);transform-origin:bottom center;position:absolute;left:0;top:0;width:100%;height:100%';el.style.position='relative';el.style.width='100%';el.style.height='100%';wrap.appendChild(el);
     el.addEventListener('click',()=>{
       if(el.classList.contains('picked'))return;
       if(window._selected.length>=needed)return;
@@ -358,7 +358,7 @@ function renderSelectionSpread(pool,needed){
       updateSelectionState(needed);
       setTimeout(()=>el.style.display='none',450);
     });
-    fan.appendChild(el);
+    fan.appendChild(wrap);
   });
   a.appendChild(fan);
   const btn=document.createElement('button');btn.className='draw-btn';btn.id='revealBtn';
