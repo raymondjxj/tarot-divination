@@ -121,8 +121,8 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .reading h3{color:var(--accent);font-size:1.4em;margin-bottom:20px;text-align:center;}
 .summary-box{margin-top:24px;padding:24px;background:rgba(167,139,250,.08);border-radius:16px;line-height:2.1;font-size:.95em;}
 .summary-box strong{color:var(--accent);}.reading-card{background:rgba(30,20,60,.3);border:1px solid rgba(180,150,220,.1);border-radius:14px;padding:16px 18px;margin:10px 0;animation:fadeIn .5s ease both;backdrop-filter:blur(4px);}
-.reading-card .rc-icon{font-size:1.1em;margin-bottom:4px;}
-.reading-card .rc-label{font-size:.75em;color:rgba(200,160,240,.6);font-weight:600;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
+.reading-card .rc-header{font-size:.75em;color:rgba(200,160,240,.55);letter-spacing:2px;margin-bottom:10px;font-weight:600;}
+.reading-card .rc-sym{color:rgba(200,160,240,.7);margin-right:4px;}
 .reading-card p{font-size:clamp(.88em,2vw,.98em);line-height:1.75;color:rgba(230,220,245,.85);}
 .summary-box .q-ref{font-size:1.05em;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed rgba(167,139,250,.25);}
 
@@ -513,7 +513,7 @@ function showReading(){
  if(et)payload.elementSummary=et;
  fetch('/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
  .then(res=>res.json()).then(data=>{
-  let raw=data&&data.reading?data.reading:bigSummary(q);let parts=[];if(raw.includes('|PART|')){parts=raw.split('|PART|').filter(p=>p.trim());}else{const re=/【(牌面|含义|提醒|行动)】/g;let m,last=0;while((m=re.exec(raw))!==null){if(last>0)parts.push(raw.substring(last,m.index).trim());last=m.index;}if(last>0)parts.push(raw.substring(last).trim());}const icons={'牌面':'◈','含义':'—','提醒':'◆','行动':'→'};let txt;if(parts.length>0){txt=parts.map((p,i)=>{const label=p.match(/^【(牌面|含义|提醒|行动)】/);const l=label?label[1]:'牌面';const content=label?p.substring(label[0].length).trim():p.trim();return'<div class="reading-card" style="animation-delay:'+(i*.12)+'s"><div class="rc-icon">'+(icons[l]||'◈')+'</div><div class="rc-label">'+l+'</div><p>'+content+'</p></div>';}).join('');}else{txt=raw.replace(/\n/g,'<br>');}
+  let raw=data&&data.reading?data.reading:bigSummary(q);let parts=[];if(raw.includes('|PART|')){parts=raw.split('|PART|').filter(p=>p.trim());}else{const re=/【(牌面|含义|提醒|行动)】/g;let m,last=0;while((m=re.exec(raw))!==null){if(last>0)parts.push(raw.substring(last,m.index).trim());last=m.index;}if(last>0)parts.push(raw.substring(last).trim());}const icons={'牌面':'◈','含义':'—','提醒':'◆','行动':'→'};let txt;if(parts.length>0){txt=parts.map((p,i)=>{const label=p.match(/^【(牌面|含义|提醒|行动)】/);const l=label?label[1]:'牌面';const content=label?p.substring(label[0].length).trim():p.trim();return'<div class="reading-card" style="animation-delay:'+(i*.12)+'s"><div class="rc-header"><span class="rc-sym">'+(icons[l]||'◈')+'</span> '+l+'</div><p>'+content+'</p></div>';}).join('');}else{txt=raw.replace(/\n/g,'<br>');}
   txt=txt.replace(/\n/g,'<br>');
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+txt+'</div>';
