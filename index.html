@@ -53,6 +53,14 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 @media(max-width:768px){:root{--card-w:150px;--card-h:235px;}}
 
 .batch-hint{width:100%;text-align:center;color:rgba(167,139,250,.7);font-size:clamp(.85em,1.6vw,1em);letter-spacing:1px;margin-bottom:8px;animation:fadeIn .5s ease;padding:4px 0;}
+.selection-mode{justify-content:center!important;flex-wrap:wrap!important;overflow:visible!important;}
+.selection-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;}
+.selectable-card{width:clamp(65px,18vw,100px);height:clamp(100px,28vw,155px);border-radius:8px;overflow:hidden;cursor:pointer;position:relative;transition:all .25s;border:2px solid rgba(167,139,250,.2);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.selectable-card img{width:100%;height:100%;object-fit:cover;}
+.selectable-card .sc-num{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:.6em;color:rgba(167,139,250,.5);pointer-events:none;}
+.selectable-card:hover{transform:translateY(-3px);box-shadow:0 4px 16px rgba(124,58,237,.3);border-color:rgba(167,139,250,.5);}
+.selectable-card.picked{transform:translateY(-6px) scale(1.04);box-shadow:0 6px 20px rgba(200,160,240,.35);border-color:rgba(200,160,240,.6);}
+.selectable-card.picked::after{content:'';position:absolute;inset:-2px;border-radius:10px;pointer-events:none;box-shadow:inset 0 0 12px rgba(200,160,240,.2);}
 .summary-overlay{position:fixed;inset:0;background:rgba(5,0,20,.88);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .4s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
 .summary-card{background:linear-gradient(135deg,#1e1040,#110526);border:1px solid rgba(167,139,250,.35);border-radius:20px;padding:max(24px,4vw);max-width:680px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);max-height:85vh;overflow-y:auto;}
 .summary-card h2{color:var(--accent);margin-bottom:6px;font-size:1.3em;}
@@ -123,7 +131,10 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .summary-box strong{color:var(--accent);}.reading-card{background:rgba(30,20,60,.3);border:1px solid rgba(180,150,220,.1);border-radius:14px;padding:16px 18px;margin:10px 0;animation:fadeIn .5s ease both;backdrop-filter:blur(4px);}
 .reading-card .rc-header{font-size:.75em;color:rgba(200,160,240,.55);letter-spacing:2px;margin-bottom:10px;font-weight:600;}
 .reading-card .rc-sym{color:rgba(200,160,240,.7);margin-right:4px;}
+.share-btn{padding:8px 20px;border:1px solid rgba(180,150,220,.15);border-radius:20px;background:rgba(30,20,60,.4);color:rgba(200,180,230,.5);cursor:pointer;font-size:.78em;font-family:inherit;transition:all .25s;margin:4px;backdrop-filter:blur(4px);}
+.share-btn:hover{background:rgba(160,130,220,.12);border-color:rgba(200,160,240,.25);color:rgba(220,200,240,.7);}
 .reading-card p{font-size:clamp(.88em,2vw,.98em);line-height:1.75;color:rgba(230,220,245,.85);}
+.reading-headline{font-family:'Noto Serif SC',serif;font-size:clamp(1.05em,2.5vw,1.25em);color:rgba(220,200,240,.9);text-align:center;padding:12px 0 16px;margin-bottom:16px;border-bottom:1px solid rgba(180,150,220,.1);font-style:italic;line-height:1.5;letter-spacing:1px;}
 .summary-box .q-ref{font-size:1.05em;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed rgba(167,139,250,.25);}
 
 /* 响应式 */
@@ -320,15 +331,51 @@ document.querySelectorAll('.spread-btn').forEach(b=>{
 });
 document.getElementById('drawBtn').addEventListener('click',draw);
 document.getElementById('question').addEventListener('keydown',e=>{if(e.key==='Enter')draw();});
+function copyReading(){var t=document.getElementById('reading').innerText;navigator.clipboard.writeText(t).then(()=>{var b=event.target;b.textContent='已复制!';setTimeout(()=>b.textContent='复制解读',1500);}).catch(()=>{alert('复制失败');});}
 
+function renderSelectionSpread(pool,needed){
+  const a=document.getElementById('cardsArea');a.innerHTML='';
+  a.className='cards-area selection-mode';
+  const hint=document.createElement('div');hint.className='batch-hint';hint.id='selHint';
+  hint.innerHTML='从牌堆中选取 <span style="color:var(--accent)">'+needed+'</span> 张卡牌';
+  a.appendChild(hint);
+  const grid=document.createElement('div');grid.className='selection-grid';
+  pool.forEach((c,i)=>{
+    const w=document.createElement('div');w.className='selectable-card';
+    w.innerHTML='<img src="/back.png" alt="card"><span class="sc-num">'+(i+1)+'</span>';
+    w.addEventListener('click',()=>{
+      if(w.classList.contains('picked')){w.classList.remove('picked');window._selected=window._selected.filter(x=>x!==i);}
+      else if(window._selected.length<needed){w.classList.add('picked');window._selected.push(i);}
+      updateSelectionState(needed);
+    });
+    grid.appendChild(w);
+  });
+  a.appendChild(grid);
+  const btn=document.createElement('button');btn.className='draw-btn';btn.id='revealBtn';
+  btn.textContent='揭示命运';btn.style.display='none';btn.style.margin='16px auto';
+  btn.addEventListener('click',()=>{
+    cards=window._selected.map(i=>pool[i]);
+    flipped=0;batchIndex=0;batchPlan=buildBatchPlan(cards.length);allBatchesFlipped=!1;isAnimating=!1;
+    document.getElementById('cardsArea').classList.remove('scroll-row');
+    renderCards(SPREADS[spread]);document.getElementById('reading').classList.remove('show');
+  });
+  a.appendChild(btn);
+}
+function updateSelectionState(needed){
+  const h=document.getElementById('selHint'),btn=document.getElementById('revealBtn'),count=window._selected.length;
+  if(h)h.innerHTML='已选择 <span style="color:var(--accent)">'+count+'</span> / '+needed+' 张';
+  if(btn)btn.style.display=count>=needed?'block':'none';
+}
 function buildBatchPlan(count){if(count<=3)return[Array.from({length:count},(_,i)=>i)];if(count===5)return[[0,1,2],[3,4]];if(count===10)return[[0,1,2],[3,4,5],[6,7,8,9]];const p=[];for(let i=0;i<count;i+=3)p.push(Array.from({length:Math.min(3,count-i)},(_,j)=>i+j));return p;}function draw(){
  const s=SPREADS[spread],all=[...CARDS,...MINOR_ARCANA];
  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
- cards=all.slice(0,s.count).map(c=>({...c,isReversed:Math.random()<0.28}));cards.forEach(c=>{const img=new Image();img.src=c.img;});
- flipped=0;document.getElementById("cardsArea").classList.remove("scroll-row");batchIndex=0;batchPlan=buildBatchPlan(s.count);allBatchesFlipped=!1;isAnimating=!1;document.getElementById("cardsArea").classList.remove("scroll-row");renderCards(s);document.getElementById('reading').classList.remove('show');
+ cards=all.slice(0,s.count).map(c=>({...c,isReversed:Math.random()<0.28}));
+ const poolN=Math.min(s.count*3+3,all.length-1),pool=all.slice(s.count,poolN).map(c=>({...c,isReversed:Math.random()<0.28}));
+ window._pool=pool;window._selected=[];window._needed=s.count;
+ renderSelectionSpread(pool,s.count);
 }
 
-function reset(){cards=[];flipped=0;document.getElementById('cardsArea').innerHTML='';document.getElementById('reading').classList.remove('show');document.getElementById('summaryOverlay').style.display='none';}
+function reset(){cards=[];flipped=0;window._pool=[];window._selected=[];window._needed=0;document.getElementById('cardsArea').innerHTML='';document.getElementById('reading').classList.remove('show');document.getElementById('summaryOverlay').style.display='none';}
 
 function renderCards(s){
  const fb=batchPlan[0]||[];
@@ -499,7 +546,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModalDirect();}
 function showReading(){
  const s=SPREADS[spread],q=document.getElementById('question').value.trim();
  const r=document.getElementById('reading');
- r.innerHTML='<h4 style="color:var(--accent);text-align:center;padding:40px">解读中，请稍候…</h4>';
+ r.innerHTML='<h4 style="color:var(--accent);text-align:center;padding:40px">牌面正在揭示中…</h4>';
  r.style.display='none';r.offsetHeight;r.style.display='';
  r.classList.add('show');
  renderAllFlippedCards();
@@ -517,13 +564,13 @@ function showReading(){
   txt=txt.replace(/\n/g,'<br>');
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+txt+'</div>';
-  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p>';
+  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p><div style="text-align:center;margin-top:8px"><button class="share-btn" onclick="copyReading()">复制解读</button> <button class="share-btn" onclick="draw()">重新抽牌</button></div>';
   r.innerHTML=h;
   r.scrollIntoView({behavior:'smooth',block:'start'});
  }).catch(()=>{
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+bigSummary(q)+'</div>';
-  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p>';
+  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p><div style="text-align:center;margin-top:8px"><button class="share-btn" onclick="copyReading()">复制解读</button> <button class="share-btn" onclick="draw()">重新抽牌</button></div>';
   r.innerHTML=h;
   r.scrollIntoView({behavior:'smooth',block:'start'});
  });
