@@ -331,7 +331,8 @@ document.querySelectorAll('.spread-btn').forEach(b=>{
 });
 document.getElementById('drawBtn').addEventListener('click',draw);
 document.getElementById('question').addEventListener('keydown',e=>{if(e.key==='Enter')draw();});
-function copyReading(){var t=document.getElementById('reading').innerText;navigator.clipboard.writeText(t).then(()=>{var b=event.target;b.textContent='已复制!';setTimeout(()=>b.textContent='复制解读',1500);}).catch(()=>{alert('复制失败');});}
+function copyReading(e){var t=document.getElementById('reading').innerText;var b=e?e.target:document.querySelector('.share-btn');if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>{b.textContent='已复制';setTimeout(()=>b.textContent='复制解读',1500);}).catch(()=>{fallbackCopy(t,b);});}else{fallbackCopy(t,b);}}
+function fallbackCopy(text,btn){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');btn.textContent='已复制';}catch(ex){alert('请手动选择文字复制');}setTimeout(()=>{btn.textContent='复制解读';},1500);document.body.removeChild(ta);}
 
 function renderSelectionSpread(pool,needed){
   const a=document.getElementById('cardsArea');a.innerHTML='';
@@ -564,13 +565,13 @@ function showReading(){
   txt=txt.replace(/\n/g,'<br>');
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+txt+'</div>';
-  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p><div style="text-align:center;margin-top:8px"><button class="share-btn" onclick="copyReading()">复制解读</button> <button class="share-btn" onclick="draw()">重新抽牌</button></div>';
+  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p><div style="text-align:center;margin-top:8px"><button class="share-btn" onclick="copyReading(event)">复制解读</button> <button class="share-btn" onclick="draw()">重新抽牌</button></div>';
   r.innerHTML=h;
   r.scrollIntoView({behavior:'smooth',block:'start'});
  }).catch(()=>{
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+bigSummary(q)+'</div>';
-  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p><div style="text-align:center;margin-top:8px"><button class="share-btn" onclick="copyReading()">复制解读</button> <button class="share-btn" onclick="draw()">重新抽牌</button></div>';
+  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p><div style="text-align:center;margin-top:8px"><button class="share-btn" onclick="copyReading(event)">复制解读</button> <button class="share-btn" onclick="draw()">重新抽牌</button></div>';
   r.innerHTML=h;
   r.scrollIntoView({behavior:'smooth',block:'start'});
  });
