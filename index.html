@@ -55,7 +55,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .batch-hint{width:100%;text-align:center;color:rgba(167,139,250,.7);font-size:clamp(.85em,1.6vw,1em);letter-spacing:1px;margin-bottom:8px;animation:fadeIn .5s ease;padding:4px 0;}
 .selection-mode{justify-content:center!important;flex-wrap:wrap!important;overflow:visible!important;}
 .selection-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;}
-.selectable-card{width:clamp(65px,18vw,100px);height:clamp(100px,28vw,155px);border-radius:8px;overflow:hidden;cursor:pointer;position:relative;transition:all .25s;border:2px solid rgba(167,139,250,.2);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+
 .selectable-card img{width:100%;height:100%;object-fit:cover;}
 .selectable-card .sc-num{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:.6em;color:rgba(167,139,250,.5);pointer-events:none;}
 .selectable-card:hover{transform:translateY(-3px);box-shadow:0 4px 16px rgba(124,58,237,.3);border-color:rgba(167,139,250,.5);}
@@ -339,18 +339,27 @@ function renderSelectionSpread(pool,needed){
   const hint=document.createElement('div');hint.className='batch-hint';hint.id='selHint';
   hint.innerHTML='从牌堆中选取 <span style="color:var(--accent)">'+needed+'</span> 张卡牌';
   a.appendChild(hint);
-  const grid=document.createElement('div');grid.className='selection-grid';
+  const fan=document.createElement('div');fan.className='fan-container';fan.id='fanSpread';
+  const total=pool.length;
+  const w=Math.min(document.body.clientWidth-40,700);
+  const cx=w/2,cy=100,radius=Math.min(w*.65,300);
   pool.forEach((c,i)=>{
-    const w=document.createElement('div');w.className='selectable-card';
-    w.innerHTML='<img src="/back.png" alt="card"><span class="sc-num">'+(i+1)+'</span>';
-    w.addEventListener('click',()=>{
-      if(w.classList.contains('picked')){w.classList.remove('picked');window._selected=window._selected.filter(x=>x!==i);}
-      else if(window._selected.length<needed){w.classList.add('picked');window._selected.push(i);}
+    const angle=(-60+i*120/(total-1||1))*Math.PI/180;
+    const x=cx+Math.sin(angle)*radius-36;
+    const y=cy-Math.cos(angle)*radius+30;
+    const rot=angle*180/Math.PI;
+    const el=document.createElement('div');el.className='fan-card-item';
+    el.style.left=x+'px';el.style.top=y+'px';el.style.transform='rotate('+rot+'deg)';
+    el.addEventListener('click',()=>{
+      if(el.classList.contains('picked'))return;
+      if(window._selected.length>=needed)return;
+      el.classList.add('picked');window._selected.push(i);
       updateSelectionState(needed);
+      setTimeout(()=>el.style.display='none',450);
     });
-    grid.appendChild(w);
+    fan.appendChild(el);
   });
-  a.appendChild(grid);
+  a.appendChild(fan);
   const btn=document.createElement('button');btn.className='draw-btn';btn.id='revealBtn';
   btn.textContent='揭示命运';btn.style.display='none';btn.style.margin='16px auto';
   btn.addEventListener('click',()=>{
