@@ -169,7 +169,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我应该继续坚持吗？</button>
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">今天宇宙想提醒我什么？</button>
 </div>
-<button class="draw-btn" id="drawBtn" style="display:block;margin:12px auto 0">✨ 开始抽牌</button></div>
+<button class="draw-btn" id="drawBtn" style="display:block;margin:12px auto 0">开始抽牌</button></div>
 <div class="cards-area" id="cardsArea"></div>
 <div class="reading" id="reading"></div>
 </div>
@@ -337,7 +337,7 @@ function renderCards(s){
 
  const hint=document.createElement("div");
  hint.className="batch-hint";hint.id="batchHint";
- hint.textContent=batchPlan.length>1?"👆 点击任意卡牌翻开（第1/"+batchPlan.length+"批）":"👆 点击翻开卡牌";
+ hint.textContent=batchPlan.length>1?"点击任意卡牌翻开（第1/"+batchPlan.length+"批）":"点击翻开卡牌";
  a.appendChild(hint);
 
  // Only render first batch initially
@@ -423,11 +423,11 @@ function handleCardClick(){
     const done=cb.every(i=>{const el=document.querySelector('.card-inner[data-card-index="'+i+'"]');return el&&el.classList.contains('flipped');});
     if(!done){
       const left=cb.filter(i=>{const el=document.querySelector('.card-inner[data-card-index="'+i+'"]');return el&&!el.classList.contains('flipped');}).length;
-      const h=document.getElementById('batchHint');if(h)h.innerHTML='👆 还有 '+left+' 张待翻开（第'+(batchIndex+1)+'/'+batchPlan.length+'组）';
+      const h=document.getElementById('batchHint');if(h)h.innerHTML='还有 '+left+' 张待翻开（第'+(batchIndex+1)+'/'+batchPlan.length+'组）';
     }else{
       batchIndex++;
       if(batchIndex>=batchPlan.length){allBatchesFlipped=!0;const h=document.getElementById('batchHint');if(h)h.innerHTML='';setTimeout(showSummaryModal,600);}
-      else{renderBatchCards(batchPlan[batchIndex]);const h=document.getElementById('batchHint');if(h)h.innerHTML='👆 点击翻开（第'+(batchIndex+1)+'/'+batchPlan.length+'组）';}
+      else{renderBatchCards(batchPlan[batchIndex]);const h=document.getElementById('batchHint');if(h)h.innerHTML='点击翻开（第'+(batchIndex+1)+'/'+batchPlan.length+'组）';}
     }
   },1000);
 }
@@ -513,17 +513,17 @@ function showReading(){
  if(et)payload.elementSummary=et;
  fetch('/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
  .then(res=>res.json()).then(data=>{
-  let raw=data&&data.reading?data.reading:bigSummary(q);let parts=[];if(raw.includes('|PART|')){parts=raw.split('|PART|').filter(p=>p.trim());}else{const re=/【(牌面|含义|提醒|行动)】/g;let m,last=0;while((m=re.exec(raw))!==null){if(last>0)parts.push(raw.substring(last,m.index).trim());last=m.index;}if(last>0)parts.push(raw.substring(last).trim());}const icons={'牌面':'🎴','含义':'💫','提醒':'⚡','行动':'🌿'};let txt;if(parts.length>0){txt=parts.map((p,i)=>{const label=p.match(/^【(牌面|含义|提醒|行动)】/);const l=label?label[1]:'牌面';const content=label?p.substring(label[0].length).trim():p.trim();return'<div class="reading-card" style="animation-delay:'+(i*.12)+'s"><div class="rc-icon">'+(icons[l]||'🎴')+'</div><div class="rc-label">'+l+'</div><p>'+content+'</p></div>';}).join('');}else{txt=raw.replace(/\n/g,'<br>');}
+  let raw=data&&data.reading?data.reading:bigSummary(q);let parts=[];if(raw.includes('|PART|')){parts=raw.split('|PART|').filter(p=>p.trim());}else{const re=/【(牌面|含义|提醒|行动)】/g;let m,last=0;while((m=re.exec(raw))!==null){if(last>0)parts.push(raw.substring(last,m.index).trim());last=m.index;}if(last>0)parts.push(raw.substring(last).trim());}const icons={'牌面':'◈','含义':'—','提醒':'◆','行动':'→'};let txt;if(parts.length>0){txt=parts.map((p,i)=>{const label=p.match(/^【(牌面|含义|提醒|行动)】/);const l=label?label[1]:'牌面';const content=label?p.substring(label[0].length).trim():p.trim();return'<div class="reading-card" style="animation-delay:'+(i*.12)+'s"><div class="rc-icon">'+(icons[l]||'◈')+'</div><div class="rc-label">'+l+'</div><p>'+content+'</p></div>';}).join('');}else{txt=raw.replace(/\n/g,'<br>');}
   txt=txt.replace(/\n/g,'<br>');
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+txt+'</div>';
-  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">👆 双击/长按卡牌查看单张详情</p>';
+  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p>';
   r.innerHTML=h;
   r.scrollIntoView({behavior:'smooth',block:'start'});
  }).catch(()=>{
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+bigSummary(q)+'</div>';
-  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">👆 双击/长按卡牌查看单张详情</p>';
+  h+='<p style="text-align:center;margin-top:16px;font-size:.78em;color:rgba(167,139,250,.45);letter-spacing:1px">双击/长按卡牌查看单张详情</p>';
   r.innerHTML=h;
   r.scrollIntoView({behavior:'smooth',block:'start'});
  });
