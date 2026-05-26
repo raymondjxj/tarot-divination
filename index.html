@@ -22,8 +22,6 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .header{text-align:center;padding:40px 20px 20px;}
 .header h1{font-size:clamp(1.8em,5vw,2.8em);background:linear-gradient(135deg,var(--accent),#a78bfa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
 .header .subtitle{color:#a78bfa;font-size:clamp(.9em,2vw,1.1em);letter-spacing:4px;}
-.fs-icon{color:rgba(180,160,220,.25);cursor:pointer;font-size:.85em;margin-left:6px;transition:all .3s;vertical-align:middle;}
-.fs-icon:hover{color:rgba(200,180,240,.6);}
 
 /* 牌阵选择 */
 .spread-selector{display:flex;justify-content:center;gap:max(8px,1vw);flex-wrap:wrap;margin:30px 0;}
@@ -159,14 +157,12 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 @media(min-width:1200px){
   :root{--card-w:260px;--card-h:400px;}
 }
-.el-row{display:flex;gap:5px;justify-content:center;margin:10px 0 16px;}.eld{width:4px;height:4px;border-radius:50%;opacity:.65;}.eld-火{background:#fb923c;box-shadow:0 0 3px #fb923c;}.eld-水{background:#60a5fa;box-shadow:0 0 3px #60a5fa;}.eld-风{background:#facc15;box-shadow:0 0 3px #facc15;}.eld-土{background:#4ade80;box-shadow:0 0 3px #4ade80;}
-.selectable-card.picked{animation:cardPulse 2s ease-in-out infinite;}
-@keyframes cardPulse{0%,100%{box-shadow:0 6px 20px rgba(200,160,240,.35)}50%{box-shadow:0 6px 30px rgba(200,160,240,.55)}}</style>
+</style>
 </head>
 <body>
 <div class="stars" id="stars"></div>
 <div class="container">
-<div class="header"><h1>🔮 塔罗占卜</h1><p class="subtitle">✦ 聆听宇宙的低语 ✦ <span class="fs-icon" onclick="toggleFullscreen()" title="全屏">⛶</span></p></div>
+<div class="header"><h1>🔮 塔罗占卜</h1><p class="subtitle">✦ 聆听宇宙的低语 ✦</p></div>
 <div class="spread-selector">
 <button class="spread-btn active" data-spread="1">单张</button>
 <button class="spread-btn" data-spread="3">三张</button>
@@ -335,7 +331,6 @@ document.querySelectorAll('.spread-btn').forEach(b=>{
 });
 document.getElementById('drawBtn').addEventListener('click',draw);
 document.getElementById('question').addEventListener('keydown',e=>{if(e.key==='Enter')draw();});
-function toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}else{document.exitFullscreen();}}
 function copyReading(){var t=document.getElementById('reading').innerText;navigator.clipboard.writeText(t).then(()=>{var b=event.target;b.textContent='已复制!';setTimeout(()=>b.textContent='复制解读',1500);}).catch(()=>{alert('复制失败');});}
 
 function renderSelectionSpread(pool,needed){
@@ -516,7 +511,7 @@ function showSummaryModal(){
   count.textContent=cards.length;
   list.innerHTML=cards.map((c,i)=>'<div class="summary-item el-'+c.el+'"><span class="si-pos">'+s.pos[i]+'</span><span class="si-name">'+c.name+'</span><span class="si-idx">'+(c.isReversed?'— 逆位 —':'— 正位 —')+'</span><span class="si-meta"><span>'+c.el+'</span><span>'+timeHint(c)+'</span></span></div>').join('');
   const pi=findPairInteractions(Array.from({length:cards.length},(_,i)=>i));if(pi.length>0){const pd=document.createElement('div');pd.className='summary-connections';pd.innerHTML='<p>'+pi.map(p=>p.card1.name+'  ·  '+p.card2.name).join('&emsp;')+'</p>';list.after(pd);}
-  ov.style.display='flex';document.getElementById('summaryViewBtn').onclick=()=>{ov.style.display='none';showReading();};ov.onclick=function(e){if(e.target===ov){ov.style.opacity='0';ov.style.transition='opacity .3s';setTimeout(()=>{ov.style.display='none';showReading();},300);}};document.getElementById('summaryViewBtn').onclick=()=>{ov.style.display='none';showReading();};ov.onclick=function(e){if(e.target===ov)ov.style.display='none';};
+  ov.style.display='flex';document.getElementById('summaryViewBtn').onclick=()=>{ov.style.display='none';showReading();};ov.onclick=function(e){if(e.target===ov)ov.style.display='none';};document.getElementById('summaryViewBtn').onclick=()=>{ov.style.display='none';showReading();};ov.onclick=function(e){if(e.target===ov)ov.style.display='none';};
 }
 
 
