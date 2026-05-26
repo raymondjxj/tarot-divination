@@ -497,7 +497,7 @@ function showReading(){
  if(allPairs.length>0)payload.pairs=allPairs.map(p=>({card1:p.card1.name,card2:p.card2.name,text:p.text}));
  const et=getElementTension(Array.from({length:cards.length},(_,i)=>i));
  if(et)payload.elementSummary=et;
- fetch('http://65.49.222.127/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+ fetch('/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
  .then(res=>res.json()).then(data=>{
   let txt=data&&data.reading?data.reading:bigSummary(q);
   txt=txt.replace(/\n/g,'<br>');
