@@ -25,8 +25,8 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 
 /* 牌阵选择 */
 .spread-selector{display:flex;justify-content:center;gap:max(8px,1vw);flex-wrap:wrap;margin:30px 0;}
-.spread-btn{padding:12px 24px;border:1px solid rgba(180,150,220,.2);background:rgba(167,139,250,.1);color:var(--light);border-radius:12px;cursor:pointer;font-size:clamp(.85em,1.5vw,1em);font-family:inherit;transition:all .3s;backdrop-filter:blur(10px);white-space:nowrap;}
-.spread-btn:hover,.spread-btn.active{background:rgba(160,130,220,.15);border-color:rgba(200,160,240,.35);box-shadow:0 0 16px rgba(160,130,220,.12);transform:translateY(-2px);}
+.spread-btn{padding:clamp(10px,2vw,14px) clamp(16px,3vw,28px);border:1px solid rgba(180,150,220,.15);font-size:clamp(.82em,1.5vw,.95em);font-weight:500;letter-spacing:1px;background:rgba(167,139,250,.1);color:var(--light);border-radius:12px;cursor:pointer;font-size:clamp(.85em,1.5vw,1em);font-family:inherit;transition:all .3s;backdrop-filter:blur(10px);white-space:nowrap;}
+.spread-btn:hover{background:rgba(160,130,220,.1);border-color:rgba(200,160,240,.25);}.spread-btn.active{background:rgba(140,120,200,.18);border-color:rgba(200,160,240,.4);box-shadow:0 0 12px rgba(160,130,220,.1);color:#ddd0f5;font-weight:600;transform:translateY(-2px);}
 
 /* 输入 */
 .question-area{display:flex;gap:12px;margin:20px 0 30px;justify-content:center;flex-wrap:wrap;}
@@ -43,7 +43,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .draw-btn:active{transform:translateY(0);}
 
 /* 卡牌区域 */
-.cards-area{display:flex;justify-content:center!important;gap:max(12px,2vw);flex-wrap:wrap;margin:30px 0;min-height:200px;align-items:center;width:100%;}.cards-area.scroll-row{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start!important;scroll-snap-type:x proximity;padding:0 8px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;will-change:scroll-position;overscroll-behavior-x:contain;scroll-behavior:smooth;justify-content:flex-start!important;}
+.cards-area{display:flex;justify-content:center!important;gap:max(8px,1.5vw);flex-wrap:wrap;margin:30px 0;min-height:200px;align-items:center;width:100%;}.cards-area.scroll-row{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start!important;scroll-snap-type:x proximity;padding:0 8px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;will-change:scroll-position;overscroll-behavior-x:contain;scroll-behavior:smooth;justify-content:flex-start!important;}
 .cards-area.scroll-row::-webkit-scrollbar{display:none;}
 .cards-area.scroll-row .card-wrapper{flex:0 0 auto;width:var(--card-w)!important;min-width:var(--card-w);scroll-snap-align:start;}
 
@@ -52,7 +52,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 /* 单张牌放更大 */
 @media(max-width:768px){:root{--card-w:150px;--card-h:235px;}}
 
-.batch-hint{width:100%;text-align:center;color:rgba(167,139,250,.7);font-size:clamp(.8em,1.5vw,.95em);letter-spacing:1px;margin-bottom:8px;animation:fadeIn .5s ease;padding:4px 0;}
+.batch-hint{width:100%;text-align:center;color:rgba(167,139,250,.7);font-size:clamp(.85em,1.6vw,1em);letter-spacing:1px;margin-bottom:8px;animation:fadeIn .5s ease;padding:4px 0;}
 .summary-overlay{position:fixed;inset:0;background:rgba(5,0,20,.88);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .4s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
 .summary-card{background:linear-gradient(135deg,#1e1040,#110526);border:1px solid rgba(167,139,250,.35);border-radius:20px;padding:max(24px,4vw);max-width:680px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);max-height:85vh;overflow-y:auto;}
 .summary-card h2{color:var(--accent);margin-bottom:6px;font-size:1.3em;}
@@ -96,7 +96,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .card-front{transform:rotateY(180deg);border:2px solid var(--purple);position:relative;}
 .card-front img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;}
 .card-front .info-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.78));border-radius:0 0 10px 10px;z-index:1;padding:max(10px,2vw) max(8px,1.5vw);text-align:center;pointer-events:none;}
-.card-front .info-overlay .card-title-line{font-size:clamp(.7em,1.3vw,.85em);font-weight:700;color:#fff;text-shadow:0 1px 2px #000;}
+.card-front .info-overlay .card-title-line{font-size:clamp(.75em,1.4vw,.9em);font-weight:700;color:#fff;text-shadow:0 1px 2px #000;}
 .card-front .info-overlay .card-pos-line{font-size:clamp(.55em,1vw,.65em);color:var(--accent);letter-spacing:1px;margin-bottom:3px;}
 .card-front .rev-tag{position:absolute;top:10px;right:10px;background:rgba(239,68,68,.88);color:#fff;padding:4px 12px;border-radius:10px;font-size:clamp(.6em,1vw,.7em);font-weight:700;z-index:2;}
 .card-front .tap-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:.7em;background:rgba(0,0,0,.6);padding:6px 14px;border-radius:20px;z-index:3;opacity:.9;pointer-events:none;transition:opacity .4s;}
@@ -122,8 +122,8 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .summary-box{margin-top:24px;padding:24px;background:rgba(167,139,250,.08);border-radius:16px;line-height:2.1;font-size:.95em;}
 .summary-box strong{color:var(--accent);}.reading-card{background:rgba(30,20,60,.3);border:1px solid rgba(180,150,220,.1);border-radius:14px;padding:16px 18px;margin:10px 0;animation:fadeIn .5s ease both;backdrop-filter:blur(4px);}
 .reading-card .rc-icon{font-size:1.1em;margin-bottom:4px;}
-.reading-card .rc-label{font-size:.72em;color:rgba(200,160,240,.5);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
-.reading-card p{font-size:.92em;line-height:1.85;color:rgba(220,210,240,.8);}
+.reading-card .rc-label{font-size:.75em;color:rgba(200,160,240,.6);font-weight:600;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
+.reading-card p{font-size:clamp(.88em,2vw,.98em);line-height:1.75;color:rgba(230,220,245,.85);}
 .summary-box .q-ref{font-size:1.05em;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed rgba(167,139,250,.25);}
 
 /* 响应式 */
@@ -160,7 +160,6 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 </div>
 <div class="question-area">
 <input type="text" id="question" placeholder="默念你的问题…（可选）">
-<button class="draw-btn" id="drawBtn">✨ 抽牌</button>
 
 <div class="quick-questions">
   <span class="qq-label">试着问问：</span>
@@ -170,7 +169,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我应该继续坚持吗？</button>
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">今天宇宙想提醒我什么？</button>
 </div>
-</div>
+<button class="draw-btn" id="drawBtn" style="display:block;margin:12px auto 0">✨ 开始抽牌</button></div>
 <div class="cards-area" id="cardsArea"></div>
 <div class="reading" id="reading"></div>
 </div>
