@@ -375,9 +375,9 @@ function renderSelectionSpread(pool,needed){
   btn.textContent='揭示命运';btn.style.display='none';btn.style.margin='16px auto';
   btn.addEventListener('click',()=>{
     cards=window._selected.map(i=>pool[i]);
-    flipped=0;batchIndex=0;batchPlan=buildBatchPlan(cards.length);allBatchesFlipped=!1;isAnimating=!1;
-    document.getElementById('cardsArea').classList.remove('scroll-row');
-    renderCards(SPREADS[spread]);document.getElementById('reading').classList.remove('show');
+    cards.forEach(c=>{const img=new Image();img.src=c.img;});
+    renderAllFlippedCards();
+    showReading();
   });
   a.appendChild(btn);
 }
@@ -569,7 +569,6 @@ function showReading(){
  r.innerHTML='<h4 style="color:var(--accent);text-align:center;padding:40px">牌面正在揭示中…</h4>';
  r.style.display='none';r.offsetHeight;r.style.display='';
  r.classList.add('show');
- renderAllFlippedCards();
  const ca=document.getElementById("cardsArea");
  if(spread!=='1'&&cards.length<=3){ca.style.justifyContent="center";ca.style.flexWrap="wrap";}
  if(cards.length>3){requestAnimationFrame(()=>{ca.scrollLeft=0;requestAnimationFrame(()=>{ca.scrollLeft=0;});});}
