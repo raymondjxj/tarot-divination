@@ -370,7 +370,7 @@ function buildBatchPlan(count){if(count<=3)return[Array.from({length:count},(_,i
  const s=SPREADS[spread],all=[...CARDS,...MINOR_ARCANA];
  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
  cards=all.slice(0,s.count).map(c=>({...c,isReversed:Math.random()<0.28}));
- const poolN=Math.min(s.count*3+3,all.length-1),pool=all.slice(s.count,poolN).map(c=>({...c,isReversed:Math.random()<0.28}));
+ const poolN=Math.min(s.count+16,all.length-1),pool=all.slice(s.count,poolN).map(c=>({...c,isReversed:Math.random()<0.28}));
  window._pool=pool;window._selected=[];window._needed=s.count;
  renderSelectionSpread(pool,s.count);
 }
