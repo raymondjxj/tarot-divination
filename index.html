@@ -514,7 +514,7 @@ function showReading(){
  if(et)payload.elementSummary=et;
  fetch('/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
  .then(res=>res.json()).then(data=>{
-  let raw=data&&data.reading?data.reading:bigSummary(q);let txt=raw.split('|PART|').map((p,i)=>{const icons=['🎴','💫','⚡','🌿'];const labels=['牌面','含义','提醒','行动'];if(i<4)return'<div class="reading-card" style="animation-delay:'+(i*.15)+'s"><div class="rc-icon">'+icons[i]+'</div><div class="rc-label">'+labels[i]+'</div><p>'+p.trim()+'</p></div>';return'<p>'+p.trim()+'</p>';}).join('');if(raw.indexOf('|PART|')<0)txt=raw.replace(/\n/g,'<br>');
+  let raw=data&&data.reading?data.reading:bigSummary(q);let parts=[];if(raw.includes('|PART|')){parts=raw.split('|PART|').filter(p=>p.trim());}else{const re=/【(牌面|含义|提醒|行动)】/g;let m,last=0;while((m=re.exec(raw))!==null){if(last>0)parts.push(raw.substring(last,m.index).trim());last=m.index;}if(last>0)parts.push(raw.substring(last).trim());}const icons={'牌面':'🎴','含义':'💫','提醒':'⚡','行动':'🌿'};let txt;if(parts.length>0){txt=parts.map((p,i)=>{const label=p.match(/^【(牌面|含义|提醒|行动)】/);const l=label?label[1]:'牌面';const content=label?p.substring(label[0].length).trim():p.trim();return'<div class="reading-card" style="animation-delay:'+(i*.12)+'s"><div class="rc-icon">'+(icons[l]||'🎴')+'</div><div class="rc-label">'+l+'</div><p>'+content+'</p></div>';}).join('');}else{txt=raw.replace(/\n/g,'<br>');}
   txt=txt.replace(/\n/g,'<br>');
   let h=q?'<h3>🔮 「'+q+'」</h3>':'';
   h+='<div class="summary-box" style="line-height:2.2">'+txt+'</div>';
