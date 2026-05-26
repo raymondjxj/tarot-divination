@@ -341,8 +341,8 @@ function renderSelectionSpread(pool,needed){
   a.appendChild(hint);
   const fan=document.createElement('div');fan.className='fan-container';fan.id='fanSpread';
   const total=pool.length;
-  const w=Math.min(document.body.clientWidth-40,700);
-  const cx=w/2,cy=100,radius=Math.min(w*.65,300);
+  const w=Math.min(window.innerWidth-40,600);
+  const cx=w/2,cy=70,radius=Math.min(w*.45,220);
   pool.forEach((c,i)=>{
     const angle=(-60+i*120/(total-1||1))*Math.PI/180;
     const x=cx+Math.sin(angle)*radius-36;
