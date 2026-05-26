@@ -350,7 +350,7 @@ function renderSelectionSpread(pool,needed){
     const y=cy;
     const rot=(i/(total-1||1)-.5)*50;
     const el=document.createElement('div');el.className='fan-card-item';
-    el.style.left=x+'px';el.style.top=y+'px';el.style.transform='rotate('+rot+'deg)';
+    el.style.left=x+'px';el.style.top=y+'px';
     el.addEventListener('click',()=>{
       if(el.classList.contains('picked'))return;
       if(window._selected.length>=needed)return;
