@@ -376,8 +376,11 @@ function renderSelectionSpread(pool,needed){
   btn.addEventListener('click',()=>{
     cards=window._selected.map(i=>pool[i]);
     cards.forEach(c=>{const img=new Image();img.src=c.img;});
-    renderAllFlippedCards();
-    showReading();
+    flipped=0;batchIndex=0;batchPlan=buildBatchPlan(cards.length);allBatchesFlipped=!1;isAnimating=!1;
+    document.getElementById('cardsArea').classList.remove('scroll-row');
+    renderCards(SPREADS[spread]);
+    document.getElementById('reading').classList.remove('show');
+    autoReveal();
   });
   a.appendChild(btn);
 }
@@ -386,6 +389,7 @@ function updateSelectionState(needed){
   if(h)h.innerHTML='已选择 <span style="color:var(--accent)">'+count+'</span> / '+needed+' 张';
   if(btn)btn.style.display=count>=needed?'block':'none';
 }
+function autoReveal(){var all=[];batchPlan.forEach(function(b){b.forEach(function(i){all.push(i)})});var idx=0;function flipNext(){if(idx>=all.length){renderAllFlippedCards();setTimeout(showReading,500);return;}var i=all[idx];var inner=document.querySelector('.card-inner[data-card-index="'+i+'"]');if(inner){inner.classList.add('flipped');var front=inner.querySelector('.card-front');if(front)front.classList.add('flipped-card');}idx++;setTimeout(flipNext,300)}flipNext()}
 function buildBatchPlan(count){if(count<=3)return[Array.from({length:count},(_,i)=>i)];if(count===5)return[[0,1,2],[3,4]];if(count===10)return[[0,1,2],[3,4,5],[6,7,8,9]];const p=[];for(let i=0;i<count;i+=3)p.push(Array.from({length:Math.min(3,count-i)},(_,j)=>i+j));return p;}function draw(){
  const s=SPREADS[spread],all=[...CARDS,...MINOR_ARCANA];
  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
