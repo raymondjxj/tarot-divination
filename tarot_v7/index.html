@@ -239,7 +239,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 (()=>{const c=document.getElementById("stars");for(let i=0;i<50;i++){const s=document.createElement("div");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";const z=Math.random()*3+1;s.style.width=z+"px";s.style.height=z+"px";s.style.setProperty("--d",(Math.random()*3+2)+"s");s.style.animationDelay=Math.random()*3+"s";c.appendChild(s)}})();
 
 /* 状态 */
-let mood="",intent="",card=null,spread="1",cards=[];
+let mood="",intent="",card=null,spread="1",cards=[],readingText="";
 let recs=JSON.parse(localStorage.getItem("tv7sim")||"[]");
 let calY,calM;
 const SP={1:["今日指引"],3:["过去的影响","当下的状态","未来的方向"],5:["你的立场","关系的障碍","对方/环境","根基与支撑","最终的结果"],10:["现在状况","横交阻碍","基础根基","过往影响","最高目标","不久将来","你的态度","周围环境","希望与恐惧","最终结果"]};
@@ -293,17 +293,22 @@ function doShuffle(){
     });
     h+='</div>';
   }else if(n===5){
-    h+='<div style="position:relative;width:300px;height:380px;margin:0 auto" id="drawGrid">';
-    const pos=[[150,0],[0,130],[150,130],[300,130],[150,260]];
-    cards.forEach((c,i)=>{
-      h+='<div class="cw" style="--cw:100px;--ch:152px;position:absolute;left:'+pos[i][0]+'px;top:'+pos[i][1]+'px;transform:translate(-50%,0)" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.62em;color:var(--dm);margin-top:2px">'+["核心","阻碍","根基支撑","对方环境","最终结果"][i]+'</p></div>';
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;max-width:340px;margin:0 auto" id="drawGrid">';
+    const order5=[null,0,null,1,2,3,null,4,null];
+    order5.forEach(ci=>{
+      if(ci===null){h+='<div></div>';return}
+      const c=cards[ci];
+      h+='<div class="cw" style="--cw:100px;--ch:152px" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.62em;color:var(--dm);margin-top:2px">'+["核心","阻碍","根基支撑","对方环境","最终结果"][ci]+'</p></div>';
     });
     h+='</div>';
   }else if(n===10){
-    h+='<div style="position:relative;width:340px;height:440px;margin:0 auto" id="drawGrid">';
-    const pos10=[[170,0],[270,80],[170,80],[70,80],[0,160],[340,160],[70,240],[170,240],[270,240],[170,320]];
-    cards.forEach((c,i)=>{
-      h+='<div class="cw" style="--cw:72px;--ch:112px;position:absolute;left:'+pos10[i][0]+'px;top:'+pos10[i][1]+'px;transform:translate(-50%,0)" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.55em;color:var(--dm);margin-top:1px">'+SP[10][i].substring(0,4)+'</p></div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto auto;gap:6px;max-width:360px;margin:0 auto" id="drawGrid">';
+    const o10=[3,0,0,4,1,2,2,5,7,8,8,6,9,9,9,9];
+    const ci10=[null,0,1,2,null,3,4,5,null,6,7,8,9,null,null,null];
+    ci10.forEach(ci=>{
+      if(ci===null){h+='<div></div>';return}
+      const c=cards[ci];
+      h+='<div class="cw" style="--cw:68px;--ch:105px" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.5em;color:var(--dm);margin-top:1px">'+SP[10][ci].substring(0,4)+'</p></div>';
     });
     h+='</div>';
   }else{
@@ -324,24 +329,45 @@ function doFlip(){
       const cf=$("drawCF"+i);
       cf.innerHTML='<img src="'+c.img+'" alt="'+c.name+'">'+(c.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+c.name+" · "+c.en+'</div></div>';
       cf.style.cursor='pointer';
-      cf.onclick=e=>{e.stopPropagation();zoomCard(c,i)};
+      cf.onclick=function(e){e.stopPropagation();zoomCard(i)};
     },100+i*580);
   });
-  setTimeout(()=>showReading(),100+cards.length*580+900);
+  setTimeout(()=>showBall(),100+cards.length*580+900);
 }
 
-/* 放大查看 */
-function zoomCard(c,i){
-  U.e("mod").classList.add("on");
-  const d=c.isReversed?c.rev:c.up;
-  U.e("modC").innerHTML='<button class="mx" onclick="U.shut()">✕</button><img src="'+c.img+'" style="width:100%;max-width:200px;height:auto;border-radius:12px;display:block;margin:0 auto 8px;border:2px solid var(--ac);box-shadow:0 8px 28px rgba(110,60,200,.4);'+(c.isReversed?'transform:rotate(180deg)':'')+'"><p style="color:var(--a2);font-size:.74em;letter-spacing:1px;text-align:center">'+SP[+spread][i]+' '+(c.isReversed?"逆位":"正位")+'</p><p style="font-size:1.05em;font-weight:700;text-align:center">'+c.name+" · "+c.en+'</p><p style="line-height:1.8;font-size:.88em;margin-top:8px">'+d.core+'</p>';
+/* 水晶球按钮 */
+function showBall(){
+  const ex=document.getElementById("cbw");if(ex)ex.remove();
+  const w=document.createElement("div");w.id="cbw";
+  w.style.cssText="position:fixed;bottom:max(20px,4vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:cbIn .65s ease";
+  w.innerHTML='<div style="width:60px;height:60px;border-radius:50%;margin:0 auto 5px;background:radial-gradient(circle at 35% 30%,rgba(215,185,250,.94),rgba(135,85,210,.82) 40%,rgba(60,18,115,.88) 70%,rgba(14,4,38,.94));box-shadow:0 0 26px rgba(155,100,240,.55),0 0 55px rgba(115,55,195,.3);animation:cbGl 3s ease-in-out infinite"></div><div style="color:rgba(200,180,238,.78);font-size:.74em;letter-spacing:2px;animation:cT 3s ease-in-out infinite">触碰水晶球 · 揭示命运</div>';
+  w.onclick=()=>{w.remove();showReading()};
+  $("drawArea").appendChild(w);
 }
+
+/* 放大查看 - 接受index而非card对象避免闭包问题 */
+function zoomCard(i){
+  const c=cards[i];if(!c)return;
+  $("mod").classList.add("on");
+  const d=c.isReversed?c.rev:c.up;
+  let h='<button class="mx" onclick="document.getElementById(\x27mod\x27).classList.remove(\x27on\x27)">✕</button>';
+  h+='<img src="'+c.img+'" style="width:100%;max-width:200px;border-radius:12px;display:block;margin:0 auto 8px;border:2px solid var(--ac);box-shadow:0 8px 28px rgba(110,60,200,.4)'+(c.isReversed?';transform:rotate(180deg)':'')+'">';
+  h+='<p style="color:var(--a2);font-size:.74em;letter-spacing:1px;text-align:center">'+SP[+spread][i]+' '+(c.isReversed?"逆位":"正位")+'</p>';
+  h+='<p style="font-size:1.05em;font-weight:700;text-align:center">'+c.name+" · "+c.en+'</p>';
+  h+='<p style="line-height:1.8;font-size:.88em;margin-top:8px">'+d.core+'</p>';
+  if(d.what)h+='<p style="font-size:.82em;color:var(--dm);margin-top:4px">🌱 '+d.what+'</p>';
+  $("modC").innerHTML=h;
+}
+document.getElementById("mod").onclick=function(e){if(e.target===this)this.classList.remove("on")};
+
+/* 动画 */
+var style=document.createElement("style");style.textContent="@keyframes cbIn{0%{opacity:0;transform:translateX(-50%) translateY(36px) scale(.45)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}@keyframes cbGl{0%,to{box-shadow:0 0 26px rgba(155,100,240,.55),0 0 55px rgba(115,55,195,.3)}50%{box-shadow:0 0 40px rgba(175,125,250,.75),0 0 80px rgba(135,75,215,.45)}}@keyframes cT{0%,to{opacity:.55}50%{opacity:1}}";document.head.appendChild(style);
 
 /* 解读 */
 function showReading(){
   scr("scrRead");
   // Show all cards in reading page
-  $("readCardsRow").innerHTML=cards.map((c,i)=>'<img src="'+c.img+'" style="width:44px;height:68px;border-radius:6px;object-fit:cover;border:1px solid var(--ac);cursor:pointer;'+(c.isReversed?'transform:rotate(180deg)':'')+'" onclick="zoomCard(cards['+i+'],'+i+')" title="'+c.name+'">').join('');
+  $("readCardsRow").innerHTML=cards.map((c,i)=>'<img src="'+c.img+'" style="width:44px;height:68px;border-radius:6px;object-fit:cover;border:1px solid var(--ac);cursor:pointer;'+(c.isReversed?'transform:rotate(180deg)':'')+'" onclick="zoomCard('+i+')" title="'+c.name+'">').join('');
   const d=card.isReversed?card.rev:card.up;
   $("readTitle").textContent=cards.length===1?card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位"):"共"+cards.length+"张牌";
   $("readPanel").innerHTML='<p class="d" style="text-align:center;padding:30px">✦ 牌面正在揭示中…</p>';
@@ -350,12 +376,13 @@ function showReading(){
   fetch('/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(r=>r.json()).then(data=>{
     let raw=data&&data.reading?data.reading:buildLocal();
+    readingText=raw;
     raw=raw.replace(/\n/g,'<br>');
     let h=mood?'<p class="d">今日状态：'+mood+'</p>':'';
     if(intent)h+='<p class="d">你问的是：「'+intent+'」</p>';
     h+='<div style="line-height:2.1;margin-top:8px">'+raw+'</div>';
     $("readPanel").innerHTML=h;
-  }).catch(()=>{$("readPanel").innerHTML='<div style="line-height:2.1">'+buildLocal()+'</div>';});
+  }).catch(()=>{readingText=buildLocal();$("readPanel").innerHTML='<div style="line-height:2.1">'+readingText.replace(/\n/g,'<br>')+'</div>';});
 }
 function buildLocal(){
   if(cards.length===1){const d=card.isReversed?card.rev:card.up;let h='<h3>💡 初始觉察</h3><p>'+d.core+'</p>';if(intent)h+='<p class="d">'+d.q+'</p>';h+='<h3>📖 牌义参考</h3><p style="font-size:.82em;color:var(--dm)">'+card.kw+' · 元素：'+card.el+'</p>';h+='<h3>🌱 今日行动建议</h3><p>'+d.what+'</p><p class="d">⚠ '+d.warn+'</p>';if(card.persona)h+='<p class="d">👤 '+card.persona+'</p>';return h;}
@@ -364,13 +391,13 @@ function buildLocal(){
 
 /* 保存/分享 */
 function saveRec(){
-  const r={date:new Date().toISOString().slice(0,10),mood,intent,spread,cards:cards.map(c=>({name:c.name,en:c.en,img:c.img,isReversed:c.isReversed,el:c.el}))};
+  const r={date:new Date().toISOString().slice(0,10),mood,intent,spread,cards:cards.map(c=>({name:c.name,en:c.en,img:c.img,isReversed:c.isReversed,el:c.el})),reading:readingText};
   recs.unshift(r);localStorage.setItem("tv7sim",JSON.stringify(recs));
   const b=event.target.closest("button");b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>已保存 ✓';setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存',1500);
 }
 function shareRec(){
-  const t="🔮 塔罗 · 自察指引\n\n"+cards.map((c,i)=>SP[+spread][i]+" · "+c.name+"（"+(c.isReversed?"逆位":"正位")+"）").join("\n")+"\n\n—— 不替你决定命运，只帮你更理解自己";
-  navigator.clipboard.writeText(t).then(()=>{const b=event.target.closest("button");b.textContent="已复制!";setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{});
+  const t="🔮 塔罗 · 自察指引\n"+(mood?"\n状态："+mood:"")+(intent?"\n问：「"+intent+"」":"")+"\n"+cards.map((c,i)=>SP[+spread][i]+" · "+c.name+"（"+(c.isReversed?"逆位":"正位")+"）").join("\n")+"\n\n"+(readingText||"")+"\n\n—— 不替你决定命运，只帮你更理解自己";
+  navigator.clipboard.writeText(t).then(()=>{const b=event.target.closest("button");b.textContent="已复制!";setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{alert("复制失败，请检查浏览器权限")});
 }
 
 /* 回顾 */
