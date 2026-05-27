@@ -3,653 +3,325 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>塔罗 · 每日指引</title>
+<title>塔罗 · 自察指引</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap');
-:root{
-  --bg:#080414;--bg-card:rgba(20,10,45,.7);--bg-panel:rgba(15,8,40,.85);
-  --purple:#8b5cf6;--purple-glow:#a78bfa;--purple-light:#c4b5fd;
-  --gold:#d4a853;--gold-light:#f0d078;
-  --text:#e8e0f0;--text-dim:rgba(200,180,220,.55);--text-muted:rgba(160,140,200,.32);
-  --border:rgba(139,92,246,.15);--border-glow:rgba(167,139,250,.35);
-  --radius:14px;--radius-lg:20px;
-  --card-w:200px;--card-h:310px;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family:'Noto Serif SC',serif;
-  min-height:100vh;min-height:100dvh;
-  background:var(--bg);
-  color:var(--text);
-  overflow-x:hidden;
-  -webkit-tap-highlight-color:transparent;
-  padding-bottom:80px;
-}
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;
-  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(100,50,200,.1) 0%,transparent 55%),
-             radial-gradient(ellipse 40% 50% at 20% 80%,rgba(160,120,220,.05) 0%,transparent 60%),
-             radial-gradient(ellipse 30% 30% at 80% 30%,rgba(200,160,80,.04) 0%,transparent 50%);
-  pointer-events:none;
-}
-
-/* 星空 */
-.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
-.star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite;}
-@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.85;transform:scale(2)}}
-
-/* === SVG 图标 === */
-.icon{display:inline-block;width:20px;height:20px;vertical-align:-.25em;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-.icon-sm{width:16px;height:16px;}
-.icon-lg{width:28px;height:28px;}
-.icon-xl{width:40px;height:40px;}
-
-/* 主容器 */
-.app{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 16px;}
-
-/* 页面 */
-.page{display:none;animation:fadeUp .4s ease;min-height:calc(100vh - 140px);padding-top:clamp(12px,2vh,20px);}
-.page.active{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-/* 头部 */
-.header{text-align:center;padding:clamp(10px,2vh,22px) 0 clamp(6px,1.5vh,14px);}
-.header .logo{display:inline-block;width:clamp(36px,7vw,50px);height:clamp(36px,7vw,50px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(200,170,255,.9),rgba(120,70,200,.8) 45%,rgba(40,10,90,.9) 75%);box-shadow:0 0 24px rgba(160,100,240,.5),0 0 50px rgba(100,40,180,.25);margin-bottom:6px;animation:orbPulse 3s ease-in-out infinite;}
-@keyframes orbPulse{0%,100%{box-shadow:0 0 24px rgba(160,100,240,.5),0 0 50px rgba(100,40,180,.25)}50%{box-shadow:0 0 38px rgba(180,130,255,.7),0 0 70px rgba(120,60,200,.4)}}
-.header h1{font-size:clamp(1.4em,5vw,2em);background:linear-gradient(135deg,var(--purple-glow),#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px;}
-.header .sub{color:var(--text-dim);font-size:clamp(.76em,2vw,.88em);letter-spacing:2px;}
-.page-title{font-size:1.1em;color:var(--purple-glow);text-align:center;padding:12px 0 8px;letter-spacing:1px;}
-
-/* 面板 */
-.panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-lg);padding:clamp(14px,3vw,22px);backdrop-filter:blur(12px);margin-bottom:12px;overflow:hidden;}
-.panel h2{color:var(--purple-glow);font-size:1.05em;margin-bottom:10px;letter-spacing:1px;}
-.panel h3{color:var(--purple-light);font-size:.92em;margin:12px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border);}
-.panel p{color:var(--text);line-height:1.8;font-size:.88em;margin:5px 0;}
-.panel .dim{color:var(--text-dim);font-size:.8em;line-height:1.6;}
-
-/* 模式选择按钮 */
-.mode-selector{display:flex;gap:clamp(6px,1.5vw,10px);justify-content:center;margin:14px 0;}
-.mode-btn{
-  padding:clamp(7px,1.5vw,10px) clamp(14px,3vw,22px);
-  border:1px solid var(--border);border-radius:var(--radius);
-  background:rgba(139,92,246,.06);color:var(--text-dim);
-  font-size:clamp(.8em,1.5vw,.9em);font-family:inherit;cursor:pointer;
-  transition:all .3s;backdrop-filter:blur(10px);white-space:nowrap;
-  display:flex;align-items:center;gap:5px;
-}
-.mode-btn:hover,.mode-btn.active{background:rgba(139,92,246,.16);border-color:var(--border-glow);color:var(--text);box-shadow:0 0 14px rgba(139,92,246,.1);}
-.mode-btn .mode-num{font-weight:700;color:var(--purple-glow);}
-.mode-btn.active .mode-num{color:var(--gold-light);}
-
-/* 问题输入 */
-.q-input{width:100%;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9em;font-family:inherit;outline:none;transition:.3s;margin:8px 0;}
-.q-input:focus{border-color:var(--purple-glow);box-shadow:0 0 20px rgba(139,92,246,.15);}
-.q-input::placeholder{color:var(--text-muted);}
-
-/* 类别标签 */
-.cat-tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;}
-.cat-tag{
-  padding:6px 14px;border:1px solid var(--border);border-radius:20px;
-  background:rgba(15,8,35,.5);color:var(--text-dim);font-size:.8em;
-  cursor:pointer;font-family:inherit;transition:all .25s;white-space:nowrap;
-}
-.cat-tag:hover,.cat-tag.selected{border-color:var(--border-glow);background:rgba(139,92,246,.1);color:var(--text);}
-
-/* 快捷问题 */
-.qq-list{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0;}
-.qq-chip{font-size:clamp(.7em,1.2vw,.78em);padding:5px 10px;border:1px solid rgba(139,92,246,.1);border-radius:16px;background:rgba(15,8,35,.4);color:var(--text-dim);cursor:pointer;font-family:inherit;transition:.25s;white-space:nowrap;}
-.qq-chip:hover{background:rgba(139,92,246,.1);border-color:var(--border-glow);color:var(--text);}
-
-/* 主按钮 */
-.btn-primary{
-  display:block;width:100%;max-width:340px;margin:clamp(14px,2.5vh,22px) auto;
-  padding:clamp(11px,2.5vw,15px);text-align:center;
-  background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(109,40,217,.15));
-  border:1px solid rgba(167,139,250,.35);border-radius:var(--radius);
-  color:white;font-size:.98em;font-family:inherit;font-weight:600;cursor:pointer;
-  transition:all .3s;box-shadow:0 4px 22px rgba(139,92,246,.3);
-  letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(167,139,250,.45);}
-.btn-primary:active{transform:translateY(0);}
-.btn-primary:disabled{opacity:.4;pointer-events:none;}
-
-.btn-secondary{
-  padding:9px 20px;border:1px solid var(--border);border-radius:var(--radius);
-  background:rgba(15,8,35,.5);color:var(--text-dim);font-size:.8em;
-  font-family:inherit;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:6px;
-}
-.btn-secondary:hover{background:rgba(139,92,246,.12);border-color:var(--border-glow);color:var(--text);}
-
-/* 底部导航 */
-.tab-bar{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:rgba(10,5,25,.92);backdrop-filter:blur(20px);
-  border-top:1px solid var(--border);display:flex;justify-content:space-around;
-  padding:6px 0 env(safe-area-inset-bottom,6px);
-}
-.tab-item{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:4px 10px;transition:.2s;}
-.tab-item .tb-label{font-size:.62em;color:var(--text-dim);transition:.2s;}
-.tab-item.active .tb-label{color:var(--purple-glow);}
-.tab-item.active svg{filter:drop-shadow(0 0 5px rgba(167,139,250,.5));}
-
-/* 洗牌过渡 */
-.shuffle-overlay{
-  position:fixed;inset:0;z-index:300;display:none;
-  background:radial-gradient(ellipse at center,rgba(30,10,70,.95) 0%,rgba(6,2,18,.98) 70%);
-  align-items:center;justify-content:center;flex-direction:column;
-}
-.shuffle-overlay.active{display:flex;animation:fadeIn .5s ease;}
-.shuffle-vortex{position:absolute;width:260px;height:260px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(139,92,246,.06),transparent,rgba(167,139,250,.04),transparent);animation:vortexSpin 10s linear infinite;}
-@keyframes vortexSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.shuffle-title{font-size:1.3em;color:var(--purple-glow);z-index:2;letter-spacing:3px;animation:shufflePulse 2s ease-in-out infinite;}
-.shuffle-sub{font-size:.8em;color:var(--text-dim);z-index:2;margin-top:6px;}
-@keyframes shufflePulse{0%,100%{opacity:.6}50%{opacity:1}}
-
-/* 扇形选牌 */
-.fan-container{position:relative;width:100%;max-width:680px;height:190px;overflow:visible;margin:0 auto 8px;}
-.fan-card{width:clamp(60px,10vw,82px);height:clamp(92px,16vw,126px);border-radius:7px;cursor:pointer;border:2px solid rgba(200,160,240,.2);background:url(/tarot/back.png) center/cover;box-shadow:0 3px 12px rgba(0,0,0,.5);transform-origin:bottom center;transition:margin-top .15s,filter .15s,box-shadow .15s,border-color .15s;z-index:1;}
-.fan-card:hover{margin-top:-6px;z-index:20;filter:brightness(1.2);border-color:rgba(200,160,240,.55);box-shadow:0 6px 24px rgba(160,120,240,.4);}
-.fan-card.picked{pointer-events:none;opacity:0;transition:opacity .2s;}
-.fan-card-flyer{position:fixed;z-index:1000;border-radius:5px;border:2px solid rgba(200,160,240,.5);background:url(/tarot/back.png) center/cover no-repeat;background-size:cover;box-shadow:0 6px 36px rgba(139,92,246,.6);pointer-events:none;transform-origin:center center;filter:brightness(1.15);will-change:transform,opacity;animation:cardFlyAway 1s ease-out forwards;}
-@keyframes cardFlyAway{0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}20%{transform:translate(3px,-25px) scale(1.05) rotate(3deg);opacity:.9}100%{transform:translate(-2px,-360px) scale(.04) rotate(16deg);opacity:0}}
-.batch-hint{width:100%;text-align:center;color:var(--text-dim);font-size:clamp(.8em,1.5vw,.92em);letter-spacing:1px;margin-bottom:4px;padding:4px 0;}
-
-/* 卡牌 */
-.card-wrapper{perspective:1200px;width:var(--card-w);height:var(--card-h);position:relative;flex-shrink:0;}
-.card-inner{position:relative;width:100%;height:100%;transition:transform .85s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;will-change:transform;}
-.card-inner.flipped{transform:rotateY(180deg);}
-.card-front,.card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(124,58,237,.5);}
-.card-back{background:#2d1060;border:2px solid var(--purple);}
-.card-back img{width:100%;height:100%;object-fit:cover;}
-.card-back::after{content:'✦';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.2em;color:#a78bfa;text-shadow:0 0 20px #a78bfa;animation:pulse 2s ease-in-out infinite;z-index:2;}
-@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
-.card-front{transform:rotateY(180deg);border:2px solid var(--purple);position:relative;}
-.card-front img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;}
-.card-front .info-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.78));border-radius:0 0 10px 10px;z-index:1;padding:8px 12px;text-align:center;pointer-events:none;}
-.card-front .card-name{font-size:.76em;font-weight:700;color:#fff;}
-.card-front .card-pos{font-size:.56em;color:var(--purple-glow);letter-spacing:1px;}
-.card-front .rev-tag{position:absolute;top:6px;right:6px;background:rgba(239,68,68,.85);color:#fff;padding:2px 8px;border-radius:8px;font-size:.58em;font-weight:700;z-index:2;}
-
-/* 牌阵结果区 */
-.cards-area{display:flex;justify-content:center;gap:max(6px,1.2vw);flex-wrap:wrap;margin:8px 0;min-height:100px;align-items:center;}
-.cards-area.scroll-row{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scroll-snap-type:x proximity;padding:0 6px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.cards-area.scroll-row::-webkit-scrollbar{display:none;}
-
-/* 解读 Tab */
-.reading-tabs{display:flex;gap:0;margin-bottom:12px;border-bottom:1px solid var(--border);}
-.reading-tab{padding:8px 16px;font-size:.82em;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:.25s;font-family:inherit;}
-.reading-tab:hover{color:var(--text);}
-.reading-tab.active{color:var(--purple-glow);border-bottom-color:var(--purple-glow);}
-.reading-tab-content{display:none;animation:fadeUp .3s ease;}
-.reading-tab-content.active{display:block;}
-
-/* 记录卡片 */
-.record-row{display:flex;gap:10px;align-items:flex-start;padding:12px;background:rgba(15,8,35,.4);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:.2s;}
-.record-row:hover{background:rgba(139,92,246,.08);border-color:var(--border-glow);}
-.record-row .rc-imgs{display:flex;gap:3px;flex-shrink:0;}
-.record-row .rc-imgs img{width:36px;height:54px;border-radius:4px;object-fit:cover;border:1px solid var(--purple);}
-.record-row .rc-info{flex:1;min-width:0;}
-.record-row .rc-date{font-size:.7em;color:var(--text-muted);}
-.record-row .rc-q{font-size:.85em;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.record-row .rc-meta{font-size:.7em;color:var(--text-dim);margin-top:2px;}
-
-/* 复盘 */
-.review-block{margin:10px 0;}
-.review-block textarea{width:100%;min-height:60px;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.88em;font-family:inherit;resize:vertical;outline:none;transition:.3s;}
-.review-block textarea:focus{border-color:var(--purple-glow);}
-
-/* 分类筛选 */
-.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-.filter-chip{padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:rgba(15,8,35,.4);color:var(--text-dim);font-size:.75em;cursor:pointer;font-family:inherit;transition:.25s;}
-.filter-chip:hover,.filter-chip.active{border-color:var(--border-glow);background:rgba(139,92,246,.1);color:var(--text);}
-
-/* 水晶球 */
-#crystalBall{position:fixed;bottom:max(20px,4vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:crystalAppear .7s ease;}
-@keyframes crystalAppear{from{opacity:0;transform:translateX(-50%) translateY(40px) scale(.5)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
-.crystal-orb{width:70px;height:70px;border-radius:50%;margin:0 auto 6px;background:radial-gradient(circle at 35% 30%,rgba(210,180,255,.95),rgba(130,80,210,.85) 40%,rgba(60,20,120,.9) 70%,rgba(15,5,40,.95));box-shadow:0 0 30px rgba(160,100,240,.6),0 0 60px rgba(120,60,200,.35),0 0 100px rgba(100,40,180,.2),inset -6px -6px 14px rgba(0,0,0,.4),inset 3px 3px 10px rgba(255,255,255,.12);animation:crystalGlow 3s ease-in-out infinite;}
-@keyframes crystalGlow{0%,100%{box-shadow:0 0 30px rgba(160,100,240,.6),0 0 60px rgba(120,60,200,.35),0 0 100px rgba(100,40,180,.2)}50%{box-shadow:0 0 45px rgba(180,130,255,.8),0 0 90px rgba(140,80,220,.5),0 0 140px rgba(120,60,200,.35)}}
-.crystal-label{color:rgba(200,180,240,.8);font-size:.78em;letter-spacing:2px;text-shadow:0 0 10px rgba(160,100,240,.4);animation:crystalText 3s ease-in-out infinite;}
-@keyframes crystalText{0%,100%{opacity:.6}50%{opacity:1}}
-
-/* 弹窗 */
-.modal-overlay{position:fixed;inset:0;background:rgba(5,0,20,.94);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .3s ease;backdrop-filter:blur(10px);}
-.modal-content{background:linear-gradient(135deg,#1a0e38,#0f0724);border:1px solid var(--border-glow);border-radius:var(--radius-lg);padding:max(18px,4vw);max-width:440px;width:100%;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.7);}
-.modal-close{position:absolute;top:8px;right:12px;background:none;border:none;color:var(--purple-glow);font-size:1.4em;cursor:pointer;padding:4px 8px;border-radius:6px;}
-
-/* 响应式 */
-@media(max-width:768px){:root{--card-w:140px;--card-h:215px;}.mode-btn{padding:6px 12px;font-size:.78em;}}
-@media(max-width:420px){:root{--card-w:105px;--card-h:162px;}.mode-btn{padding:5px 10px;font-size:.74em;}.cards-area{gap:4px;}}
+:root{--bg:#070312;--sfc:rgba(14,7,36,.88);--sf2:rgba(22,12,50,.7);--ac:#9b6dff;--a2:#b794f6;--a3:rgba(155,109,255,.15);--gd:#d4a853;--g2:#f0d078;--tx:#e6dff5;--dm:rgba(200,190,220,.52);--mu:rgba(160,150,190,.3);--bd:rgba(130,100,200,.14);--b2:rgba(160,130,230,.3);--r:14px;--r2:20px;--cw:170px;--ch:260px}
+*,:before,:after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Noto Serif SC",sans-serif;min-height:100dvh;background:var(--bg);color:var(--tx);overflow-x:hidden;-webkit-tap-highlight-color:transparent;padding-bottom:76px}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 35% at 50% 0%,rgba(110,60,210,.09) 0%,transparent 55%),radial-gradient(ellipse 35% 45% at 15% 75%,rgba(150,100,210,.04) 0%,transparent 55%),radial-gradient(ellipse 30% 30% at 85% 25%,rgba(190,150,70,.03) 0%,transparent 50%)}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.star{position:absolute;background:#fff;border-radius:50%;animation:tw var(--d) ease-in-out infinite}
+@keyframes tw{0%,to{opacity:.18;transform:scale(1)}50%{opacity:.8;transform:scale(2.2)}}
+.app{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 16px}
+.scr{display:none;animation:fu .38s ease;padding-top:clamp(10px,2vh,18px);min-height:calc(100dvh - 156px)}
+.scr.on{display:block}
+@keyframes fu{0%{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{0%{opacity:0}to{opacity:1}}
+.hdr{text-align:center;padding:clamp(8px,2vh,18px) 0 clamp(4px,1vh,10px)}
+.hdr .orb{display:inline-block;width:clamp(34px,7vw,48px);height:clamp(34px,7vw,48px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(210,180,250,.92),rgba(130,80,210,.82) 45%,rgba(45,12,95,.9) 75%);box-shadow:0 0 22px rgba(160,100,240,.45),0 0 48px rgba(100,40,180,.2);margin-bottom:6px;animation:orb 3s ease-in-out infinite}
+@keyframes orb{0%,to{box-shadow:0 0 22px rgba(160,100,240,.45),0 0 48px rgba(100,40,180,.2)}50%{box-shadow:0 0 34px rgba(180,130,255,.65),0 0 65px rgba(120,60,200,.35)}}
+.hdr h1{font-size:clamp(1.4em,4.5vw,1.9em);background:linear-gradient(135deg,#b794f6,#d4c8f0,#9b6dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px;font-weight:700}
+.hdr .sub{color:var(--dm);font-size:clamp(.74em,1.8vw,.84em);letter-spacing:2.5px}
+.sttl{font-size:1.05em;color:var(--a2);text-align:center;padding:10px 0 6px;letter-spacing:1px;font-weight:600}
+.pnl{background:var(--sfc);border:1px solid var(--bd);border-radius:var(--r2);padding:clamp(12px,3vw,20px);backdrop-filter:blur(14px);margin-bottom:10px;overflow:hidden}
+.pnl h2{color:var(--a2);font-size:1em;margin-bottom:8px}
+.pnl h3{color:var(--a2);font-size:.88em;margin:12px 0 5px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.pnl p{line-height:1.75;font-size:.86em;margin:5px 0}
+.d{color:var(--dm);font-size:.78em;line-height:1.6}
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;max-width:340px;margin:12px auto;padding:12px 20px;background:linear-gradient(135deg,rgba(139,92,246,.28),rgba(109,40,217,.12));border:1px solid rgba(160,120,240,.3);border-radius:var(--r);color:#fff;font-size:.95em;font-family:inherit;font-weight:600;cursor:pointer;transition:.3s;box-shadow:0 4px 20px rgba(139,92,246,.25);letter-spacing:.5px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(160,130,250,.4)}
+.btn:active{transform:translateY(0)}.btn:disabled{opacity:.35;pointer-events:none}
+.bsm{padding:8px 18px;border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.5);color:var(--dm);font-size:.78em;font-family:inherit;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;gap:5px}
+.bsm:hover{background:rgba(139,92,246,.1);border-color:var(--b2);color:var(--tx)}
+.modes{display:flex;gap:clamp(5px,1.2vw,8px);justify-content:center;margin:10px 0}
+.md{padding:clamp(7px,1.4vw,10px) clamp(14px,2.8vw,20px);border:1px solid var(--bd);border-radius:var(--r);background:rgba(139,92,246,.04);color:var(--dm);font-size:clamp(.78em,1.4vw,.88em);font-family:inherit;cursor:pointer;transition:.3s;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.md:hover,.md.sel{border-color:var(--b2);background:var(--a3);color:var(--tx);box-shadow:0 0 12px rgba(139,92,246,.08)}
+.md .n{font-weight:700;color:var(--a2)}.md.sel .n{color:var(--g2)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.tg{padding:5px 12px;border:1px solid var(--bd);border-radius:18px;background:rgba(14,7,36,.45);color:var(--dm);font-size:.77em;cursor:pointer;font-family:inherit;transition:.25s;white-space:nowrap}
+.tg:hover,.tg.sel{border-color:var(--b2);background:var(--a3);color:var(--tx)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.ch{font-size:clamp(.68em,1.1vw,.76em);padding:4px 9px;border:1px solid rgba(130,100,200,.08);border-radius:14px;background:rgba(14,7,36,.35);color:var(--dm);cursor:pointer;font-family:inherit;transition:.25s;white-space:nowrap}
+.ch:hover{background:rgba(139,92,246,.08);border-color:var(--b2);color:var(--tx)}
+.inp{width:100%;padding:11px 15px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-size:.88em;font-family:inherit;outline:none;transition:.3s;margin:6px 0}
+.inp:focus{border-color:var(--b2);box-shadow:0 0 18px rgba(139,92,246,.12)}
+.inp::placeholder{color:var(--mu)}
+.txt{width:100%;min-height:55px;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-size:.86em;font-family:inherit;resize:vertical;outline:none;transition:.3s}
+.txt:focus{border-color:var(--b2)}
+.cw{perspective:1200px;width:var(--cw);height:var(--ch);position:relative;flex-shrink:0}
+.ci{position:relative;width:100%;height:100%;transition:transform .82s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;will-change:transform}
+.ci.flipped{transform:rotateY(180deg)}
+.cf,.cb{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;overflow:hidden;box-shadow:0 8px 28px rgba(110,60,200,.4)}
+.cb{background:#28105a;border:2px solid var(--ac)}
+.cb img{width:100%;height:100%;object-fit:cover}
+.cb:after{content:"✦";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2em;color:var(--a2);text-shadow:0 0 18px var(--a2);animation:pp 2s ease-in-out infinite;z-index:2}
+@keyframes pp{0%,to{opacity:.45}50%{opacity:1}}
+.cf{transform:rotateY(180deg);border:2px solid var(--ac)}
+.cf img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.cf .cio{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.76));border-radius:0 0 10px 10px;z-index:1;padding:7px 10px;text-align:center;pointer-events:none}
+.cf .cnm{font-size:.73em;font-weight:700;color:#fff}
+.cf .cps{font-size:.54em;color:var(--a2);letter-spacing:1px}
+.cf .rtag{position:absolute;top:5px;right:5px;background:rgba(239,68,68,.82);color:#fff;padding:2px 7px;border-radius:7px;font-size:.56em;font-weight:700;z-index:2}
+.ca-wrap{display:flex;justify-content:center;gap:max(5px,1vw);flex-wrap:wrap;margin:6px 0;align-items:center;min-height:80px}
+.ca-scr{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scroll-snap-type:x proximity;padding:0 4px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ca-scr::-webkit-scrollbar{display:none}
+.fan{position:relative;width:100%;max-width:680px;height:190px;overflow:visible;margin:0 auto 6px}
+.fc{width:clamp(58px,9.5vw,80px);height:clamp(90px,15vw,124px);border-radius:7px;cursor:pointer;border:2px solid rgba(190,150,230,.18);background:url(/tarot/back.png) center/cover;box-shadow:0 3px 12px rgba(0,0,0,.5);transform-origin:bottom center;transition:margin-top .15s,filter .15s,box-shadow .15s,border-color .15s;z-index:1}
+.fc:hover{margin-top:-5px;z-index:20;filter:brightness(1.18);border-color:rgba(190,150,230,.5);box-shadow:0 6px 22px rgba(150,110,230,.35)}
+.fc.gone{pointer-events:none;opacity:0;transition:opacity .18s}
+.fly{position:fixed;z-index:1000;border-radius:5px;border:2px solid rgba(190,150,230,.45);background:url(/tarot/back.png) center/cover no-repeat;background-size:cover;box-shadow:0 6px 32px rgba(130,80,230,.55);pointer-events:none;transform-origin:center center;filter:brightness(1.12);will-change:transform,opacity;animation:flyOut 1s ease-out forwards}
+@keyframes flyOut{0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}20%{transform:translate(3px,-22px) scale(1.04) rotate(3deg);opacity:.88}to{transform:translate(-2px,-340px) scale(.04) rotate(14deg);opacity:0}}
+.hint{width:100%;text-align:center;color:var(--dm);font-size:clamp(.78em,1.4vw,.9em);letter-spacing:.5px;margin-bottom:4px}
+.shfl{position:fixed;inset:0;z-index:300;display:none;background:radial-gradient(ellipse at center,rgba(28,10,68,.94) 0%,rgba(6,2,16,.98) 70%);align-items:center;justify-content:center;flex-direction:column}
+.shfl.on{display:flex;animation:fi .45s ease}
+.shfl .vx{position:absolute;width:250px;height:250px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(130,85,240,.05),transparent,rgba(155,120,240,.03),transparent);animation:vx 10s linear infinite}
+@keyframes vx{0%{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.shfl .sht{font-size:1.25em;color:var(--a2);z-index:2;letter-spacing:3px;animation:shP 2s ease-in-out infinite}
+.shfl .shs{font-size:.78em;color:var(--dm);z-index:2;margin-top:5px}
+@keyframes shP{0%,to{opacity:.55}50%{opacity:1}}
+.cbw{position:fixed;bottom:max(18px,3.5vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:cbIn .65s ease}
+@keyframes cbIn{0%{opacity:0;transform:translateX(-50%) translateY(36px) scale(.45)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+.cbo{width:66px;height:66px;border-radius:50%;margin:0 auto 5px;background:radial-gradient(circle at 35% 30%,rgba(215,185,250,.94),rgba(135,85,210,.82) 40%,rgba(60,18,115,.88) 70%,rgba(14,4,38,.94));box-shadow:0 0 26px rgba(155,100,240,.55),0 0 55px rgba(115,55,195,.3),0 0 90px rgba(95,35,175,.18),inset -5px -5px 12px rgba(0,0,0,.38),inset 2px 2px 8px rgba(255,255,255,.1);animation:cbGl 3s ease-in-out infinite}
+@keyframes cbGl{0%,to{box-shadow:0 0 26px rgba(155,100,240,.55),0 0 55px rgba(115,55,195,.3),0 0 90px rgba(95,35,175,.18)}50%{box-shadow:0 0 40px rgba(175,125,250,.75),0 0 80px rgba(135,75,215,.45),0 0 120px rgba(115,55,200,.3)}}
+.cbl{color:rgba(200,180,238,.78);font-size:.76em;letter-spacing:2px;text-shadow:0 0 8px rgba(155,100,240,.35);animation:cbT 3s ease-in-out infinite}
+@keyframes cbT{0%,to{opacity:.55}50%{opacity:1}}
+.rtabs{display:flex;margin-bottom:10px;border-bottom:1px solid var(--bd)}
+.rt{flex:1;padding:7px 8px;font-size:.78em;color:var(--dm);cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:.25s;font-family:inherit}
+.rt:hover{color:var(--tx)}.rt.sel{color:var(--a2);border-bottom-color:var(--a2)}
+.rtc{display:none;animation:fu .28s ease}.rtc.on{display:block}
+.rec{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:7px;cursor:pointer;transition:.2s}
+.rec:hover{background:rgba(139,92,246,.06);border-color:var(--b2)}
+.rec .ri{display:flex;gap:2px;flex-shrink:0}.rec .ri img{width:34px;height:50px;border-radius:4px;object-fit:cover;border:1px solid var(--ac)}
+.rec .rr{flex:1;min-width:0}.rec .rr .rd{font-size:.68em;color:var(--mu)}
+.rec .rr .rq{font-size:.83em;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec .rr .rm{font-size:.68em;color:var(--dm);margin-top:2px}
+.mod{position:fixed;inset:0;background:rgba(5,0,18,.93);z-index:200;display:none;align-items:center;justify-content:center;padding:18px;animation:fi .28s ease;backdrop-filter:blur(8px)}
+.mod.on{display:flex}
+.mc{background:linear-gradient(135deg,#190d36,#0e0622);border:1px solid var(--b2);border-radius:var(--r2);padding:max(16px,3.5vw);max-width:430px;width:100%;max-height:82vh;overflow-y:auto;position:relative;box-shadow:0 18px 50px rgba(0,0,0,.65)}
+.mc .mx{position:absolute;top:7px;right:10px;background:none;border:none;color:var(--a2);font-size:1.3em;cursor:pointer;padding:4px 7px;border-radius:5px}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,5,22,.9);backdrop-filter:blur(18px);border-top:1px solid var(--bd);display:flex;justify-content:space-around;padding:5px 0 env(safe-area-inset-bottom,5px)}
+.nav .ni{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:3px 9px;transition:.2s}
+.nav .ni .nl{font-size:.6em;color:var(--dm);transition:.2s}
+.nav .ni.sel .nl{color:var(--a2)}.nav .ni.sel svg{filter:drop-shadow(0 0 4px rgba(160,120,240,.4))}
+@media(max-width:768px){:root{--cw:130px;--ch:200px}}
+@media(max-width:420px){:root{--cw:98px;--ch:150px}.md{padding:5px 10px;font-size:.74em}.ca-wrap{gap:3px}}
 </style>
 </head>
 <body>
 <div class="stars" id="stars"></div>
-
-<!-- 洗牌过渡 -->
-<div class="shuffle-overlay" id="shuffleOverlay">
-  <div class="shuffle-vortex"></div>
-  <div class="shuffle-title">✨ 深呼吸，洗牌中…</div>
-  <div class="shuffle-sub">放松内在，感受你的直觉</div>
-</div>
-
+<div class="shfl" id="shfl"><div class="vx"></div><div class="sht">✦ 深呼吸，洗牌中…</div><div class="shs">放松内在，感受你的直觉</div></div>
 <div class="app">
-  <!-- ====== 首页 ====== -->
-  <div class="page active" id="pageHome">
-    <div class="header">
-      <div class="logo"></div>
-      <h1>塔罗 · 每日指引</h1>
-      <p class="sub">不替你决定命运，只帮你更理解自己</p>
-    </div>
-    <div class="panel">
-      <p style="text-align:center;font-size:.95em;">晚上好，愿你静下心，更理解自己</p>
-      <p style="text-align:center;color:var(--text-dim);font-size:.78em;margin-top:4px;">选择模式</p>
-      <div class="mode-selector" id="modeSelector">
-        <button class="mode-btn active" data-spread="1"><span class="mode-num">1</span> 单张</button>
-        <button class="mode-btn" data-spread="3"><span class="mode-num">3</span> 三张</button>
-        <button class="mode-btn" data-spread="5"><span class="mode-num">5</span> 五张</button>
-        <button class="mode-btn" data-spread="10"><span class="mode-num">10</span> 十张</button>
-      </div>
-    </div>
-    <div class="panel">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 9a3 3 0 1 1 6 0c0 3-3 6-3 6s-3-3-3-6Z"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span style="font-size:.85em;color:var(--text-dim);">提出你的问题</span>
-      </div>
-      <input class="q-input" id="question" placeholder="你想问塔罗什么？">
-      <div class="cat-tags" id="catTags">
-        <button class="cat-tag" onclick="setCat('关系')">关系</button>
-        <button class="cat-tag" onclick="setCat('事业')">事业</button>
-        <button class="cat-tag" onclick="setCat('自我')">自我</button>
-        <button class="cat-tag" onclick="setCat('学业')">学业</button>
-        <button class="cat-tag" onclick="setCat('财运')">财运</button>
-      </div>
-      <p style="font-size:.7em;color:var(--text-muted);margin-top:4px;">推荐问题</p>
-      <div class="qq-list">
-        <button class="qq-chip" onclick="setQ('我们接下来会怎样？')">我们接下来会怎样？</button>
-        <button class="qq-chip" onclick="setQ('我最近的事业方向？')">我最近的事业方向？</button>
-        <button class="qq-chip" onclick="setQ('我应该继续坚持吗？')">我应该继续坚持吗？</button>
-        <button class="qq-chip" onclick="setQ('今天宇宙想提醒我什么？')">今天宇宙想提醒我什么？</button>
-      </div>
-    </div>
-    <button class="btn-primary" id="btnStart" onclick="startDraw()">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M4 4h6l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M12 12l-4 4"/><path d="M16 12l-4 4"/></svg>
-      开始抽牌
-    </button>
-  </div>
-
-  <!-- ====== 抽牌 / 选牌区 ====== -->
-  <div class="page" id="pageDraw">
-    <div class="page-title" id="drawTitle">选择你的牌</div>
-    <div id="cardsArea" style="min-height:160px;"></div>
-  </div>
-
-  <!-- ====== 翻牌 / 结果 ====== -->
-  <div class="page" id="pageResult">
-    <div class="page-title">你的牌阵</div>
-    <div id="resultCards"></div>
-    <p class="dim" style="text-align:center;margin:4px 0;">点击翻开的牌查看详细牌义</p>
-    <div id="resultCrystal"></div>
-  </div>
-
-  <!-- ====== 解读 ====== -->
-  <div class="page" id="pageReading">
-    <div class="page-title">综合解读</div>
-    <div class="panel">
-      <div id="readingCardRow" style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;"></div>
-      <div class="reading-tabs" id="readingTabs">
-        <div class="reading-tab active" data-rtab="overview">牌阵解读</div>
-        <div class="reading-tab" data-rtab="detail">深入解读</div>
-        <div class="reading-tab" data-rtab="action">行动建议</div>
-      </div>
-      <div id="readingTabContent"></div>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:center;margin:12px 0 40px;">
-      <button class="btn-secondary" onclick="saveToRecords()">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg> 保存
-      </button>
-      <button class="btn-secondary" onclick="shareReading()">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg> 分享
-      </button>
-      <button class="btn-secondary" onclick="resetAll()">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.5 18.5A9 9 0 1 0 2 12"/></svg> 重抽
-      </button>
-    </div>
-  </div>
-
-  <!-- ====== 记录 ====== -->
-  <div class="page" id="pageRecords">
-    <div class="page-title">我的记录</div>
-    <div class="panel">
-      <div class="filter-bar" id="filterBar">
-        <button class="filter-chip active" data-filter="all">全部</button>
-        <button class="filter-chip" data-filter="1">单张</button>
-        <button class="filter-chip" data-filter="3">三张</button>
-        <button class="filter-chip" data-filter="5">五张</button>
-        <button class="filter-chip" data-filter="10">十张</button>
-      </div>
-      <div id="recordsList"><p class="dim" style="text-align:center;padding:20px;">暂无记录</p></div>
-    </div>
-  </div>
-
-  <!-- ====== 复盘 ====== -->
-  <div class="page" id="pageReview">
-    <div class="page-title">晚间回顾</div>
-    <div class="panel">
-      <p class="dim">复盘今天的抽牌体验，让觉察更完整</p>
-      <div class="review-block">
-        <p style="font-size:.82em;margin-bottom:4px;">今天抽到的牌带给我的提醒是什么？</p>
-        <textarea id="rvQ1" placeholder="写下你的觉察…"></textarea>
-      </div>
-      <div class="review-block">
-        <p style="font-size:.82em;margin-bottom:4px;">我学到了什么？发现了什么？</p>
-        <textarea id="rvQ2" placeholder="记录你的发现…"></textarea>
-      </div>
-      <div class="review-block">
-        <p style="font-size:.82em;margin-bottom:4px;">下一步我会尝试什么？</p>
-        <textarea id="rvQ3" placeholder="写下你的行动…"></textarea>
-      </div>
-    </div>
-    <button class="btn-primary" onclick="saveReview()">
-      <svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> 完成回顾
-    </button>
-  </div>
-</div>
-
-<!-- 卡片弹窗 -->
-<div class="modal-overlay" id="modal" style="display:none" onclick="e=>{if(e.target===modal)closeModal();}">
-  <div class="modal-content" id="modalContent"></div>
-</div>
-
-<!-- 底部导航 -->
-<div class="tab-bar">
-  <div class="tab-item active" data-tab="home" onclick="switchTab('home')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span class="tb-label">首页</span>
-  </div>
-  <div class="tab-item" data-tab="review" onclick="switchTab('review')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-    <span class="tb-label">日记</span>
-  </div>
-  <div class="tab-item" data-tab="records" onclick="switchTab('records')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    <span class="tb-label">记录</span>
-  </div>
-  <div class="tab-item" data-tab="home" onclick="switchTab('home')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span class="tb-label">我的</span>
-  </div>
-</div>
-
+<div class="scr on" id="scrHome">
+<div class="hdr"><div class="orb"></div><h1>塔罗 · 自察指引</h1><p class="sub">不替你决定命运，只帮你更理解自己</p></div>
+<div class="pnl"><p style="text-align:center;font-size:.92em">晚上好，愿你静下心，更理解自己</p><p style="text-align:center;color:var(--dm);font-size:.74em;margin-top:2px">选择模式</p>
+<div class="modes" id="ms"><button class="md sel" data-s="1"><span class="n">1</span>单张</button><button class="md" data-s="3"><span class="n">3</span>三张</button><button class="md" data-s="5"><span class="n">5</span>五张</button><button class="md" data-s="10"><span class="n">10</span>十张</button></div></div>
+<div class="pnl"><div style="display:flex;align-items:center;gap:5px;margin-bottom:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9 9a3 3 0 1 1 6 0c0 3-3 6-3 6s-3-3-3-6Z"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span style="font-size:.82em;color:var(--dm)">提出你的问题</span></div>
+<input class="inp" id="qi" placeholder="你想问塔罗什么？">
+<div class="tags"><button class="tg" onclick="S.cat('关系')">关系</button><button class="tg" onclick="S.cat('事业')">事业</button><button class="tg" onclick="S.cat('自我')">自我</button><button class="tg" onclick="S.cat('学业')">学业</button><button class="tg" onclick="S.cat('财运')">财运</button></div>
+<div class="chips"><button class="ch" onclick="S.qq('我们接下来会怎样？')">我们接下来会怎样？</button><button class="ch" onclick="S.qq('我最近的事业方向？')">我最近的事业方向？</button><button class="ch" onclick="S.qq('我应该继续坚持吗？')">我应该继续坚持吗？</button><button class="ch" onclick="S.qq('今天宇宙想提醒我什么？')">今天宇宙想提醒我什么？</button></div></div>
+<button class="btn" onclick="A.start()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>开始抽牌</button></div>
+<div class="scr" id="scrPick"><div class="sttl" id="pt">从牌堆中选取</div><div id="pa" style="min-height:140px"></div></div>
+<div class="scr" id="scrResult"><div class="sttl">你的牌阵</div><div id="ra"></div></div>
+<div class="scr" id="scrRead"><div class="sttl">综合解读</div>
+<div class="pnl"><div id="rcs" style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:8px"></div>
+<div class="rtabs"><button class="rt sel" data-rt="ov">牌阵解读</button><button class="rt" data-rt="dt">深入解读</button><button class="rt" data-rt="ac">行动建议</button></div><div id="rtc"></div></div>
+<div style="display:flex;gap:8px;justify-content:center;margin:10px 0 40px"><button class="bsm" onclick="A.save()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存</button><button class="bsm" onclick="A.share()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享</button><button class="bsm" onclick="A.reset()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.5 18.5A9 9 0 1 0 2 12"/></svg>重抽</button></div></div>
+<div class="scr" id="scrRecs"><div class="sttl">我的记录</div>
+<div class="pnl"><div class="tags" id="rf"><button class="tg sel" data-rf="all">全部</button><button class="tg" data-rf="1">单张</button><button class="tg" data-rf="3">三张</button><button class="tg" data-rf="5">五张</button><button class="tg" data-rf="10">十张</button></div><div id="rl"><p class="d" style="text-align:center;padding:18px">暂无记录</p></div></div></div>
+<div class="scr" id="scrReview"><div class="sttl">晚间回顾</div>
+<div class="pnl"><p class="d">复盘今天的抽牌体验，让觉察更完整</p>
+<div style="margin:8px 0"><p style="font-size:.8em;margin-bottom:3px">今天抽到的牌带给我的提醒是什么？</p><textarea class="txt" id="rv1" placeholder="写下你的觉察…"></textarea></div>
+<div style="margin:8px 0"><p style="font-size:.8em;margin-bottom:3px">我学到了什么？发现了什么？</p><textarea class="txt" id="rv2" placeholder="记录你的发现…"></textarea></div>
+<div style="margin:8px 0"><p style="font-size:.8em;margin-bottom:3px">下一步我会尝试什么？</p><textarea class="txt" id="rv3" placeholder="写下你的行动…"></textarea></div></div>
+<button class="btn" onclick="A.review()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>完成回顾</button></div></div>
+<div class="mod" id="mod"><div class="mc" id="modC"></div></div>
+<div class="nav"><div class="ni sel" data-t="home" onclick="U.tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">首页</span></div>
+<div class="ni" data-t="review" onclick="U.tab('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nl">日记</span></div>
+<div class="ni" data-t="recs" onclick="U.tab('recs')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">记录</span></div>
+<div class="ni" data-t="home" onclick="U.tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">我的</span></div></div>
 <script>
-/* ===== 星空 ===== */
-(function(){const c=document.getElementById('stars');for(let i=0;i<60;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';const sz=Math.random()*3+1;s.style.width=sz+'px';s.style.height=sz+'px';s.style.setProperty('--dur',(Math.random()*3+2)+'s');s.style.animationDelay=Math.random()*3+'s';c.appendChild(s);}})();
+/* === 星空 === */
+(()=>{const c=document.getElementById("stars");for(let i=0;i<50;i++){const s=document.createElement("div");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";const z=Math.random()*3+1;s.style.width=z+"px";s.style.height=z+"px";s.style.setProperty("--d",(Math.random()*3+2)+"s");s.style.animationDelay=Math.random()*3+"s";c.appendChild(s)}})();
 
-/* ===== 状态管理 ===== */
-let spread='1',cards=[],isAnimating=!1;
-let state={question:'',category:'',drawTime:null,review:null};
-let records=JSON.parse(localStorage.getItem('tarot_v7r2_records')||'[]');
-const SPREADS={1:{count:1,pos:['今日指引']},3:{count:3,pos:['过去的影响','当下的状态','未来的方向']},5:{count:5,pos:['你的立场','关系的障碍','对方/环境','根基与支撑','最终的结果']},10:{count:10,pos:['现在状况','横交阻碍','基础根基','过往影响','最高目标','不久将来','你的态度','周围环境','希望与恐惧','最终结果']}};
+/* === 牌阵 === */
+const SP={1:["今日指引"],3:["过去的影响","当下的状态","未来的方向"],5:["你的立场","关系的障碍","对方/环境","根基与支撑","最终的结果"],10:["现在状况","横交阻碍","基础根基","过往影响","最高目标","不久将来","你的态度","周围环境","希望与恐惧","最终结果"]};
 
-/* ===== 模式选择 ===== */
-document.querySelectorAll('.mode-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');spread=b.dataset.spread;});});
-function setCat(c){state.category=c;document.querySelectorAll('.cat-tag').forEach(x=>x.classList.toggle('selected',x.textContent===c));}
-function setQ(t){document.getElementById('question').value=t;}
+/* === 状态 === */
+let M="1",Q="",CAT="",CA=[],AN=!1,RV=null,RECS=JSON.parse(localStorage.getItem("tv7c")||"[]");
 
-/* ===== Tab 切换 ===== */
-function switchTab(tab){
-  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelector('.tab-item[data-tab="'+tab+'"]').classList.add('active');
-  if(tab==='home'){document.getElementById('pageHome').classList.add('active');}
-  else if(tab==='review'){document.getElementById('pageReview').classList.add('active');}
-  else if(tab==='records'){document.getElementById('pageRecords').classList.add('active');renderRecords();}
-}
+/* === 工具 === */
+const U={
+  e:id=>document.getElementById(id),
+  c:sel=>document.querySelectorAll(sel),
+  scr(id){U.c(".scr").forEach(s=>s.classList.remove("on"));U.e(id).classList.add("on")},
+  tab(t){
+    U.c(".nav .ni").forEach(n=>n.classList.remove("sel"));
+    document.querySelector('.nav .ni[data-t="'+t+'"]').classList.add("sel");
+    if(t==="home")U.scr("scrHome");
+    else if(t==="review")U.scr("scrReview");
+    else if(t==="recs"){U.scr("scrRecs");R.render()}
+  },
+  modal(h){U.e("mod").classList.add("on");U.e("modC").innerHTML=h},
+  shut(){U.e("mod").classList.remove("on")},
+  shuf(ms,cb){const s=U.e("shfl");s.classList.add("on");setTimeout(()=>{s.classList.remove("on");cb()},ms)}
+};
+document.getElementById("mod").onclick=function(e){if(e.target===this)U.shut()};
 
-/* ===== 开始抽牌 ===== */
-function startDraw(){
-  state.question=document.getElementById('question').value.trim();
-  state.drawTime=new Date().toISOString();
-  // Show shuffle overlay
-  const so=document.getElementById('shuffleOverlay');so.classList.add('active');
-  setTimeout(()=>{so.classList.remove('active');doDraw();},2200);
-}
+/* === 首页交互 === */
+const S={
+  sel(m){M=m;U.c(".md").forEach(b=>b.classList.toggle("sel",b.dataset.s===m))},
+  cat(c){CAT=c;U.c(".tg").forEach(b=>b.classList.toggle("sel",b.textContent===c))},
+  qq(t){U.e("qi").value=t}
+};
+U.c(".md").forEach(b=>b.onclick=()=>S.sel(b.dataset.s));
 
-function doDraw(){
-  const s=SPREADS[spread],all=[...CARDS];
-  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
-  cards=all.slice(0,s.count).map(c=>({...c,isReversed:Math.random()<0.28}));
-  const poolSize=s.count<=3?8:s.count<=5?12:16;
-  const poolN=Math.min(s.count+poolSize,all.length-1);
-  const pool=all.slice(s.count,poolN).map(c=>({...c,isReversed:Math.random()<0.28}));
-  window._pool=pool;window._selected=[];window._needed=s.count;
+/* === 主流程 === */
+const A={
+  start(){
+    Q=U.e("qi").value.trim();
+    U.shuf(2200,()=>{
+      const n=+M,all=[...DECK];
+      for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
+      CA=all.slice(0,n).map(c=>({...c,isReversed:Math.random()<0.28}));
+      A._pool=all.slice(n,Math.min(n+(n<=3?8:n<=5?12:16),all.length-1)).map(c=>({...c,isReversed:Math.random()<0.28}));
+      A._sel=[];A._need=n;
+      U.scr("scrPick");U.e("pt").textContent="从牌堆中选取 "+n+" 张牌";
+      P.render(A._pool,n)
+    })
+  },
+  reset(){CA=[];AN=!1;Q="";CAT="";U.tab("home");const cb=document.getElementById("cbw");if(cb)cb.remove()},
+  save(){
+    const r={ts:Date.now(),q:Q,cat:CAT,m:M,cards:CA.map(c=>({name:c.name,en:c.en,img:c.img,isReversed:c.isReversed,el:c.el})),review:RV};
+    RECS.unshift(r);RV=null;localStorage.setItem("tv7c",JSON.stringify(RECS));
+    const b=event.target.closest("button");
+    b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>已保存 ✓';
+    setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存',1500)
+  },
+  share(){
+    const t="🔮 塔罗 · 自察指引\n"+CA.map((c,i)=>SP[+M][i]+" · "+c.name+"（"+(c.isReversed?"逆位":"正位")+"）").join("\n")+"\n\n—— 不替你决定命运，只帮你更理解自己";
+    navigator.clipboard.writeText(t).then(()=>{const b=event.target.closest("button");b.textContent="已复制!";setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{})
+  },
+  review(){RV={q1:U.e("rv1").value.trim(),q2:U.e("rv2").value.trim(),q3:U.e("rv3").value.trim()};if(RECS.length>0){RECS[0].review=RV;localStorage.setItem("tv7c",JSON.stringify(RECS))}alert("回顾已保存")}
+};
 
-  switchPage('pageDraw');
-  document.getElementById('drawTitle').textContent='从牌堆中选取 '+s.count+' 张牌';
-  renderSelectionSpread(pool,s.count);
-}
-
-/* ===== 扇形选牌 ===== */
-function renderSelectionSpread(pool,needed){
-  const a=document.getElementById('cardsArea');a.innerHTML='';
-  const hint=document.createElement('div');hint.className='batch-hint';hint.id='selHint';
-  hint.innerHTML='已选择 <span style="color:var(--purple-glow)">0</span> / '+needed+' 张';
-  a.appendChild(hint);
-  const fan=document.createElement('div');fan.className='fan-container';fan.id='fanSpread';
-  const total=pool.length;
-  const w=Math.min(window.innerWidth-32,680);
-  const cx=w/2,cy=115;
-  const cardStates=[];
-  pool.forEach((c,i)=>{
-    const spreadW=Math.min(w*.82,480);
-    const step=total>1?spreadW/(total-1):0;
-    const x=(w-spreadW)/2+i*step;
-    const rot=(total>1?(i/(total-1)-.5)*55:0);
-    cardStates.push({x,rot});
-    const card=document.createElement('div');card.className='fan-card';
-    card.style.cssText='position:absolute;left:'+cx+'px;top:'+cy+'px;transform:translateX(-50%) rotate(0deg) scale(.3);opacity:0;transition:all .55s cubic-bezier(.34,1.56,.64,1) '+(i*.06)+'s';
-    card.dataset.poolIndex=i;
-    card.addEventListener('click',()=>{
-      if(card.classList.contains('picked'))return;
-      if(window._selected.length>=needed)return;
-      const rect=card.getBoundingClientRect();
-      const cw=card.offsetWidth,ch=card.offsetHeight;
-      const fcx=rect.left+rect.width/2,fcy=rect.top+rect.height/2;
-      const flyer=document.createElement('div');flyer.className='fan-card-flyer';
-      flyer.style.cssText='left:'+(fcx-cw/2)+'px;top:'+(fcy-ch/2)+'px;width:'+cw+'px;height:'+ch+'px';
-      document.body.appendChild(flyer);
-      card.classList.add('picked');
-      window._selected.push(i);
-      updateSelectionState(needed);
-      setTimeout(()=>{card.style.display='none';if(flyer.parentNode)flyer.remove();},1250);
+/* === 扇形选牌 === */
+const P={
+  render(pool,need){
+    const a=U.e("pa");a.innerHTML="";
+    const h=document.createElement("div");h.className="hint";h.id="ph";
+    h.innerHTML='已选择 <span style="color:var(--a2)">0</span> / '+need+" 张";a.appendChild(h);
+    const f=document.createElement("div");f.className="fan";
+    const n=pool.length,w=Math.min(window.innerWidth-32,680),cx=w/2,cy=115,st=[];
+    pool.forEach((c,i)=>{
+      const sw=Math.min(w*.82,480),step=n>1?sw/(n-1):0,x=(w-sw)/2+i*step,rot=n>1?(i/(n-1)-.5)*55:0;
+      st.push({x,rot});
+      const card=document.createElement("div");card.className="fc";
+      card.style.cssText="position:absolute;left:"+cx+"px;top:"+cy+"px;transform:translateX(-50%) rotate(0deg) scale(.3);opacity:0;transition:all .55s cubic-bezier(.34,1.56,.64,1) "+(i*.06)+"s";
+      card.onclick=()=>{
+        if(card.classList.contains("gone")||A._sel.length>=need)return;
+        const r=card.getBoundingClientRect(),cw=card.offsetWidth,ch=card.offsetHeight;
+        const fly=document.createElement("div");fly.className="fly";
+        fly.style.cssText="left:"+(r.left+r.width/2-cw/2)+"px;top:"+(r.top+r.height/2-ch/2)+"px;width:"+cw+"px;height:"+ch+"px";
+        document.body.appendChild(fly);card.classList.add("gone");A._sel.push(i);P.up(need);
+        setTimeout(()=>{card.style.display="none";if(fly.parentNode)fly.remove()},1250)
+      };
+      f.appendChild(card)
     });
-    fan.appendChild(card);
-  });
-  a.appendChild(fan);
-  requestAnimationFrame(()=>{requestAnimationFrame(()=>{const cards=fan.querySelectorAll('.fan-card');cards.forEach((card,i)=>{const s=cardStates[i];card.style.left=s.x+'px';card.style.transform='translateX(-50%) rotate('+s.rot+'deg) scale(1)';card.style.opacity='1';});});});
-}
-
-function updateSelectionState(needed){
-  const h=document.getElementById('selHint'),count=window._selected.length;
-  if(h)h.innerHTML='已选择 <span style="color:var(--purple-glow)">'+count+'</span> / '+needed+' 张';
-  if(count>=needed){setTimeout(()=>{cards=window._selected.map(i=>window._pool[i]);cards.forEach(c=>{const img=new Image();img.src=c.img;});renderResultCards();},400);}
-}
-
-/* ===== 翻牌结果 ===== */
-function renderResultCards(){
-  switchPage('pageResult');
-  const a=document.getElementById('resultCards');a.innerHTML='';
-  const s=SPREADS[spread];
-  a.className='cards-area'+(cards.length>3?' scroll-row':'');
-  cards.forEach((c,i)=>{
-    const w=document.createElement('div');w.className='card-wrapper';
-    w.style.animation='fadeUp .4s ease '+(i*.08)+'s both';
-    const inner=document.createElement('div');inner.className='card-inner';
-    const back=document.createElement('div');back.className='card-back';
-    back.innerHTML='<img src="/tarot/back.png" alt="">';
-    const front=document.createElement('div');front.className='card-front';
-    front.innerHTML=`<img src="${c.img}" alt="${c.name}">${c.isReversed?'<div class="rev-tag">逆位</div>':''}<div class="info-overlay"><div class="card-pos">${s.pos[i]}</div><div class="card-name">${c.name} · ${c.en}</div></div>`;
-    const openCP=()=>showCardModal(c,s.pos[i]);
-    front.addEventListener('dblclick',e=>{e.stopPropagation();openCP();});
-    let pt,lp=!1;
-    front.addEventListener('pointerdown',e=>{if(!inner.classList.contains('flipped'))return;e.stopPropagation();lp=!1;pt=setTimeout(()=>{lp=!0;openCP();pt=null;},500);});
-    front.addEventListener('pointerup',e=>{if(pt){clearTimeout(pt);pt=null;}});
-    front.addEventListener('pointerleave',()=>{if(pt){clearTimeout(pt);pt=null;}});
-    inner.appendChild(back);inner.appendChild(front);w.appendChild(inner);a.appendChild(w);
-  });
-  startSequentialFlip();
-}
-
-function startSequentialFlip(){
-  const ca=document.getElementById('resultCards');
-  const wrappers=ca.querySelectorAll('.card-wrapper');
-  if(wrappers.length===0)return;
-  isAnimating=!0;
-  const delay=580,count=wrappers.length,needsScroll=count>3;
-  if(needsScroll)ca.scrollLeft=0;
-  wrappers.forEach((w,i)=>{
-    setTimeout(()=>{
-      const inner=w.querySelector('.card-inner');
-      if(inner){inner.classList.add('flipped');inner.style.transition='transform .85s cubic-bezier(.4,0,.2,1)';}
-      if(needsScroll){const r=w.getBoundingClientRect(),cr=ca.getBoundingClientRect();const t=ca.scrollLeft+r.left-cr.left-cr.width*.35;ca.scrollTo({left:Math.max(0,t),behavior:'smooth'});}
-    },100+i*delay);
-  });
-  const total=100+count*delay+920;
-  setTimeout(()=>{isAnimating=!1;if(needsScroll)ca.scrollTo({left:0,behavior:'smooth'});showCrystalBall();},total);
-}
-
-/* ===== 水晶球 ===== */
-function showCrystalBall(){
-  const a=document.getElementById('resultCrystal');a.innerHTML='';
-  const wrap=document.createElement('div');wrap.id='crystalBall';
-  wrap.innerHTML=`<div class="crystal-orb"></div><div class="crystal-label">触碰水晶球 · 揭示命运</div>`;
-  wrap.addEventListener('click',()=>{wrap.remove();showReading();});
-  a.appendChild(wrap);
-}
-
-/* ===== 解读 ===== */
-function showReading(){
-  switchPage('pageReading');
-  const s=SPREADS[spread];
-
-  // Card row
-  const row=document.getElementById('readingCardRow');
-  row.innerHTML=cards.map(c=>`<img src="${c.img}" style="width:44px;height:68px;border-radius:6px;object-fit:cover;border:1px solid var(--purple);${c.isReversed?'transform:rotate(180deg)':''}">`).join('');
-
-  // Tabs
-  document.querySelectorAll('.reading-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelector('.reading-tab[data-rtab="overview"]').classList.add('active');
-
-  // Tab content
-  buildReadingTabs();
-}
-
-function buildReadingTabs(){
-  const ct=document.getElementById('readingTabContent');
-  const s=SPREADS[spread];
-  const rev=cards.filter(c=>c.isReversed).length;
-
-  // Overview tab
-  let ov='<div class="reading-tab-content active" data-rtabc="overview">';
-  if(state.question)ov+=`<p class="dim" style="margin-bottom:8px;">你问的是：「${state.question}」</p>`;
-  ov+=cardListHTML();
-  if(spread!=='1'){
-    if(rev===0)ov+='<p style="margin-top:8px;color:var(--gold-light);font-size:.82em;">✦ 全部正位 — 能量流动顺畅，这是顺势而为的时机。</p>';
-    else if(rev===cards.length)ov+='<p style="margin-top:8px;color:var(--purple-glow);font-size:.82em;">✦ 全部逆位 — 建议先观察和沉淀，不急推进。</p>';
-    else ov+=`<p style="margin-top:8px;color:var(--purple-glow);font-size:.82em;">✦ ${rev}张逆位 — 部分能量需要重新校准。</p>`;
+    a.appendChild(f);
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>{f.querySelectorAll(".fc").forEach((card,i)=>{const s=st[i];if(!card.classList.contains("gone")){card.style.left=s.x+"px";card.style.transform="translateX(-50%) rotate("+s.rot+"deg) scale(1)";card.style.opacity="1"}})})})
+  },
+  up(need){
+    const cnt=A._sel.length;
+    U.e("ph").innerHTML='已选择 <span style="color:var(--a2)">'+cnt+'</span> / '+need+" 张";
+    if(cnt>=need){setTimeout(()=>{CA=A._sel.map(i=>A._pool[i]);CA.forEach(c=>{new Image().src=c.img});R.show()},400)}
   }
-  ov+='</div>';
+};
 
-  // Detail tab
-  let dt='<div class="reading-tab-content" data-rtabc="detail">';
-  cards.forEach((c,i)=>{
-    const d=c.isReversed?c.rev:c.up;
-    dt+=`<div style="margin:12px 0;padding:10px 0;border-bottom:1px solid var(--border);"><p style="font-weight:600;color:var(--purple-glow);">${s.pos[i]} · ${c.name}${c.isReversed?'（逆位）':'（正位）'}</p><p style="font-size:.84em;margin:4px 0;">${d.core}</p>`;
-    if(c.persona)dt+=`<p class="dim">👤 ${c.persona}</p>`;
-    dt+='</div>';
-  });
-  dt+='</div>';
+/* === 翻牌 === */
+const R={
+  show(){
+    U.scr("scrResult");
+    const a=U.e("ra"),s=SP[+M];a.innerHTML="";a.className="ca-wrap"+(CA.length>3?" ca-scr":"");
+    CA.forEach((c,i)=>{
+      const w=document.createElement("div");w.className="cw";w.style.animation="fu .38s ease "+(i*.07)+"s both";
+      const ci=document.createElement("div");ci.className="ci";
+      const cb=document.createElement("div");cb.className="cb";cb.innerHTML='<img src="/tarot/back.png" alt="">';
+      const cf=document.createElement("div");cf.className="cf";
+      cf.innerHTML='<img src="'+c.img+'" alt="'+c.name+'">'+(c.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cps">'+s[i]+'</div><div class="cnm">'+c.name+" · "+c.en+'</div></div>';
+      const op=()=>L.modal(c,s[i]);
+      cf.addEventListener("dblclick",e=>{e.stopPropagation();op()});
+      let pt,lp=!1;
+      cf.addEventListener("pointerdown",e=>{if(!ci.classList.contains("flipped"))return;e.stopPropagation();lp=!1;pt=setTimeout(()=>{lp=!0;op();pt=null},480)});
+      cf.addEventListener("pointerup",()=>{if(pt){clearTimeout(pt);pt=null}});
+      cf.addEventListener("pointerleave",()=>{if(pt){clearTimeout(pt);pt=null}});
+      ci.appendChild(cb);ci.appendChild(cf);w.appendChild(ci);a.appendChild(w)
+    });
+    R.flip()
+  },
+  flip(){
+    const ca=U.e("ra"),ws=ca.querySelectorAll(".cw");if(ws.length===0)return;
+    AN=!0;const d=560,n=ws.length,sc=n>3;if(sc)ca.scrollLeft=0;
+    ws.forEach((w,i)=>{setTimeout(()=>{const ci=w.querySelector(".ci");if(ci){ci.classList.add("flipped");ci.style.transition="transform .82s cubic-bezier(.4,0,.2,1)"}if(sc){const r=w.getBoundingClientRect(),cr=ca.getBoundingClientRect();ca.scrollTo({left:Math.max(0,ca.scrollLeft+r.left-cr.left-cr.width*.35),behavior:"smooth"})}},100+i*d)});
+    setTimeout(()=>{AN=!1;if(sc)ca.scrollTo({left:0,behavior:"smooth"});L.ball()},100+n*d+880)
+  },
+  render(){
+    U.scr("scrRecs");
+    const rf=document.querySelector("#rf .tg.sel")?.dataset.rf||"all";
+    let fs=RECS;if(rf!=="all")fs=RECS.filter(r=>r.m===rf);
+    const l=U.e("rl");if(fs.length===0){l.innerHTML='<p class="d" style="text-align:center;padding:18px">暂无记录</p>';return}
+    l.innerHTML=fs.slice(0,25).map(r=>'<div class="rec" onclick="L.vr('+r.ts+')"><div class="ri">'+r.cards.slice(0,4).map(c=>'<img src="'+c.img+'">').join("")+'</div><div class="rr"><div class="rd">'+new Date(r.ts).toISOString().slice(0,10)+'</div><div class="rq">'+(r.q||"未提问")+'</div><div class="rm">'+r.m+"张"+(r.cat?" · "+r.cat:"")+(r.review?" ✓已复盘":"")+'</div></div></div>').join("")
+  }
+};
 
-  // Action tab
-  let ac='<div class="reading-tab-content" data-rtabc="action">';
-  cards.forEach((c,i)=>{
-    const d=c.isReversed?c.rev:c.up;
-    ac+=`<div style="margin:10px 0;padding:8px 0;border-bottom:1px solid var(--border);"><p style="font-weight:600;color:var(--gold-light);">${s.pos[i]}</p><p style="font-size:.84em;">${d.what}</p><p class="dim" style="margin-top:4px;">⚠ ${d.warn}</p></div>`;
-  });
-  ac+='</div>';
+/* === 水晶球 & 解读 === */
+const L={
+  ball(){
+    const ex=document.getElementById("cbw");if(ex)ex.remove();
+    const w=document.createElement("div");w.id="cbw";w.className="cbw";
+    w.innerHTML='<div class="cbo"></div><div class="cbl">触碰水晶球 · 揭示命运</div>';
+    w.onclick=()=>{w.remove();L.reading()};U.e("ra").parentNode.appendChild(w)
+  },
+  reading(){
+    U.scr("scrRead");const s=SP[+M];
+    U.e("rcs").innerHTML=CA.map(c=>'<img src="'+c.img+'" style="width:40px;height:62px;border-radius:5px;object-fit:cover;border:1px solid var(--ac);'+(c.isReversed?"transform:rotate(180deg)":"")+'">').join("");
+    U.c(".rt").forEach(t=>t.classList.remove("sel"));
+    const ovTab=document.querySelector('.rt[data-rt="ov"]');if(ovTab)ovTab.classList.add("sel");
+    L.tabs();
+    U.c(".rt").forEach(t=>t.onclick=()=>{U.c(".rt").forEach(x=>x.classList.remove("sel"));t.classList.add("sel");U.c(".rtc").forEach(c=>c.classList.remove("on"));const tc=U.e("rtc").querySelector('[data-rtc="'+t.dataset.rt+'"]');if(tc)tc.classList.add("on")})
+  },
+  tabs(){
+    const ct=U.e("rtc"),s=SP[+M],rv=CA.filter(c=>c.isReversed).length;
+    let ov='<div class="rtc on" data-rtc="ov">';
+    if(Q)ov+='<p class="d" style="margin-bottom:6px">你问的是：「'+Q+'」</p>';
+    CA.forEach((c,i)=>{const d=c.isReversed?c.rev:c.up;ov+='<div style="margin:6px 0;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--a2);font-size:.76em">'+s[i]+'</span> <b>'+c.name+'</b>'+(c.isReversed?' <span style="color:#f87171;font-size:.72em">逆位</span>':"")+' · <span style="color:var(--dm);font-size:.74em">'+c.el+'元素</span><p style="font-size:.82em;margin:3px 0">'+(d.core||d.q||"")+'</p></div>'});
+    if(M!=="1"){if(rv===0)ov+='<p style="color:var(--g2);font-size:.78em;margin-top:6px">✦ 全部正位 — 能量顺畅</p>';else if(rv===CA.length)ov+='<p style="color:var(--a2);font-size:.78em;margin-top:6px">✦ 全部逆位 — 建议先观察</p>';else ov+='<p style="color:var(--a2);font-size:.78em;margin-top:6px">✦ '+rv+"张逆位 — 部分能量需校准</p>"}ov+="</div>";
+    let dt='<div class="rtc" data-rtc="dt">';CA.forEach((c,i)=>{const d=c.isReversed?c.rev:c.up;dt+='<div style="margin:10px 0;padding:8px 0;border-bottom:1px solid var(--bd)"><p style="font-weight:600;color:var(--a2)">'+s[i]+" · "+c.name+(c.isReversed?"（逆位）":"（正位）")+'</p><p style="font-size:.82em">'+(d.core||d.q||"")+'</p>'+(c.persona?'<p class="d">👤 '+c.persona+'</p>':"")+'</div>'});dt+="</div>";
+    let ac='<div class="rtc" data-rtc="ac">';CA.forEach((c,i)=>{const d=c.isReversed?c.rev:c.up;ac+='<div style="margin:8px 0;padding:6px 0;border-bottom:1px solid var(--bd)"><p style="font-weight:600;color:var(--g2)">'+s[i]+'</p><p style="font-size:.82em">'+(d.what||d.q||"")+'</p>'+(d.warn?'<p class="d" style="margin-top:2px">⚠ '+d.warn+'</p>':"")+'</div>'});ac+="</div>";
+    ct.innerHTML=ov+dt+ac
+  },
+  modal(card,pos){
+    const d=card.isReversed?card.rev:card.up;
+    const kw=card.kw.split("·").map(k=>'<span class="tg" style="pointer-events:none;font-size:.68em">'+k.trim()+'</span>').join("");
+    let h='<button class="mx" onclick="U.shut()">✕</button>';
+    h+='<img src="'+card.img+'" style="width:96px;height:148px;object-fit:cover;border-radius:10px;float:right;margin:0 0 8px 10px;border:2px solid var(--ac);box-shadow:0 4px 14px rgba(110,55,200,.35)">';
+    h+='<p style="color:var(--a2);font-size:.76em;letter-spacing:1px">'+pos+" "+(card.isReversed?"逆位":"正位")+'</p>';
+    h+='<p style="font-size:1.02em;font-weight:700">'+card.name+" · "+card.en+'</p>';
+    h+='<div class="tags" style="margin:5px 0">'+kw+'</div>';
+    h+='<p style="line-height:1.85;font-size:.88em">'+(d.core||d.q||"")+'</p>';
+    if(Q)h+='<p style="color:var(--a2);margin-top:6px;font-size:.83em">关于「'+Q+'」：'+d.q+'</p>';
+    h+='<p style="margin-top:6px;font-size:.83em;color:var(--dm)">'+(d.what||d.q||"")+'</p>';
+    if(d.warn)h+='<p style="color:var(--mu);font-size:.76em">⚠ '+d.warn+'</p>';
+    U.modal(h)
+  },
+  vr(ts){const r=RECS.find(x=>x.ts===+ts);if(!r)return;CA=r.cards.map(c=>({...c,isReversed:c.isReversed||!1}));M=r.m;Q=r.q||"";CAT=r.cat||"";L.reading()}
+};
 
-  ct.innerHTML=ov+dt+ac;
+/* === 记录筛选 === */
+U.c("#rf .tg").forEach(b=>b.onclick=()=>{U.c("#rf .tg").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");R.render()});
+</script>
 
-  // Tab click handlers
-  document.querySelectorAll('.reading-tab').forEach(t=>{t.onclick=()=>{document.querySelectorAll('.reading-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.reading-tab-content').forEach(c=>c.classList.remove('active'));const tc=document.querySelector('.reading-tab-content[data-rtabc="'+t.dataset.rtab+'"]');if(tc)tc.classList.add('active');};});
-}
-
-function cardListHTML(){
-  const s=SPREADS[spread];
-  return cards.map((c,i)=>{
-    const d=c.isReversed?c.rev:c.up;
-    return `<div style="margin:8px 0;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--purple-glow);font-size:.8em;">${s.pos[i]}</span> <span style="font-weight:600;">${c.name}</span>${c.isReversed?' <span style="color:#f87171;font-size:.75em;">逆位</span>':''} · <span style="color:var(--text-dim);font-size:.78em;">${c.el}元素</span><p style="font-size:.84em;margin:3px 0;">${d.core}</p><p style="font-size:.76em;color:var(--text-dim);">🌱 ${d.what}</p></div>`;
-  }).join('');
-}
-
-/* ===== 弹窗 ===== */
-function showCardModal(card,pos){
-  const d=card.isReversed?card.rev:card.up;
-  const m=document.getElementById('modal');
-  const mc=document.getElementById('modalContent');
-  mc.innerHTML=`<button class="modal-close" onclick="document.getElementById(\x27modal\x27).style.display=\x27none\x27">✕</button><img src="${card.img}" style="width:100px;height:154px;object-fit:cover;border-radius:10px;float:right;margin:0 0 8px 12px;border:2px solid var(--purple);box-shadow:0 4px 16px rgba(124,58,237,.4);"><p style="color:var(--purple-glow);font-size:.78em;letter-spacing:1px;">${pos} ${card.isReversed?'逆位':'正位'}</p><p style="font-size:1.05em;font-weight:700;">${card.name} · ${card.en}</p><div class="cat-tags" style="margin:6px 0;">${card.kw.split('·').map(k=>'<span class="cat-tag" style="pointer-events:none;font-size:.7em;">'+k.trim()+'</span>').join('')}</div><p style="line-height:1.9;font-size:.9em;">${d.core}</p>${state.question?`<p style="color:var(--purple-glow);margin-top:8px;font-size:.85em;">关于「${state.question}」：${d.q}</p>`:''}<p style="margin-top:8px;font-size:.85em;color:var(--text-dim);">${d.what}</p><p style="color:var(--text-muted);font-size:.78em;">⚠ ${d.warn}</p>`;
-  m.style.display='flex';
-}
-document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)this.style.display='none';});
-
-/* ===== 保存/分享/重抽 ===== */
-function saveToRecords(){
-  const r={date:new Date().toISOString().slice(0,10),time:state.drawTime,question:state.question,category:state.category,spread,cards:cards.map(c=>({name:c.name,en:c.en,img:c.img,isReversed:c.isReversed,el:c.el})),review:state.review};
-  const idx=records.findIndex(x=>x.time===r.time);
-  if(idx>=0)records[idx]=r;else records.unshift(r);
-  localStorage.setItem('tarot_v7r2_records',JSON.stringify(records));
-  const b=event.target.closest('button');b.textContent='已保存 ✓';setTimeout(()=>b.innerHTML='<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg> 保存',1500);
-}
-
-function shareReading(){
-  const t=`🔮 塔罗 · 每日指引\n${state.question?'问：「'+state.question+'」\n':''}牌阵：${spread}张\n\n`+cards.map((c,i)=>`${SPREADS[spread].pos[i]} · ${c.name}（${c.isReversed?'逆位':'正位'}）`).join('\n')+`\n\n—— 不替你决定命运，只帮你更理解自己`;
-  navigator.clipboard.writeText(t).then(()=>{const b=event.target.closest('button');b.textContent='已复制!';setTimeout(()=>b.innerHTML='<svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg> 分享',1500);}).catch(()=>{});
-}
-
-function resetAll(){cards=[];isAnimating=!1;state.question='';state.category='';switchTab('home');const cb=document.getElementById('crystalBall');if(cb)cb.remove();}
-
-/* ===== 记录页 ===== */
-function renderRecords(filter){
-  const fl=filter||'all';
-  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.toggle('active',c.dataset.filter===fl));
-  const list=document.getElementById('recordsList');
-  let filtered=records;
-  if(fl!=='all')filtered=records.filter(r=>r.spread===fl);
-  if(filtered.length===0){list.innerHTML='<p class="dim" style="text-align:center;padding:20px;">暂无记录</p>';return;}
-  list.innerHTML=filtered.slice(0,30).map(r=>`<div class="record-row" onclick="viewRecord('${r.time}')"><div class="rc-imgs">${r.cards.slice(0,4).map(c=>`<img src="${c.img}">`).join('')}</div><div class="rc-info"><div class="rc-date">${r.date}</div><div class="rc-q">${r.question||'未提问'}</div><div class="rc-meta">${r.spread}张牌${r.category?' · '+r.category:''}${r.review?' ✓已复盘':''}</div></div></div>`).join('');
-  document.querySelectorAll('.filter-chip').forEach(c=>{c.onclick=()=>renderRecords(c.dataset.filter);});
-}
-
-function viewRecord(time){
-  const r=records.find(x=>x.time===time);if(!r)return;
-  cards=r.cards.map(c=>({...c,isReversed:c.isReversed||!1}));
-  spread=r.spread;state.question=r.question||'';state.category=r.category||'';
-  switchPage('pageReading');
-  buildReadingTabs();
-}
-
-/* ===== 复盘 ===== */
-function saveReview(){
-  state.review={q1:document.getElementById('rvQ1').value.trim(),q2:document.getElementById('rvQ2').value.trim(),q3:document.getElementById('rvQ3').value.trim(),time:new Date().toISOString()};
-  if(records.length>0&&!records[0].review){records[0].review=state.review;localStorage.setItem('tarot_v7r2_records',JSON.stringify(records));}
-  alert('回顾已保存 🌙');
-}
-
-/* ===== 工具 ===== */
-function switchPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
-
-const CARDS=[
+const DECK=[
 {id:0,name:"愚者",en:"The Fool",kw:"开始·冒险·天真",el:"风",img:"/tarot/00_fool.png",
  up:{core:"全新的旅程正在召唤你。愚者并非愚蠢——他是唯一看清世界本质后依然选择天真的人。这不是鲁莽，而是对未知的绝对信任。你站在悬崖边，脚下是万丈深渊，头顶是灿烂阳光。跳，还是不跳？愚者说：你早已知道答案。",q:"关于这个问题，愚者正位给了一个大胆的答案——勇敢迈出第一步。你之前的犹豫不是因为准备不足，而是因为太想把每一步都算清楚。但有些事情，只能在路上去理解。现在不是分析的时候，是出发的时候。",what:"放下过度的计划和算计，跟随你的直觉行动。本周适合开启新项目、新关系或新的生活方式。带着初学者的心态，你会看到别人看不到的风景。",warn:"不要把所有细节都想清楚了再出发——那永远不会有那一天。但也别因为兴奋而完全忽视基本的准备。带好你的行囊，然后上路。"},
  rev:{core:"逆位愚者揭示了你当下的困境：你在逃避一个选择。用「随性」来掩饰恐惧，用「还没准备好」来推迟决定。但你自己清楚——这种停滞正在消耗你的能量。",q:"关于这个问题，逆位愚者在提醒你：你以为的「从容」其实是逃避。你可能在用拖延来保护自己免受失败的可能，但拖延本身就是一种失败。",what:"先停下手中的一切，问自己一个问题：我在怕什么？把你真正担心的东西写下来，面对它。然后制定一个最小可行的第一步——不是庞大的计划，只是一小步。",warn:"本周不适合做重大决定或开始新事物。先稳住自己。冲动行事和故意不动都是对恐惧的两种反应，你都不需要。"}},
@@ -715,8 +387,7 @@ const CARDS=[
  rev:{core:"逆位的审判揭示了逃避。你听到了内心的召唤——那个更深的声音——却找了一百个理由不去回应。自我怀疑、内疚、或者对改变的恐惧正在阻碍你的重生。",q:"关于这个问题，逆位审判在直视你：你知道答案，你知道该怎么做。你没有在寻找答案——你在寻找许可。你不需要任何人的许可，除了你自己。你唯一需要克服的，是「我可能不行」这个想法。",what:"找出你一直逃避的那件事——那个「迟早要做但现在不想」的事情。然后今天为它做最小的一步。不是完成它——只是一步。比如发一封邮件、打一个电话、写第一段。一步之后，下一步会自然出现。",warn:"逃避内在召唤的代价是日益增长的空虚感。要么自己觉醒，要么生活逼你觉醒——后者通常会痛很多。现在做选择，你还有主动权。"}},
 {id:21,name:"世界",en:"The World",kw:"完成·圆满·成就",el:"土",img:"/tarot/21_world.png",
  up:{core:"世界是大阿尔卡纳的终点——一个完整的循环完成。舞者在月桂花环中旋转，四位神圣守护者在四角见证。你已经做到了，走到了，完成了。现在可以停下来，深深呼吸，感受这份圆满。",q:"关于这个问题，世界牌给出了一个完满的答案：你已经或即将到达目的地。这件事正在走向它应得的结局——一个圆满的结局。之前的付出、等待、挣扎——都是有意义的。现在是收获的时刻。",what:"庆祝！这是你应得的。花一天时间回顾你走过的路——从起点到现在，你经历了多少、成长了多少。然后开始思考：下一个「世界」在哪里？巅峰不是终点，是新起点。",warn:"不要因为达成了目标就停止生长。圆满是逗号，不是句号。同时注意：不要因为「已经完成了」就放松警惕——维护已有的成果同样需要精力。"},
- rev:{core:"逆位的世界意味着你在最后一步卡住了。你离完成只差一点点——可能是最后的签字、最后的收尾、或者最后的心里那关。这种「几乎完成但差一截」的焦躁感正在折磨你。",q:"关于这个问题，逆位世界在问：是什么在卡住你？检查一下——通常卡住你的不是大困难，而是一个你一直在回避的小问题。解决它，圆就能合上。",what:"做最后的清查：还有什么没完成的？还有什么被忽略的？把那些「先放着」的小任务列出来，逐个击破。同时审视一下：你拒绝完成——是不是因为完成后你不知道接下来要做什么？",warn:"不要因为「只差一点」就放弃。走了一百步，最后一步最累，但也是最关键的。也不要用「不完美」作为拖延完成的借口——完美主义的尽头往往是未完。"}}];;
-const MINOR_ARCANA=[
+ rev:{core:"逆位的世界意味着你在最后一步卡住了。你离完成只差一点点——可能是最后的签字、最后的收尾、或者最后的心里那关。这种「几乎完成但差一截」的焦躁感正在折磨你。",q:"关于这个问题，逆位世界在问：是什么在卡住你？检查一下——通常卡住你的不是大困难，而是一个你一直在回避的小问题。解决它，圆就能合上。",what:"做最后的清查：还有什么没完成的？还有什么被忽略的？把那些「先放着」的小任务列出来，逐个击破。同时审视一下：你拒绝完成——是不是因为完成后你不知道接下来要做什么？",warn:"不要因为「只差一点」就放弃。走了一百步，最后一步最累，但也是最关键的。也不要用「不完美」作为拖延完成的借口——完美主义的尽头往往是未完。"}},
 {id:22,name:"权杖王牌",en:"Ace of Wands",kw:"新开始·灵感·潜力·创造力·契机",el:"火",img:"/tarot/22_ace_of_wands.png",up:{core:"一个新机会正在敲门，它带着满满的能量和可能性。这张牌告诉你大胆动手，别犹豫。创意的火花已经点燃，抓住它。",q:"你现在感到蠢蠢欲动的那种冲动不是错觉，它值得你去试。你的问题是缺勇气，而不是缺方向，先迈出第一步。",what:"立刻采取实际行动，哪怕只是打个电话或写个方案开头。",warn:"不要停留在空想阶段，热情来得快去得也快。"},rev:{core:"灵感被卡住了，或者有个新机会你迟迟不敢接。可能你脑子里想法很多，但一个都没落地。先搞清楚自己到底想要什么。",q:"你最近有点想太多做太少，拖延让热情冷却了。如果目前的方向让你提不起劲，可能是目标本身需要换个角度。",what:"把分散的想法写下来，挑一个最靠谱的先做起来。",warn:"别因为害怕失败就干脆不开始。"}},
 {id:23,name:"权杖二",en:"Two of Wands",kw:"规划·远见·抉择·展望·野望",el:"火",img:"/tarot/23_two_of_wands.png",up:{core:"你站在十字路口，手里握着地图，现在要做的是选一条路。你有能力也有视野，只需要做出决定然后出发。不要害怕离开舒适区。",q:"你纠结是因为两条路各有好坏，但你心里其实已经有了倾向。这张牌在告诉你：想清楚了就行动，不要一直观望。",what:"列出每个选项的利弊，给自己一个截止日期做决定。",warn:"无限拖延做决定本身就是一种错误的决定。"},rev:{core:"计划赶不上变化，可能你之前的选择并没有带来预期结果。你对未来感到迷茫，缺乏清晰的路线图。先停下来重新评估。",q:"你最近对未来的规划有点乱，可能之前定的目标已经不适合现在的你。不要硬着头皮走错的方向。",what:"重新审视你的长期目标，该放弃的就果断放弃。",warn:"别因为已经投入了很多就舍不得调整方向。"}},
 {id:24,name:"权杖三",en:"Three of Wands",kw:"扩张·远航·先见·探索·增长",el:"火",img:"/tarot/24_three_of_wands.png",up:{core:"你之前的布局开始见到成效了，现在是向外拓展的好时机。眼光放远一些，可以跨界合作、尝试新领域。船已经备好，出发吧。",q:"你已经做了足够的准备，现在缺少的只是迈出那一步。你的计划是靠谱的，大胆去推。",what:"主动联系那些能帮你打开局面的人或资源。",warn:"不要只顾着看远方而忽略了脚下的细节。"},rev:{core:"计划推进遇阻，可能是外部环境不支持或者时机不对。你有点眼高手低，想象中的局面和现实差距挺大。先回到可执行的小步骤上。",q:"你期待的结果迟迟不来，让你开始怀疑自己的方向。但问题可能不是方向错了，而是你对进度的预期太乐观了。",what:"把大目标拆成每周可完成的小任务，从眼前做起。",warn:"不要把暂时的卡顿当成彻底的失败。"}},
@@ -773,9 +444,6 @@ const MINOR_ARCANA=[
 {id:75,name:"星币骑士",persona:"老黄牛·可靠者——可能是工匠、同事、一个值得你把最重要任务托付给ta的人。🔸 对你当下：你可能是这个局面里最稳的那块砖——别人在冲在变，你在守在做。虽然慢，但你走的是长路。偶尔提速可以，但别因为别人在跑就否定自己的节奏。",en:"Knight of Pentacles",kw:"勤奋·可靠·缓慢·扎实·责任",el:"土",img:"/tarot/75_knight_of_pentacles.png",up:{core:"你就是一头老黄牛，走得慢但每一步都踩实。不耍花招、不投机取巧，用最笨也最稳的方法在往前走。别人跑得快你可能追不上，但你走得远。",q:"你现在做的事情需要耐心和坚持，短期内看不到大成果是正常的。你的扎实就是最大优势。",what:"继续做好手上的事，不要因为别人的速度而怀疑自己的节奏。",warn:"太慢了也会错过机会，在稳的基础上试着提一点速度。"},rev:{core:"你太慢了，慢到快要停下来了。可能懒散、不思进取，或者在一个没有前途的事情上固执地坚持。稳不是不动的借口。",q:"你可能最近缺乏动力，或者在做一件没有增长空间的事。光靠老实肯干是不够的，还要看方向对不对。",what:"检查一下你的路线：你在一个能让你成长的方向上吗？",warn:"别把懒惰美化成「稳重」。"}},
 {id:76,name:"星币皇后",persona:"守护者·经营者——可能是理财顾问、母亲角色、一个让你的生活感到安全有序的人。🔸 对你当下：你正在用双手搭建一个属于自己的安全空间——不管是财务上、关系上还是事业上。这张牌在说：你的经营是值得的。但也问问自己：除了安全感，你在里面快乐吗？",en:"Queen of Pentacles",kw:"务实·滋养·富足·持家·周到",el:"土",img:"/tarot/76_queen_of_pentacles.png",up:{core:"你既能赚钱又能持家，把现实和温情结合得很好。你知道怎么让人和事都安稳舒适地运转起来。这是「能把日子过好」的能力。",q:"你现在拥有的资源和能力足以让你和身边的人过得舒服。你的务实和细心是最有价值的品质。",what:"用你的资源去营造一个让自己和家人都舒适的生活环境。",warn:"别光顾着照顾别人，你自己的需求也要放在第一位。"},rev:{core:"你对物质和生活的把控失衡了，可能太抠门或者太浪费。也可能你把自己困在了照顾别人的角色里，忘了自己也需要被照顾。",q:"你可能最近过度关注物质层面的事情，忽略了精神层面的需求。或者你为他人的事操碎了心，自己却空空荡荡。",what:"给自己花一笔钱，只为自己开心不做任何实用考虑。",warn:"一味牺牲自己不是贤惠，是自我消耗。"}},
 {id:77,name:"星币国王",persona:"建设者·富足者——可能是企业家、父亲角色、一个能给你实际资源和安全感的人。🔸 对你当下：你已经拥有了构建稳定生活的一切——资源、经验、人脉。这张牌不是在说「去赚更多」，而是「你现在够多了」，接下来是用这些去创造更大的价值。",en:"King of Pentacles",kw:"财富·稳重·成就·实力·掌盘",el:"土",img:"/tarot/77_king_of_pentacles.png",up:{core:"你用实力和稳重在物质世界里打下了江山。你不是运气好，是真有本事。现在你坐在王座上，守住并继续扩大你的成果。",q:"你在财务或事业上已经到了一个可以稳定输出的阶段。你的经验和判断都很靠谱，继续按你的节奏走。",what:"做一个长期的资产或事业规划，让别人也能从你的成功中受益。",warn:"位子坐稳了也别停止学习，世界变化比你想象的快。"},rev:{core:"对钱和成功的执念让你变得贪婪或僵化。可能你太看重物质而忽略了生活的其他层面，或者你的财富管理出了大问题。",q:"你可能最近在钱的问题上钻牛角尖了，或者对物质的追求让你忽略了对人和自己的关怀。钱是工具不是目的。",what:"放下对钱的焦虑，做一些跟钱无关但让你内心充盈的事。",warn:"贪心和稳健只有一线之隔，守住底线。"}},
-];;
-
-
-</script>
+];
 </body>
 </html>
