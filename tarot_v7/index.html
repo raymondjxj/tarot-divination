@@ -297,18 +297,15 @@ function doShuffle(){
     });
     h+='</div>';
   }else if(n===10){
-    // Standard Celtic Cross: cross (cards 1-6) + staff (7-10) on right
-    h+='<div style="position:relative;width:100%;max-width:380px;height:520px;margin:0 auto" id="drawGrid">';
-    // Left 75% for cross, right 25% for staff column
-    // Cross section: card positions as [left%, top%] within cross area
-    // Card 1: center, Card 2: horizontal across 1, Card 3: below, Card 4: left, Card 5: above, Card 6: right
-    const cx=37,cw=75; // cross area: left 0-75%, card width
-    const pos=[[cx,44],[cx,44],[cx,58],[15,44],[cx,16],[60,44],[82,14],[82,34],[82,54],[82,74]];
+    // Celtic Cross: left cross + right arc column
+    h+='<div style="position:relative;width:100%;max-width:380px;height:480px;margin:0 auto" id="drawGrid">';
+    // Cross positions: [left%, top%] - spread wider, smaller cards
+    const pos=[[38,42],[38,42],[38,65],[11,42],[38,12],[65,42],[82,8],[82,26],[82,47],[82,73]];
     cards.forEach((c,i)=>{
-      const isX=i===1; // card 2 is horizontal across card 1
-      const w=isX?'100px':'80px',ht=isX?'80px':'122px';
+      const isX=i===1;
+      const w=isX?'76px':'64px',ht=isX?'64px':'98px';
       const rot=isX?' rotate(90deg)':'';
-      h+='<div class="cw" style="--cw:'+w+';--ch:'+ht+';position:absolute;left:'+pos[i][0]+'%;top:'+pos[i][1]+'%;transform:translate(-50%,-50%)'+rot+';z-index:'+(i===1?'2':'1')+'" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.42em;color:var(--dm);margin-top:1px;line-height:1.1;overflow:hidden;text-overflow:ellipsis;max-width:80px">'+SP[10][i].substring(0,5)+'</p></div>';
+      h+='<div class="cw" style="--cw:'+w+';--ch:'+ht+';position:absolute;left:'+pos[i][0]+'%;top:'+pos[i][1]+'%;transform:translate(-50%,-50%)'+rot+';z-index:'+(i===1?'2':'1')+'" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.38em;color:var(--dm);margin-top:1px;line-height:1;overflow:hidden;max-width:64px">'+SP[10][i].substring(0,4)+'</p></div>';
     });
     h+='</div>';
   }else{
