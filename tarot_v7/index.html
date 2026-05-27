@@ -273,7 +273,7 @@ $$("#intents .it").forEach(it=>it.onclick=()=>{
 $("customIn").oninput=function(){intent=this.value;$("btnIntent").disabled=!this.value.trim()};
 
 /* 切换页面 */
-function goIntent(){if(!mood)return;scr("scrIntent")}
+function goIntent(){if(!mood){alert('请先选择今日状态');return}scr("scrIntent")}
 
 /* 洗牌 */
 function doShuffle(){
