@@ -93,7 +93,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 /* 解读区 */
 .reading{background:rgba(255,255,255,.02);border:1px solid rgba(180,150,220,.12);border-radius:20px;padding:max(20px,3vw);margin-top:30px;display:none;backdrop-filter:blur(10px);}
 .reading.show{display:block;animation:fadeIn .6s ease;}
-.fan-container{position:relative;width:100%;max-width:620px;height:160px;overflow:visible;margin:0 auto 12px}.fan-card{width:clamp(52px,9vw,70px);height:clamp(78px,13vw,105px);border-radius:5px;cursor:pointer;border:2px solid rgba(200,160,240,.2);background:url(/back.png) center/cover;box-shadow:0 3px 10px rgba(0,0,0,.4);transform-origin:bottom center;transition:margin-top .15s ease,filter .15s ease,box-shadow .15s ease,border-color .15s ease;z-index:1}.fan-card:hover{margin-top:-8px;z-index:20;filter:brightness(1.18);border-color:rgba(200,160,240,.5);box-shadow:0 6px 22px rgba(200,160,240,.35)}.fan-card.picked{pointer-events:none;opacity:0;transition:opacity .2s ease}.fan-card-flyer{position:fixed;z-index:1000;border-radius:5px;border:2px solid rgba(200,160,240,.45);background:url(/back.png) center/cover no-repeat;background-size:cover;box-shadow:0 6px 30px rgba(124,58,237,.55);pointer-events:none;transform-origin:center center;filter:brightness(1.1);will-change:transform,opacity;animation:cardFlyAway 1s ease-out forwards}@keyframes cardFlyAway{0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}20%{transform:translate(3px,-25px) scale(1.05) rotate(3deg);opacity:0.9}100%{transform:translate(-2px,-360px) scale(0.04) rotate(16deg);opacity:0}}@keyframes cardAppear{from{opacity:0;transform:translateY(30px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fan-container{position:relative;width:100%;max-width:620px;height:160px;overflow:visible;margin:0 auto 12px}.fan-card{width:clamp(52px,9vw,70px);height:clamp(78px,13vw,105px);border-radius:5px;cursor:pointer;border:2px solid rgba(200,160,240,.2);background:url(/back.png) center/cover;box-shadow:0 3px 10px rgba(0,0,0,.4);transform-origin:bottom center;transition:margin-top .15s ease,filter .15s ease,box-shadow .15s ease,border-color .15s ease;z-index:1}.fan-card:hover{margin-top:-8px;z-index:20;filter:brightness(1.18);border-color:rgba(200,160,240,.5);box-shadow:0 6px 22px rgba(200,160,240,.35)}.fan-card.picked{pointer-events:none;opacity:0;transition:opacity .2s ease}.fan-card-flyer{position:fixed;z-index:1000;border-radius:5px;border:2px solid rgba(200,160,240,.45);background:url(/back.png) center/cover no-repeat;background-size:cover;box-shadow:0 6px 30px rgba(124,58,237,.55);pointer-events:none;transform-origin:center center;filter:brightness(1.1);will-change:transform,opacity;animation:cardFlyAway 1s ease-out forwards}@keyframes cardFlyAway{0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}20%{transform:translate(3px,-25px) scale(1.05) rotate(3deg);opacity:0.9}100%{transform:translate(-2px,-360px) scale(0.04) rotate(16deg);opacity:0}}@keyframes cardAppear{from{opacity:0;transform:translateY(30px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes crystalAppear{from{opacity:0;transform:translateX(-50%) translateY(40px) scale(.5)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}@keyframes crystalGlow{0%,100%{box-shadow:0 0 30px rgba(160,100,240,.6),0 0 60px rgba(120,60,200,.35),0 0 100px rgba(100,40,180,.2)}50%{box-shadow:0 0 45px rgba(180,130,255,.8),0 0 90px rgba(140,80,220,.5),0 0 140px rgba(120,60,200,.35)}}@keyframes crystalText{0%,100%{opacity:.7}50%{opacity:1}}
 .reading h3{color:var(--accent);font-size:1.4em;margin-bottom:20px;text-align:center;}
 .summary-box{margin-top:24px;padding:24px;background:rgba(167,139,250,.08);border-radius:16px;line-height:2.1;font-size:.95em;}
 .summary-box strong{color:var(--accent);}.reading-card{background:rgba(30,20,60,.3);border:1px solid rgba(180,150,220,.1);border-radius:14px;padding:16px 18px;margin:10px 0;animation:fadeIn .5s ease both;backdrop-filter:blur(4px);}
@@ -391,16 +391,27 @@ function startSequentialFlip(){
   wrappers.forEach((w,i)=>{
     setTimeout(()=>{
       const inner=w.querySelector('.card-inner');
-      if(inner)inner.classList.add('flipped');
+      if(inner){inner.classList.add('flipped');inner.style.transition='transform .85s cubic-bezier(.4,0,.2,1)';}
       if(needsScroll){
         const r=w.getBoundingClientRect(),cr=ca.getBoundingClientRect();
         const target=ca.scrollLeft+r.left-cr.left-cr.width*.35;
         ca.scrollTo({left:Math.max(0,target),behavior:'smooth'});
       }
-    },i*delay);
+    },100+i*delay);
   });
-  const total=count*delay+920;
-  setTimeout(()=>{isAnimating=!1;if(needsScroll)ca.scrollTo({left:0,behavior:'smooth'});showReading();},total);
+  const total=100+count*delay+920;
+  setTimeout(()=>{isAnimating=!1;if(needsScroll)ca.scrollTo({left:0,behavior:'smooth'});showCrystalBall();},total);
+}
+
+function showCrystalBall(){
+  const existing=document.getElementById('crystalBall');
+  if(existing)existing.remove();
+  const wrap=document.createElement('div');
+  wrap.id='crystalBall';
+  wrap.style.cssText='position:fixed;bottom:max(28px,6vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:crystalAppear .7s ease';
+  wrap.innerHTML=`<div style="width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(200,170,255,.95),rgba(120,70,200,.85) 40%,rgba(60,20,120,.9) 70%,rgba(20,5,50,.95));box-shadow:0 0 30px rgba(160,100,240,.6),0 0 60px rgba(120,60,200,.35),0 0 100px rgba(100,40,180,.2),inset -8px -8px 16px rgba(0,0,0,.4),inset 4px 4px 12px rgba(255,255,255,.15);margin:0 auto 10px;animation:crystalGlow 3s ease-in-out infinite"></div><div style="color:rgba(200,170,240,.85);font-size:.85em;letter-spacing:2px;text-shadow:0 0 10px rgba(160,100,240,.4);animation:crystalText 3s ease-in-out infinite">触碰水晶球 · 揭示命运</div>`;
+  wrap.addEventListener('click',()=>{wrap.remove();showReading();});
+  document.body.appendChild(wrap);
 }
 
 function renderAllFlippedCards(){
