@@ -282,13 +282,29 @@ function showReading(){
   const d=card.isReversed?card.rev:card.up;
   $("readTitle").textContent=card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位");
   $("readCF").innerHTML='<img src="'+card.img+'" alt="'+card.name+'">'+(card.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+card.name+'</div></div>';
+  $("readPanel").innerHTML='<p class="d" style="text-align:center;padding:30px">✦ 牌面正在揭示中…</p>';
 
+  // Try AI reading first
+  const payload={spread:"1",question:intent||null,cards:[{name:card.name,pos:"今日指引",el:card.el,reversed:card.isReversed,timeHint:card.isReversed?"3-6个月":"1-3个月",persona:card.persona||null}],pairs:[],elementSummary:null};
+  fetch("/api/tarot-reading",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+  .then(r=>r.json()).then(data=>{
+    let raw=data&&data.reading?data.reading:buildLocal();
+    raw=raw.replace(/\n/g,"<br>");
+    let h=mood?'<p class="d">今日状态：'+mood+'</p>':"";
+    if(intent)h+='<p class="d">你问的是：「'+intent+'」</p>';
+    h+='<div style="line-height:2.1;margin-top:8px">'+raw+'</div>';
+    $("readPanel").innerHTML=h;
+  }).catch(()=>{$("readPanel").innerHTML='<div style="line-height:2.1">'+buildLocal()+'</div>';});
+}
+
+function buildLocal(){
+  const d=card.isReversed?card.rev:card.up;
   let h='<h3>💡 初始觉察</h3><p>'+d.core+'</p>';
-  if(intent)h+='<p class="d" style="margin-top:6px">你问的是：<i>「'+intent+'」</i><br>'+d.q+'</p>';
-  h+='<h3>📖 牌义参考</h3><p style="font-size:.82em;color:var(--dm)">'+card.kw+' · 元素：'+card.el+'</p><p>'+d.core+'</p>';
+  if(intent)h+='<p class="d" style="margin-top:6px">'+d.q+'</p>';
+  h+='<h3>📖 牌义参考</h3><p style="font-size:.82em;color:var(--dm)">'+card.kw+' · 元素：'+card.el+'</p>';
   h+='<h3>🌱 今日行动建议</h3><p>'+d.what+'</p><p class="d">⚠ '+d.warn+'</p>';
   if(card.persona)h+='<p class="d" style="margin-top:6px">👤 '+card.persona+'</p>';
-  $("readPanel").innerHTML=h;
+  return h;
 }
 
 /* 保存/分享 */
