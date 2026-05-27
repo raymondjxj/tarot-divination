@@ -150,10 +150,10 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <div class="modes"><button class="md sel" data-s="1"><span class="n">1</span>今日指引</button><button class="md" data-s="3"><span class="n">3</span>过去·现在·未来</button><button class="md" data-s="5"><span class="n">5</span>关系十字</button><button class="md" data-s="10"><span class="n">10</span>凯尔特十字</button></div>
 <p style="text-align:center;font-size:.92em;margin-top:8px">你好，今天想探索什么？</p><p class="d" style="text-align:center">和自己的内心，安静对话</p><p style="text-align:center;font-size:.74em;color:var(--dm);margin-top:10px">今日状态</p>
 <div class="moods" id="moods">
-<div class="md" data-m="比较焦虑"><div class="mi">😰</div><div class="ml">比较焦虑</div></div>
-<div class="md" data-m="情绪低落"><div class="mi">😔</div><div class="ml">情绪低落</div></div>
-<div class="md" data-m="空想分心"><div class="mi">💭</div><div class="ml">空想/分心</div></div>
-<div class="md" data-m="难以抉择"><div class="mi">🤔</div><div class="ml">难以抉择</div></div>
+<div class="md" data-m="比较焦虑"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1 3 4 3 4-3 4-3"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><div class="ml">比较焦虑</div></div>
+<div class="md" data-m="情绪低落"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1-3 4-3 4 3 4 3"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><div class="ml">情绪低落</div></div>
+<div class="md" data-m="空想分心"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="2"/><circle cx="15" cy="10" r="2"/><path d="M8 14c0 0 1.5 2 4 2s4-2 4-2"/></svg><div class="ml">空想/分心</div></div>
+<div class="md" data-m="难以抉择"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/><path d="M9 15h6"/></svg><div class="ml">难以抉择</div></div>
 </div></div>
 <button class="btn" id="btnStart" onclick="goIntent()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>开始今日指引</button>
 <p class="d" style="text-align:center;margin-top:8px;cursor:pointer;display:none" id="readingHint" onclick="if(hasReading)showReading()">🔮 上一次解读仍在 · 点击查看</p>
@@ -269,8 +269,10 @@ $$("#intents .it").forEach(it=>it.onclick=()=>{
 });
 $("customIn").oninput=function(){intent=this.value;$("btnIntent").disabled=!this.value.trim()};
 
-/* 切换页面 */
-function goIntent(){if(spread==="1"&&!mood){alert("请先选择今日状态");return}scr("scrIntent")}
+function showMsg(m){$("modC").innerHTML='<div style="text-align:center;padding:20px"><p style="font-size:1em;color:var(--tx);margin-bottom:16px">'+m+'</p><button class="bsm" onclick="$(\x27mod\x27).classList.remove(\x27on\x27)">确定</button></div>';$("mod").classList.add("on")}
+
+/* 翻转页面 */
+function goIntent(){if(spread==="1"&&!mood){showMsg("请先选择今日状态");return}scr("scrIntent")}
 
 /* 洗牌 */
 function doShuffle(){
@@ -278,7 +280,7 @@ function doShuffle(){
   const n=+spread,all=[...DECK];
   for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
   cards=all.slice(0,n).map(c=>({...c,isReversed:Math.random()<0.28}));
-  hasReading=!1;$("navOrb").classList.remove("pulse");$("readingHint").style.display="none";
+  hasReading=!1;$("navOrb").classList.remove("pulse");$("readingHint").style.display="none";readingText="";
   card=cards[0];
   cards.forEach(c=>{new Image().src=c.img});
   $("drawTitle").textContent=n===1?"抽一张指引牌":"你的"+n+"张牌阵";
@@ -332,6 +334,7 @@ function doFlip(){
 
 /* 水晶球按钮 - 点亮底部导航水晶球 */
 function showBall(){
+  hasReading=!0;
   $("navOrb").classList.add("pulse");
 }
 
@@ -354,10 +357,22 @@ document.getElementById("mod").onclick=function(e){if(e.target===this)this.class
 function showReading(){
   hasReading=!0;$("readingHint").style.display="block";$("navOrb").classList.add("pulse");
   scr("scrRead");
-  // Show all cards in reading page
   $("readCardsRow").innerHTML=cards.map((c,i)=>'<img src="'+c.img+'" style="width:44px;height:68px;border-radius:6px;object-fit:cover;border:1px solid var(--ac);cursor:pointer;'+(c.isReversed?'transform:rotate(180deg)':'')+'" onclick="zoomCard('+i+')" title="'+c.name+'">').join('');
-  const d=card.isReversed?card.rev:card.up;
   $("readTitle").textContent=cards.length>1?"共"+cards.length+"张牌 — 点击上方卡牌放大查看":card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位");
+
+  // If readingText already loaded (from saved record), display directly, skip API
+  if(readingText){
+    let raw=readingText.replace(/\n/g,'<br>');
+    let h=mood?'<p class="d">今日状态：'+mood+'</p>':'';
+    if(intent)h+='<p class="d">你问的是：「'+intent+'」</p>';
+    h+='<div style="line-height:2.1;margin-top:8px">'+raw+'</div>';
+    // Show review if exists for this record
+    const today=new Date().toISOString().slice(0,10);
+    const ri=recs.find(r=>r.date===today);
+    if(ri&&ri.review){h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--bd)"><h3>📝 晚间回顾</h3>';if(ri.review.q1)h+='<p class="d">提醒：'+ri.review.q1+'</p>';if(ri.review.q2)h+='<p class="d">发现：'+ri.review.q2+'</p>';if(ri.review.q3)h+='<p class="d">行动：'+ri.review.q3+'</p>';h+='</div>';}
+    $("readPanel").innerHTML=h;return;
+  }
+
   $("readPanel").innerHTML='<p class="d" style="text-align:center;padding:30px">✦ 牌面正在揭示中…</p>';
 
   const payload={spread,question:intent||null,cards:cards.map((c,i)=>({name:c.name,pos:SP[+spread][i],el:c.el,reversed:c.isReversed,timeHint:c.isReversed?"3-6个月":"1-3个月",persona:c.persona||null})),pairs:[],elementSummary:null};
@@ -405,8 +420,10 @@ function fallbackCopy(t,b){
 /* 回顾 */
 function saveReview(){
   const rv={q1:$("rv1").value.trim(),q2:$("rv2").value.trim(),q3:$("rv3").value.trim()};
-  if(recs.length>0){recs[0].review=rv;localStorage.setItem("tv7sim",JSON.stringify(recs))}
-  alert("回顾已保存 🌙");
+  const today=new Date().toISOString().slice(0,10);
+  const ri=recs.findIndex(r=>r.date===today);
+  if(ri>=0){recs[ri].review=rv;localStorage.setItem("tv7sim",JSON.stringify(recs))}
+  upStats();alert("回顾已保存");
 }
 function upStats(){$("statN").textContent=recs.length;$("statR").textContent=recs.filter(r=>r.review).length;}
 
@@ -414,14 +431,15 @@ function upStats(){$("statN").textContent=recs.length;$("statR").textContent=rec
 function cal(d){
   const N=new Date();if(calY===undefined){calY=N.getFullYear();calM=N.getMonth()}else{calM+=d;calM<0?(calM=11,calY--):calM>11&&(calM=0,calY++)}
   $("calTitle").textContent=calY+"年"+(calM+1)+"月";let g=["日","一","二","三","四","五","六"].map(h=>'<div class="cdh">'+h+'</div>').join("");
-  const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate(),tdy=N.toISOString().slice(0,10);
+  const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate();
+  const tdy=N.toISOString().slice(0,10),tdyTs=new Date(tdy).getTime();
   for(let i=0;i<fd;i++)g+='<div class="cd om"></div>';
-  for(let d=1;d<=dim;d++){const ds=calY+"-"+String(calM+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");g+='<div class="cd'+(ds===tdy?" tdy":"")+(recs.some(r=>r.date===ds)?" dot":"")+'" onclick="showDay(\x27'+ds+'\x27)">'+d+'</div>'}
+  for(let d=1;d<=dim;d++){const ds=calY+"-"+String(calM+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");const isFut=new Date(ds).getTime()>tdyTs+86400000;const has=recs.some(r=>r.date===ds);let cls="cd";if(ds===tdy)cls+=" tdy";if(has)cls+=" dot";if(isFut)cls+=" om";g+='<div class="'+cls+'"'+(isFut?"":' onclick="showDay(\x27'+ds+'\x27)"')+'>'+d+'</div>'}
   $("calGrid").innerHTML=g;renderRecs();
 }
 function showDay(ds){
   const r=recs.find(x=>x.date===ds);
-  if(!r)return;
+  if(!r){showMsg("当天暂无记录");return;}
   cards=r.cards;card=cards[0];spread=r.spread||"1";mood=r.mood;intent=r.intent||"";readingText=r.reading||"";hasReading=!0;
   showReading();
 }
