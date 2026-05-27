@@ -300,12 +300,9 @@ function doShuffle(){
     // Celtic Cross: left cross + right arc column
     h+='<div style="position:relative;width:100%;max-width:380px;height:480px;margin:0 auto" id="drawGrid">';
     // Cross positions: [left%, top%] - spread wider, smaller cards
-    const pos=[[38,42],[38,42],[38,65],[11,42],[38,12],[65,42],[82,8],[82,26],[82,47],[82,73]];
+    const pos=[[36,11],[35,33],[35,80],[11,45],[35,56],[59,45],[82,11],[82,33],[82,56],[82,80]];
     cards.forEach((c,i)=>{
-      const isX=i===1;
-      const w=isX?'76px':'64px',ht=isX?'64px':'98px';
-      const rot=isX?' rotate(90deg)':'';
-      h+='<div class="cw" style="--cw:'+w+';--ch:'+ht+';position:absolute;left:'+pos[i][0]+'%;top:'+pos[i][1]+'%;transform:translate(-50%,-50%)'+rot+';z-index:'+(i===1?'2':'1')+'" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.38em;color:var(--dm);margin-top:1px;line-height:1;overflow:hidden;max-width:64px">'+SP[10][i].substring(0,4)+'</p></div>';
+      h+='<div class="cw" style="--cw:64px;--ch:98px;position:absolute;left:'+pos[i][0]+'%;top:'+pos[i][1]+'%;transform:translate(-50%,-50%);z-index:1" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.38em;color:var(--dm);margin-top:1px;line-height:1;overflow:hidden;max-width:64px">'+SP[10][i].substring(0,4)+'</p></div>';
     });
     h+='</div>';
   }else{
