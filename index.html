@@ -54,41 +54,9 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 
 .batch-hint{width:100%;text-align:center;color:rgba(167,139,250,.7);font-size:clamp(.85em,1.6vw,1em);letter-spacing:1px;margin-bottom:8px;animation:fadeIn .5s ease;padding:4px 0;}
 .selection-mode{justify-content:center!important;flex-wrap:wrap!important;overflow:visible!important;}
-.selection-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;}
-
-.selectable-card img{width:100%;height:100%;object-fit:cover;}
-.selectable-card .sc-num{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:.6em;color:rgba(167,139,250,.5);pointer-events:none;}
-.selectable-card:hover{transform:translateY(-3px);box-shadow:0 4px 16px rgba(124,58,237,.3);border-color:rgba(167,139,250,.5);}
-.selectable-card.picked{transform:translateY(-6px) scale(1.04);box-shadow:0 6px 20px rgba(200,160,240,.35);border-color:rgba(200,160,240,.6);}
-.selectable-card.picked::after{content:'';position:absolute;inset:-2px;border-radius:10px;pointer-events:none;box-shadow:inset 0 0 12px rgba(200,160,240,.2);}
-.summary-overlay{position:fixed;inset:0;background:rgba(5,0,20,.88);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .4s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
-.summary-card{background:linear-gradient(135deg,#1e1040,#110526);border:1px solid rgba(167,139,250,.35);border-radius:20px;padding:max(24px,4vw);max-width:680px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);max-height:85vh;overflow-y:auto;}
-.summary-card h2{color:var(--accent);margin-bottom:6px;font-size:1.3em;}
-.summary-sub{color:rgba(167,139,250,.5);font-size:.82em;margin-bottom:16px;}
-.summary-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;padding:4px 0;}
-.summary-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 10px;background:rgba(20,8,46,.5);border:1px solid rgba(167,139,250,.12);border-radius:12px;font-size:clamp(.75em,1.3vw,.85em);color:var(--light);text-align:center;position:relative;}
-.summary-item::after{content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:2px;border-radius:1px;opacity:.6;}
-.summary-item.el-火::after{background:#fb923c;}
-.summary-item.el-水::after{background:#60a5fa;}
-.summary-item.el-风::after{background:#facc15;}
-.summary-item.el-土::after{background:#4ade80;}
-.summary-item .si-pos{font-size:.62em;padding:2px 8px;border-radius:8px;font-weight:700;white-space:nowrap;color:rgba(180,160,210,.6);letter-spacing:1px;}
-.summary-item .si-name{font-weight:600;line-height:1.2;font-size:1.05em;}
-.summary-item .si-idx{font-size:.6em;color:rgba(167,139,250,.5);}
-.summary-item .si-meta{display:flex;gap:6px;margin-top:2px;}
-.summary-item .si-meta span{font-size:.58em;color:rgba(180,160,210,.4);}
-.summary-connections{margin-top:14px;padding:10px 0 0;border-top:1px solid rgba(180,150,220,.08);text-align:center;}
-.summary-connections p{font-size:clamp(.65em,1vw,.75em);color:rgba(180,160,210,.35);letter-spacing:1px;}
-.si-pos.upright{background:rgba(167,139,250,.15);color:#a78bfa;}
-.si-pos.reversed{background:rgba(239,68,68,.15);color:#f87171;}
-.summary-btn{margin-top:24px;padding:14px 40px;background:linear-gradient(135deg,var(--purple),#6d28d9);color:white;border:none;border-radius:14px;font-size:1.1em;cursor:pointer;font-family:inherit;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(124,58,237,.4);letter-spacing:2px;}
-.summary-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.6);}
 
 
-.card-back .card-pos-watermark{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:clamp(.6em,1vw,.72em);color:rgba(167,139,250,.55);letter-spacing:2px;pointer-events:none;z-index:1;}
-.card-back.show-pos::after{content:var(--pos-label);font-size:.65em!important;top:auto!important;bottom:10px!important;opacity:.7!important;}
 
-.card-back .card-pos-watermark{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:clamp(.6em,1vw,.72em);color:rgba(167,139,250,.55);letter-spacing:2px;pointer-events:none;z-index:1;}
 @media(max-width:420px){:root{--card-w:130px;--card-h:200px;}}
 @media(max-width:768px){.cards-area.single-card .card-wrapper{width:calc(var(--card-w)*1.3);height:calc(var(--card-h)*1.3);}}
 @media(max-width:420px){.cards-area.single-card .card-wrapper{width:calc(var(--card-w)*1.25);height:calc(var(--card-h)*1.25);}}
@@ -321,7 +289,7 @@ const MINOR_ARCANA=[
 ];
 
 const SPREADS={1:{count:1,pos:["今日指引"]},3:{count:3,pos:["过去的影响","当下的状态","未来的方向"]},5:{count:5,pos:["你的立场","关系的障碍","对方/环境","根基与支撑","最终的结果"]},10:{count:10,pos:["现在状况","横交阻碍","基础根基","过往影响","最高目标","不久将来","你的态度","周围环境","希望与恐惧","最终结果"]}};
-let spread='1',cards=[],flipped=0,longPressTimer=null;let batchIndex=0,batchPlan=[],allBatchesFlipped=!1,isAnimating=!1;
+let spread='1',cards=[],isAnimating=!1;
 
 document.querySelectorAll('.spread-btn').forEach(b=>{
  b.addEventListener('click',()=>{
@@ -389,7 +357,7 @@ function updateSelectionState(needed){
   if(h)h.innerHTML='已选择 <span style="color:var(--accent)">'+count+'</span> / '+needed+' 张';
   if(btn)btn.style.display=count>=needed?'block':'none';
 }
-function buildBatchPlan(count){if(count<=3)return[Array.from({length:count},(_,i)=>i)];if(count===5)return[[0,1,2],[3,4]];if(count===10)return[[0,1,2],[3,4,5],[6,7,8,9]];const p=[];for(let i=0;i<count;i+=3)p.push(Array.from({length:Math.min(3,count-i)},(_,j)=>i+j));return p;}function draw(){
+function draw(){
  const s=SPREADS[spread],all=[...CARDS,...MINOR_ARCANA];
  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
  cards=all.slice(0,s.count).map(c=>({...c,isReversed:Math.random()<0.28}));
@@ -398,57 +366,7 @@ function buildBatchPlan(count){if(count<=3)return[Array.from({length:count},(_,i
  renderSelectionSpread(pool,s.count);
 }
 
-function reset(){cards=[];flipped=0;window._pool=[];window._selected=[];window._needed=0;document.getElementById('cardsArea').innerHTML='';document.getElementById('reading').classList.remove('show');document.getElementById('summaryOverlay').style.display='none';}
-
-function renderCards(s){
- const fb=batchPlan[0]||[];
- const a=document.getElementById("cardsArea");a.innerHTML="";
- a.className="cards-area"+(spread==="1"?" single-card":"")+(spread==="10"?" ":"");
-
- const hint=document.createElement("div");
- hint.className="batch-hint";hint.id="batchHint";
- hint.textContent=batchPlan.length>1?"点击任意卡牌翻开（第1/"+batchPlan.length+"批）":"点击翻开卡牌";
- a.appendChild(hint);
-
- // Only render first batch initially
-   cards.forEach((c,i)=>{if(fb.indexOf(i)<0)return;
-  const w=document.createElement("div");w.className="card-wrapper";
-  w.dataset.cardIndex=i;
-  const inner=document.createElement("div");inner.className="card-inner";
-  inner.dataset.cardIndex=i;
-  const back=document.createElement("div");back.className="card-back";
-  back.dataset.cardIndex=i;
-  back.innerHTML='<img src="/back.png" alt="card back">';
-  const front=document.createElement("div");front.className="card-front";
-  front.innerHTML="<img src=\""+c.img+"\" alt=\""+c.name+"\">"+(c.isReversed?"<div class=\"rev-tag\">逆位</div>":"")+"<div class=\"info-overlay\"><div class=\"card-pos-line\">"+s.pos[i]+"</div><div class=\"card-title-line\">"+c.name+" · "+c.en+"</div></div><div class=\"tap-hint\">长按查看解读</div>";
-
-  w.addEventListener("click",(e)=>{e.stopPropagation();handleCardClick();});
-
-  let pressTimer,longPressed=false;
-  const openCardPopup=()=>showCardModal(c,s.pos[i]);
-  front.addEventListener("pointerdown",(e)=>{
-   if(!inner.classList.contains("flipped"))return;
-   e.stopPropagation();longPressed=false;
-   pressTimer=setTimeout(()=>{longPressed=true;openCardPopup();pressTimer=null;},500);
-  });
-  front.addEventListener("pointerup",(e)=>{
-   if(!inner.classList.contains("flipped"))return;
-   e.stopPropagation();
-   if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
-  });
-  front.addEventListener("pointerleave",()=>{if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}});
-  front.addEventListener("pointercancel",()=>{if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}});
-  front.addEventListener("dblclick",(e)=>{
-   if(!inner.classList.contains("flipped"))return;
-   e.stopPropagation();openCardPopup();
-  });
-
-  inner.appendChild(back);inner.appendChild(front);
-  w.appendChild(inner);a.appendChild(w);
- });
-}
-
-
+function reset(){cards=[];isAnimating=!1;window._pool=[];window._selected=[];window._needed=0;document.getElementById('cardsArea').innerHTML='';document.getElementById('reading').classList.remove('show');}
 
 function startSequentialFlip(){
   const wrappers=document.querySelectorAll('#cardsArea .card-wrapper');
@@ -490,68 +408,9 @@ function renderAllFlippedCards(){
   });
 }
 
-function handleCardClick(){
-  if(allBatchesFlipped||isAnimating)return;
-  if(batchIndex>=batchPlan.length)return;
-  const cb=batchPlan[batchIndex];
-  let target=-1;
-  for(let i=0;i<cb.length;i++){
-    const el=document.querySelector('.card-inner[data-card-index="'+cb[i]+'"]');
-    if(el&&!el.classList.contains('flipped')){target=cb[i];break;}
-  }
-  if(target<0)return;
-  isAnimating=!0;
-  const inner=document.querySelector('.card-inner[data-card-index="'+target+'"]');
-  if(inner){inner.classList.add('flipped');const f=inner.querySelector('.card-front');if(f)f.classList.add('flipped-card');}
-  flipped=document.querySelectorAll('.card-inner.flipped').length;
-  setTimeout(()=>{
-    isAnimating=!1;
-    const done=cb.every(i=>{const el=document.querySelector('.card-inner[data-card-index="'+i+'"]');return el&&el.classList.contains('flipped');});
-    if(!done){
-      const left=cb.filter(i=>{const el=document.querySelector('.card-inner[data-card-index="'+i+'"]');return el&&!el.classList.contains('flipped');}).length;
-      const h=document.getElementById('batchHint');if(h)h.innerHTML='还有 '+left+' 张待翻开（第'+(batchIndex+1)+'/'+batchPlan.length+'组）';
-    }else{
-      batchIndex++;
-      if(batchIndex>=batchPlan.length){allBatchesFlipped=!0;const h=document.getElementById('batchHint');if(h)h.innerHTML='';setTimeout(showSummaryModal,600);}
-      else{renderBatchCards(batchPlan[batchIndex]);const h=document.getElementById('batchHint');if(h)h.innerHTML='点击翻开（第'+(batchIndex+1)+'/'+batchPlan.length+'组）';}
-    }
-  },1000);
-}
-
-function renderBatchCards(indices){
-  const a=document.getElementById('cardsArea');
-  a.querySelectorAll('.card-wrapper').forEach(w=>w.remove());
-  const s=SPREADS[spread];
-  indices.forEach(i=>{
-    const c=cards[i],w=document.createElement('div');w.className='card-wrapper';w.dataset.cardIndex=i;
-    const inner=document.createElement('div');inner.className='card-inner';inner.dataset.cardIndex=i;
-    const back=document.createElement('div');back.className='card-back';back.dataset.cardIndex=i;
-    back.innerHTML='<img src="/back.png" alt="card back"><span class="card-pos-watermark">'+s.pos[i]+'</span>';
-    const front=document.createElement('div');front.className='card-front';
-    front.innerHTML="<img src=\""+c.img+"\" alt=\""+c.name+"\">"+(c.isReversed?"<div class=\"rev-tag\">逆位</div>":"")+"<div class=\"info-overlay\"><div class=\"card-pos-line\">"+s.pos[i]+"</div><div class=\"card-title-line\">"+c.name+" · "+c.en+"</div></div><div class=\"tap-hint\">双击/长按查看详情</div>";
-    w.addEventListener('click',(e)=>{e.stopPropagation();handleCardClick();});
-    let pt,longPressed=!1;
-    const openCP=()=>showCardModal(c,s.pos[i]);
-    front.addEventListener('pointerdown',(e)=>{if(!inner.classList.contains('flipped'))return;e.stopPropagation();longPressed=!1;pt=setTimeout(()=>{longPressed=!0;openCP();pt=null;},500);});
-    front.addEventListener('pointerup',(e)=>{if(!inner.classList.contains('flipped'))return;e.stopPropagation();if(pt){clearTimeout(pt);pt=null;}});
-    front.addEventListener('pointerleave',()=>{if(pt){clearTimeout(pt);pt=null;}});
-    front.addEventListener('pointercancel',()=>{if(pt){clearTimeout(pt);pt=null;}});
-    front.addEventListener('dblclick',(e)=>{if(!inner.classList.contains('flipped'))return;e.stopPropagation();openCP();});
-    inner.appendChild(back);inner.appendChild(front);w.appendChild(inner);a.appendChild(w);
-  });
-}
 
 
-function showSummaryModal(){
-  const ov=document.getElementById('summaryOverlay');
-  const list=document.getElementById('summaryList');
-  const count=document.getElementById('summaryCount');
-  const s=SPREADS[spread];
-  count.textContent=cards.length;
-  list.innerHTML=cards.map((c,i)=>'<div class="summary-item el-'+c.el+'"><span class="si-pos">'+s.pos[i]+'</span><span class="si-name">'+c.name+'</span><span class="si-idx">'+(c.isReversed?'— 逆位 —':'— 正位 —')+'</span><span class="si-meta"><span>'+c.el+'</span><span>'+timeHint(c)+'</span></span></div>').join('');
-  const pi=findPairInteractions(Array.from({length:cards.length},(_,i)=>i));if(pi.length>0){const pd=document.createElement('div');pd.className='summary-connections';pd.innerHTML='<p>'+pi.map(p=>p.card1.name+'  ·  '+p.card2.name).join('&emsp;')+'</p>';list.after(pd);}
-  ov.style.display='flex';document.getElementById('summaryViewBtn').onclick=()=>{ov.style.display='none';showReading();};ov.onclick=function(e){if(e.target===ov)ov.style.display='none';};document.getElementById('summaryViewBtn').onclick=()=>{ov.style.display='none';showReading();};ov.onclick=function(e){if(e.target===ov)ov.style.display='none';};
-}
+
 
 
 
@@ -894,15 +753,6 @@ function bigSummary(q){
  }catch(e){return'<p style="color:#f87171;text-align:center;padding:20px">解读错误:'+e.message+'</p>';}}
 </script>
 
-<div class="summary-overlay" id="summaryOverlay" style="display:none">
-  <div class="summary-card">
-    <h2>🔮 牌阵已揭示</h2>
-    <p class="summary-sub">共 <span id="summaryCount"></span> 张牌，以下是你抽到的全部</p>
-    <div class="summary-list" id="summaryList"></div>
-    <button class="summary-btn" id="summaryViewBtn">🔍 查看解读</button>
-    <p style="margin-top:16px;font-size:.72em;color:rgba(167,139,250,.35)">点击背景关闭</p>
-  </div>
-</div>
 
 </body>
 </html>
