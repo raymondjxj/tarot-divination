@@ -19,17 +19,17 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .container{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:max(16px,2vw);}
 
 /* 头部 */
-.header{text-align:center;padding:40px 20px 20px;}
+.header{text-align:center;padding:28px 20px 10px;}
 .header h1{font-size:clamp(1.8em,5vw,2.8em);background:linear-gradient(135deg,var(--accent),#a78bfa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
 .header .subtitle{color:#a78bfa;font-size:clamp(.9em,2vw,1.1em);letter-spacing:4px;}
 
 /* 牌阵选择 */
-.spread-selector{display:flex;justify-content:center;gap:max(8px,1vw);flex-wrap:wrap;margin:30px 0;}
+.spread-selector{display:flex;justify-content:center;gap:max(8px,1vw);flex-wrap:wrap;margin:20px 0 14px;}
 .spread-btn{padding:clamp(10px,2vw,14px) clamp(16px,3vw,28px);border:1px solid rgba(180,150,220,.15);font-size:clamp(.82em,1.5vw,.95em);font-weight:500;letter-spacing:1px;background:rgba(167,139,250,.1);color:var(--light);border-radius:12px;cursor:pointer;font-size:clamp(.85em,1.5vw,1em);font-family:inherit;transition:all .3s;backdrop-filter:blur(10px);white-space:nowrap;}
 .spread-btn:hover{background:rgba(160,130,220,.1);border-color:rgba(200,160,240,.25);}.spread-btn.active{background:rgba(140,120,200,.18);border-color:rgba(200,160,240,.4);box-shadow:0 0 12px rgba(160,130,220,.1);color:#ddd0f5;font-weight:600;transform:translateY(-2px);}
 
 /* 输入 */
-.question-area{display:flex;gap:12px;margin:20px 0 30px;justify-content:center;flex-wrap:wrap;}
+.question-area{display:flex;gap:12px;margin:10px 0 16px;justify-content:center;flex-wrap:wrap;}
 .question-area input{flex:1;min-width:200px;max-width:400px;padding:14px 20px;background:rgba(255,255,255,.05);border:1px solid rgba(167,139,250,.3);border-radius:16px;color:#e0d5ff;font-size:1em;font-family:inherit;outline:none;transition:all .3s;}
 .question-area input:focus{border-color:#a78bfa;box-shadow:0 0 20px rgba(167,139,250,.2);}
 .question-area input::placeholder{color:rgba(167,139,250,.4);}.quick-questions{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px;padding:0 4px;}
@@ -43,7 +43,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 .draw-btn:active{transform:translateY(0);}
 
 /* 卡牌区域 */
-.cards-area{display:flex;justify-content:center!important;gap:max(8px,1.5vw);flex-wrap:wrap;margin:30px 0;min-height:200px;align-items:center;width:100%;}.cards-area.scroll-row{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start!important;scroll-snap-type:x proximity;padding:0 8px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;will-change:scroll-position;overscroll-behavior-x:contain;scroll-behavior:smooth;justify-content:flex-start!important;}
+.cards-area{display:flex;justify-content:center!important;gap:max(8px,1.5vw);flex-wrap:wrap;margin:10px 0 20px;min-height:200px;align-items:center;width:100%;}.cards-area.scroll-row{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start!important;scroll-snap-type:x proximity;padding:0 8px 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;will-change:scroll-position;overscroll-behavior-x:contain;scroll-behavior:smooth;justify-content:flex-start!important;}
 .cards-area.scroll-row::-webkit-scrollbar{display:none;}
 .cards-area.scroll-row .card-wrapper{flex:0 0 auto;width:var(--card-w)!important;min-width:var(--card-w);scroll-snap-align:start;}
 
@@ -312,25 +312,26 @@ function renderSelectionSpread(pool,needed){
   const total=pool.length;
   const w=Math.min(window.innerWidth-40,600);
   const cx=w/2,cy=90;
+  const cardStates=[];
   pool.forEach((c,i)=>{
     const spread=Math.min(w*.75,340);
-    const step=spread/(total-1||1);
+    const step=total>1?spread/(total-1):0;
     const x=(w-spread)/2+i*step;
-    const y=cy;
-    const rot=(i/(total-1||1)-.5)*70;
+    const rot=(total>1?(i/(total-1)-.5)*70:0);
+    cardStates.push({x,rot});
     const card=document.createElement('div');card.className='fan-card';
-    card.style.cssText='position:absolute;left:'+x+'px;top:'+y+'px;transform:translateX(-50%) rotate('+rot+'deg)';
+    card.style.cssText='position:absolute;left:'+cx+'px;top:'+cy+'px;transform:translateX(-50%) rotate(0deg) scale(.3);opacity:0;transition:all .55s cubic-bezier(.34,1.56,.64,1) '+(i*.06)+'s';
     card.dataset.poolIndex=i;
     card.addEventListener('click',()=>{
       if(card.classList.contains('picked'))return;
       if(window._selected.length>=needed)return;
       const rect=card.getBoundingClientRect();
-      const w=card.offsetWidth;
-      const h=card.offsetHeight;
-      const cx=rect.left+rect.width/2;
-      const cy=rect.top+rect.height/2;
+      const cw=card.offsetWidth;
+      const ch=card.offsetHeight;
+      const fcx=rect.left+rect.width/2;
+      const fcy=rect.top+rect.height/2;
       const flyer=document.createElement('div');flyer.className='fan-card-flyer';
-      flyer.style.cssText='left:'+(cx-w/2)+'px;top:'+(cy-h/2)+'px;width:'+w+'px;height:'+h+'px';
+      flyer.style.cssText='left:'+(fcx-cw/2)+'px;top:'+(fcy-ch/2)+'px;width:'+cw+'px;height:'+ch+'px';
       document.body.appendChild(flyer);
       card.classList.add('picked');
       window._selected.push(i);
@@ -340,6 +341,17 @@ function renderSelectionSpread(pool,needed){
     fan.appendChild(card);
   });
   a.appendChild(fan);
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      const cards=fan.querySelectorAll('.fan-card');
+      cards.forEach((card,i)=>{
+        const s=cardStates[i];
+        card.style.left=s.x+'px';
+        card.style.transform='translateX(-50%) rotate('+s.rot+'deg) scale(1)';
+        card.style.opacity='1';
+      });
+    });
+  });
   const btn=document.createElement('button');btn.className='draw-btn';btn.id='revealBtn';
   btn.textContent='揭示命运';btn.style.display='none';btn.style.margin='16px auto';
   btn.addEventListener('click',()=>{
