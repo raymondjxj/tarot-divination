@@ -393,21 +393,20 @@ function startSequentialFlip(){
 }
 
 function showRevealButton(){
-  const a=document.getElementById('cardsArea');
   const existing=document.getElementById('revealFinalBtn');
   if(existing)existing.remove();
   const wrapper=document.createElement('div');
   wrapper.id='revealFinalBtn';
-  wrapper.style.cssText='width:100%;text-align:center;margin:24px 0;animation:revealPulse .6s ease,revealGlow 2s ease-in-out infinite';
+  wrapper.style.cssText='position:fixed;bottom:max(20px,4vh);left:50%;transform:translateX(-50%);z-index:50;animation:revealPulse .6s ease';
   const btn=document.createElement('button');
-  btn.className='draw-btn';btn.textContent='🔮 揭示命运';
-  btn.style.cssText='font-size:1.2em;padding:16px 48px;animation:revealGlow 2s ease-in-out infinite';
+  btn.className='draw-btn';btn.textContent='🃏 翻开卡牌';
+  btn.style.cssText='font-size:1.15em;padding:14px 42px;animation:revealGlow 2s ease-in-out infinite;pointer-events:auto';
   btn.addEventListener('click',()=>{
     wrapper.remove();
     showReading();
   });
   wrapper.appendChild(btn);
-  a.after(wrapper);
+  document.body.appendChild(wrapper);
 }
 
 function renderAllFlippedCards(){
