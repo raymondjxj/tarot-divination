@@ -297,14 +297,14 @@ function doShuffle(){
     });
     h+='</div>';
   }else if(n===10){
-    // Celtic Cross: 4-col grid, card 1 crosses card 3
-    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:360px;margin:0 auto;justify-items:center" id="drawGrid">';
-    const layout=[null,0,1,2,3,3,4,5,6,7,8,9,null,null,null,null];
-    layout.forEach((ci,gi)=>{
-      if(ci===null){h+='<div></div>';return}
-      const c=cards[ci],w=ci===1?'80px':'74px',hgt=ci===1?'122px':'114px';
-      const rot=ci===1?' style="transform:rotate(90deg)"':'';
-      h+='<div class="cw" style="--cw:'+w+';--ch:'+hgt+'" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png"'+rot+' alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.48em;color:var(--dm);margin-top:1px;line-height:1.1">'+SP[10][ci].substring(0,4)+'</p></div>';
+    // Celtic Cross with absolute positioning
+    h+='<div style="position:relative;width:100%;max-width:360px;height:380px;margin:0 auto" id="drawGrid">';
+    // Card positions: [left, top] in percentage
+    const pos=[[45,45],[37,45],[45,55],[15,50],[45,10],[73,50],[80,15],[80,35],[80,55],[80,75]];
+    cards.forEach((c,i)=>{
+      const w=i===1?'102px':'78px',ht=i===1?'78px':'120px'; // card 1 is horizontal
+      const rot=i===1?'transform:rotate(90deg);':'';
+      h+='<div class="cw" style="--cw:'+w+';--ch:'+ht+';position:absolute;left:'+pos[i][0]+'%;top:'+pos[i][1]+'%;transform:translate(-50%,-50%)'+(i===1?' rotate(90deg)':'')+'" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.46em;color:var(--dm);margin-top:1px;line-height:1">'+SP[10][i].substring(0,4)+'</p></div>';
     });
     h+='</div>';
   }else{
@@ -318,7 +318,7 @@ function doShuffle(){
 }
 
 function doFlip(){
-  $("btnFlip").disabled=!0;
+  $("btnFlip").style.display="none";
   cards.forEach((c,i)=>{
     setTimeout(()=>{
       $("drawCI"+i).classList.add("flipped");
@@ -336,7 +336,7 @@ function showBall(){
   const ex=document.getElementById("cbw");if(ex)ex.remove();
   const w=document.createElement("div");w.id="cbw";
   w.style.cssText="position:fixed;bottom:max(20px,4vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:cbIn .65s ease";
-  w.innerHTML='<div style="width:60px;height:60px;border-radius:50%;margin:0 auto 5px;background:radial-gradient(circle at 35% 30%,rgba(215,185,250,.94),rgba(135,85,210,.82) 40%,rgba(60,18,115,.88) 70%,rgba(14,4,38,.94));box-shadow:0 0 26px rgba(155,100,240,.55),0 0 55px rgba(115,55,195,.3);animation:cbGl 3s ease-in-out infinite"></div><div style="color:rgba(200,180,238,.78);font-size:.74em;letter-spacing:2px;animation:cT 3s ease-in-out infinite">触碰水晶球 · 揭示命运</div>';
+  w.innerHTML='<div style="position:relative;width:64px;height:64px;margin:0 auto 6px"><div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(200,180,250,.7) 0%,rgba(160,120,230,.4) 25%,rgba(80,40,160,.25) 55%,rgba(30,10,80,.15) 80%,rgba(10,5,30,.05) 100%);box-shadow:0 0 30px rgba(160,120,240,.25),0 0 60px rgba(120,80,200,.12),inset 0 0 30px rgba(180,150,250,.15);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);animation:cbGl 3s ease-in-out infinite"></div><div style="position:absolute;top:14%;left:22%;width:22%;height:18%;border-radius:50%;background:rgba(255,255,255,.35);transform:rotate(-25deg);box-shadow:0 0 8px rgba(255,255,255,.15)"></div><div style="position:absolute;top:28%;left:52%;width:10%;height:8%;border-radius:50%;background:rgba(255,255,255,.2)"></div><div style="position:absolute;bottom:16%;right:24%;width:30%;height:28%;border-radius:50%;background:radial-gradient(circle,rgba(180,140,240,.1),transparent 70%)"></div></div><div style="color:rgba(200,180,238,.75);font-size:.72em;letter-spacing:2px;animation:cT 3s ease-in-out infinite;text-shadow:0 0 8px rgba(160,120,240,.3)">触碰水晶球 · 揭示命运</div>';
   w.onclick=()=>{w.remove();showReading()};
   $("drawArea").appendChild(w);
 }
@@ -347,7 +347,7 @@ function zoomCard(i){
   $("mod").classList.add("on");
   const d=c.isReversed?c.rev:c.up;
   let h='<button class="mx" onclick="document.getElementById(\x27mod\x27).classList.remove(\x27on\x27)">✕</button>';
-  h+='<img src="'+c.img+'" style="width:100%;max-width:200px;border-radius:12px;display:block;margin:0 auto 8px;border:2px solid var(--ac);box-shadow:0 8px 28px rgba(110,60,200,.4)'+(c.isReversed?';transform:rotate(180deg)':'')+'">';
+  h+='<img src="'+c.img+'" style="width:100%;max-width:200px;border-radius:12px;display:block;margin:0 auto 8px;box-shadow:0 8px 28px rgba(110,60,200,.4)'+(c.isReversed?';transform:rotate(180deg)':'')+'">';
   h+='<p style="color:var(--a2);font-size:.74em;letter-spacing:1px;text-align:center">'+SP[+spread][i]+' '+(c.isReversed?"逆位":"正位")+'</p>';
   h+='<p style="font-size:1.05em;font-weight:700;text-align:center">'+c.name+" · "+c.en+'</p>';
   h+='<p style="line-height:1.8;font-size:.88em;margin-top:8px">'+d.core+'</p>';
