@@ -93,7 +93,7 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 /* 解读区 */
 .reading{background:rgba(255,255,255,.02);border:1px solid rgba(180,150,220,.12);border-radius:20px;padding:max(20px,3vw);margin-top:30px;display:none;backdrop-filter:blur(10px);}
 .reading.show{display:block;animation:fadeIn .6s ease;}
-.fan-container{position:relative;width:100%;max-width:620px;height:160px;overflow:visible;margin:0 auto 12px}.fan-card{width:clamp(52px,9vw,70px);height:clamp(78px,13vw,105px);border-radius:5px;cursor:pointer;border:2px solid rgba(200,160,240,.2);background:url(/back.png) center/cover;box-shadow:0 3px 10px rgba(0,0,0,.4);transform-origin:bottom center;transition:margin-top .15s ease,filter .15s ease,box-shadow .15s ease,border-color .15s ease;z-index:1}.fan-card:hover{margin-top:-8px;z-index:20;filter:brightness(1.18);border-color:rgba(200,160,240,.5);box-shadow:0 6px 22px rgba(200,160,240,.35)}.fan-card.picked{pointer-events:none;opacity:0;transition:opacity .2s ease}.fan-card-flyer{position:fixed;z-index:1000;border-radius:5px;border:2px solid rgba(200,160,240,.45);background:url(/back.png) center/cover no-repeat;background-size:cover;box-shadow:0 6px 30px rgba(124,58,237,.55);pointer-events:none;transform-origin:center center;filter:brightness(1.1);will-change:transform,opacity;animation:cardFlyAway 1s ease-out forwards}@keyframes cardFlyAway{0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}20%{transform:translate(3px,-25px) scale(1.05) rotate(3deg);opacity:0.9}100%{transform:translate(-2px,-360px) scale(0.04) rotate(16deg);opacity:0}}@keyframes cardAppear{from{opacity:0;transform:translateY(30px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fan-container{position:relative;width:100%;max-width:620px;height:160px;overflow:visible;margin:0 auto 12px}.fan-card{width:clamp(52px,9vw,70px);height:clamp(78px,13vw,105px);border-radius:5px;cursor:pointer;border:2px solid rgba(200,160,240,.2);background:url(/back.png) center/cover;box-shadow:0 3px 10px rgba(0,0,0,.4);transform-origin:bottom center;transition:margin-top .15s ease,filter .15s ease,box-shadow .15s ease,border-color .15s ease;z-index:1}.fan-card:hover{margin-top:-8px;z-index:20;filter:brightness(1.18);border-color:rgba(200,160,240,.5);box-shadow:0 6px 22px rgba(200,160,240,.35)}.fan-card.picked{pointer-events:none;opacity:0;transition:opacity .2s ease}.fan-card-flyer{position:fixed;z-index:1000;border-radius:5px;border:2px solid rgba(200,160,240,.45);background:url(/back.png) center/cover no-repeat;background-size:cover;box-shadow:0 6px 30px rgba(124,58,237,.55);pointer-events:none;transform-origin:center center;filter:brightness(1.1);will-change:transform,opacity;animation:cardFlyAway 1s ease-out forwards}@keyframes cardFlyAway{0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}20%{transform:translate(3px,-25px) scale(1.05) rotate(3deg);opacity:0.9}100%{transform:translate(-2px,-360px) scale(0.04) rotate(16deg);opacity:0}}@keyframes cardAppear{from{opacity:0;transform:translateY(30px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes revealPulse{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes revealGlow{0%,100%{box-shadow:0 4px 20px rgba(124,58,237,.4)}50%{box-shadow:0 4px 40px rgba(180,130,240,.7),0 0 60px rgba(124,58,237,.3)}}
 .reading h3{color:var(--accent);font-size:1.4em;margin-bottom:20px;text-align:center;}
 .summary-box{margin-top:24px;padding:24px;background:rgba(167,139,250,.08);border-radius:16px;line-height:2.1;font-size:.95em;}
 .summary-box strong{color:var(--accent);}.reading-card{background:rgba(30,20,60,.3);border:1px solid rgba(180,150,220,.1);border-radius:14px;padding:16px 18px;margin:10px 0;animation:fadeIn .5s ease both;backdrop-filter:blur(4px);}
@@ -143,7 +143,6 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 <div class="quick-questions">
   <span class="qq-label">试着问问：</span>
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我们接下来会怎样？</button>
-  <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">他/她现在怎么看我？</button>
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我最近的事业方向如何？</button>
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">我应该继续坚持吗？</button>
   <button class="qq-btn" onclick="document.getElementById('question').value=this.textContent;document.getElementById('question').focus()">今天宇宙想提醒我什么？</button>
@@ -154,6 +153,8 @@ body{font-family:'Noto Serif SC',serif;min-height:100vh;min-height:100dvh;backgr
 </div>
 <div class="modal-overlay" id="modal" style="display:none" onclick="closeModal(event)"><div class="modal-content" id="modalContent"></div></div>
 <script>
+/* 自动全屏（需用户手势，首次交互时触发） */
+(function(){let done=!1;function go(){if(done)return;done=!0;const e=document.documentElement;if(e.requestFullscreen){e.requestFullscreen().catch(()=>{})}else if(e.webkitRequestFullscreen){e.webkitRequestFullscreen()}document.removeEventListener('click',go);document.removeEventListener('touchstart',go);}document.addEventListener('click',go,{once:!0});document.addEventListener('touchstart',go,{once:!0});})();
 /* 星空 */
 (function(){
 const c=document.getElementById('stars');
@@ -388,7 +389,25 @@ function startSequentialFlip(){
     },i*delay);
   });
   const total=count*delay+920;
-  setTimeout(()=>{isAnimating=!1;if(needsScroll)ca.scrollTo({left:0,behavior:'smooth'});showReading();},total);
+  setTimeout(()=>{isAnimating=!1;if(needsScroll)ca.scrollTo({left:0,behavior:'smooth'});showRevealButton();},total);
+}
+
+function showRevealButton(){
+  const a=document.getElementById('cardsArea');
+  const existing=document.getElementById('revealFinalBtn');
+  if(existing)existing.remove();
+  const wrapper=document.createElement('div');
+  wrapper.id='revealFinalBtn';
+  wrapper.style.cssText='width:100%;text-align:center;margin:24px 0;animation:revealPulse .6s ease,revealGlow 2s ease-in-out infinite';
+  const btn=document.createElement('button');
+  btn.className='draw-btn';btn.textContent='🔮 揭示命运';
+  btn.style.cssText='font-size:1.2em;padding:16px 48px;animation:revealGlow 2s ease-in-out infinite';
+  btn.addEventListener('click',()=>{
+    wrapper.remove();
+    showReading();
+  });
+  wrapper.appendChild(btn);
+  a.after(wrapper);
 }
 
 function renderAllFlippedCards(){
