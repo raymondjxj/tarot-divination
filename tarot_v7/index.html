@@ -397,7 +397,15 @@ function saveRec(){
 }
 function shareRec(){
   const t="🔮 塔罗 · 自察指引\n"+(mood?"\n状态："+mood:"")+(intent?"\n问：「"+intent+"」":"")+"\n"+cards.map((c,i)=>SP[+spread][i]+" · "+c.name+"（"+(c.isReversed?"逆位":"正位")+"）").join("\n")+"\n\n"+(readingText||"")+"\n\n—— 不替你决定命运，只帮你更理解自己";
-  navigator.clipboard.writeText(t).then(()=>{const b=event.target.closest("button");b.textContent="已复制!";setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{alert("复制失败，请检查浏览器权限")});
+  const b=event.target.closest("button");
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(()=>{b.textContent="已复制!";setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{fallbackCopy(t,b)});
+  }else{fallbackCopy(t,b)}
+}
+function fallbackCopy(t,b){
+  const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();
+  try{document.execCommand("copy");b.textContent="已复制!"}catch(e){b.textContent="复制失败"}
+  document.body.removeChild(ta);setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500);
 }
 
 /* 回顾 */
