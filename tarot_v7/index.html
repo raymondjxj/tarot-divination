@@ -40,6 +40,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;max-width:340px;margin:12px auto;padding:12px 20px;background:linear-gradient(135deg,rgba(139,92,246,.28),rgba(109,40,217,.12));border:1px solid rgba(160,120,240,.3);border-radius:var(--r);color:#fff;font-size:.95em;font-family:inherit;font-weight:600;cursor:pointer;transition:.3s;box-shadow:0 4px 20px rgba(139,92,246,.25);letter-spacing:.5px}
 .btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(160,130,250,.4)}
 .btn:active{transform:translateY(0)}.btn:disabled{opacity:.35;pointer-events:none}
+.pulse-btn{animation:pulseBtn 2.5s ease-in-out infinite}@keyframes pulseBtn{0%,to{box-shadow:0 4px 20px rgba(139,92,246,.25)}50%{box-shadow:0 4px 32px rgba(160,120,250,.5),0 0 50px rgba(139,92,246,.2)}}
 
 .bsm{padding:8px 18px;border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.5);color:var(--dm);font-size:.78em;font-family:inherit;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;gap:5px}
 .bsm:hover{background:rgba(139,92,246,.1);border-color:var(--b2);color:var(--tx)}
@@ -134,46 +135,50 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <div class="shfl" id="shfl"><div class="vx"></div><div class="sht">✦ 深呼吸，洗牌中…</div><div class="shs">放松内在，感受你的直觉</div><div class="shb"><div class="shbf"></div></div></div>
 
 <div class="app">
-<!-- 首页 -->
+<!-- 第1步：入口 -->
 <div class="scr on" id="scrHome">
 <div class="hdr"><h1>塔罗自察</h1><p class="sub">在安静中，看见内心的答案</p></div>
-
-<!-- 主视觉：发光的牌背 -->
-<div style="text-align:center;margin:12px 0 6px">
-<div class="cw" style="--cw:100px;--ch:152px;margin:0 auto;opacity:.85"><div class="ci" style="animation:fu 1s ease"><div class="cb" style="box-shadow:0 0 30px rgba(140,100,220,.35),0 0 60px rgba(100,60,180,.15)"><img src="/tarot/back.png" alt=""></div></div></div>
+<div style="text-align:center;margin:24px 0 16px">
+<div class="cw" style="--cw:130px;--ch:200px;margin:0 auto;opacity:.9"><div class="ci"><div class="cb" style="box-shadow:0 0 40px rgba(160,120,240,.4),0 0 80px rgba(100,50,180,.2);animation:fu 1.2s ease"><img src="/tarot/back.png" alt=""></div></div></div>
+</div>
+<button class="btn pulse-btn" onclick="scr('scrSpread')">开始洞察</button>
+<p class="d" style="text-align:center;margin-top:16px;cursor:pointer;display:none" id="readingHint" onclick="if(hasReading)showReading()">✦ 上一次解读仍在 · 点击查看</p>
 </div>
 
+<!-- 第2步：选择洞察方式 -->
+<div class="scr" id="scrSpread">
+<div class="sttl">选择你的洞察方式</div>
 <div class="pnl" style="background:rgba(18,9,40,.75);border-color:rgba(181,140,255,.18)">
-<p class="d" style="text-align:center;font-size:.68em;letter-spacing:3px;color:var(--dm);margin-bottom:8px">✦ 选择牌阵 ✦</p>
+<p class="d" style="text-align:center;margin-bottom:10px">让牌阵为你指明方向</p>
 <div class="spreads" id="spreads">
-<button class="spd sel" data-s="1"><span class="spd-n">Ⅰ</span><span class="spd-l">今日指引</span><span class="spd-d">1 张牌 · 快速洞察</span></button>
-<button class="spd" data-s="3"><span class="spd-n">Ⅲ</span><span class="spd-l">三张牌阵</span><span class="spd-d">过去 · 现在 · 未来</span></button>
-<button class="spd" data-s="5"><span class="spd-n">Ⅴ</span><span class="spd-l">关系十字</span><span class="spd-d">看清能量流动</span></button>
-<button class="spd" data-s="10"><span class="spd-n">Ⅹ</span><span class="spd-l">凯尔特十字</span><span class="spd-d">深入探索复杂问题</span></button>
+<button class="spd sel" data-s="1"><span class="spd-n">Ⅰ</span><span class="spd-l">今时今刻</span><span class="spd-d">一张牌的此刻启示</span></button>
+<button class="spd" data-s="3"><span class="spd-n">Ⅲ</span><span class="spd-l">时间之流</span><span class="spd-d">过去 · 现在 · 未来</span></button>
+<button class="spd" data-s="5"><span class="spd-n">Ⅴ</span><span class="spd-l">关系十字</span><span class="spd-d">贯穿能量的流向</span></button>
+<button class="spd" data-s="10"><span class="spd-n">Ⅹ</span><span class="spd-l">凯尔特十字</span><span class="spd-d">深度探索复杂问题</span></button>
 </div>
-<p class="d" style="text-align:center;margin-top:10px">此刻，你最想看清什么？</p>
+<button class="btn" onclick="scr('scrFocus')">继续</button>
+</div>
+</div>
+
+<!-- 第3步：看清迷雾 -->
+<div class="scr" id="scrFocus">
+<div class="sttl">此刻，你想看清什么？</div>
+<div class="pnl" style="background:rgba(18,9,40,.75);border-color:rgba(181,140,255,.18)">
+<p class="d" style="text-align:center;margin-bottom:8px">告诉牌阵你心中的问题</p>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9 9a3 3 0 1 1 6 0c0 3-3 6-3 6s-3-3-3-6Z"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span style="font-size:.82em;color:var(--dm)">你的问题（可选）</span></div>
+<input class="inp" id="qi" placeholder="默念你想问的事…">
+<p class="d" style="text-align:center;margin:10px 0 6px">此刻的能量</p>
 <div class="moods" id="moods">
-<div class="md" data-m="内心迷雾"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="ml">内心迷雾</div><div class="ms">理清焦虑与不安</div></div>
-<div class="md" data-m="情绪低潮"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M12 3a6 6 0 0 0-6 6c0 4 6 12 6 12s6-8 6-12a6 6 0 0 0-6-6z"/></svg></div><div class="ml">情绪低潮</div><div class="ms">想要被温柔接住</div></div>
-<div class="md" data-m="思绪游离"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/><path d="M12 2a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"/></svg></div><div class="ml">思绪游离</div><div class="ms">想重新聚焦</div></div>
-<div class="md" data-m="命运岔路"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M7 7l10 10M17 7v10H7"/></svg></div><div class="ml">命运岔路</div><div class="ms">想看清选择</div></div>
-</div></div>
-<button class="btn" id="btnStart" onclick="goIntent()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3 6 6.5 1-4.5 4.5 1 6.5L12 17l-6 3 1-6.5L2.5 9 9 8z"/></svg>让牌回应此刻</button>
-<p class="d" style="text-align:center;margin-top:8px;cursor:pointer;display:none" id="readingHint" onclick="if(hasReading)showReading()">✦ 上一次解读仍在 · 点击查看</p>
+<div class="md" data-m="内心迷雾"><div class="mi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="ml">内心迷雾</div><div class="ms">理清焦虑与不安</div></div>
+<div class="md" data-m="情绪低潮"><div class="mi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M12 3a6 6 0 0 0-6 6c0 4 6 12 6 12s6-8 6-12a6 6 0 0 0-6-6z"/></svg></div><div class="ml">情绪低潮</div><div class="ms">想要被温柔接住</div></div>
+<div class="md" data-m="思绪游离"><div class="mi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/><path d="M12 2a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"/></svg></div><div class="ml">思绪游离</div><div class="ms">想重新聚焦</div></div>
+<div class="md" data-m="命运岔路"><div class="mi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M7 7l10 10M17 7v10H7"/></svg></div><div class="ml">命运岔路</div><div class="ms">想看清选择</div></div>
+</div>
+<button class="btn" id="btnStart" onclick="doShuffle()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3 6 6.5 1-4.5 4.5 1 6.5L12 17l-6 3 1-6.5L2.5 9 9 8z"/></svg>让牌回应此刻</button>
+</div>
 </div>
 
 <!-- 设定意图 -->
-<div class="scr" id="scrIntent">
-<div class="sttl">设定你的意图</div>
-<div class="pnl"><p class="d">聚焦一个问题，倾听内在答案</p>
-<div class="intents" id="intents">
-<div class="it" data-in="今天，我需要得到什么样的启发？">今天，我需要得到什么样的启发？</div>
-<div class="it" data-in="今天，有什么事值得我注意？">今天，有什么事值得我注意？</div>
-<div class="it" data-in="关于我此刻的情绪，我需要看见什么？">关于我此刻的情绪，我需要看见什么？</div>
-<div class="it" data-in="custom">✎ 其他，自由书写…</div>
-</div>
-<input class="inp" id="customIn" placeholder="写下你的意图…" style="display:none"></div>
-<button class="btn" id="btnIntent" disabled onclick="doShuffle()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>开始洗牌</button>
 </div>
 
 <!-- 抽牌 -->
@@ -263,22 +268,12 @@ $$(".spreads .spd").forEach(b=>b.onclick=()=>{$$(".spreads .spd").forEach(x=>x.c
 /* 情绪选择 */
 $$("#moods .md").forEach(m=>m.onclick=()=>{$$("#moods .md").forEach(x=>x.classList.remove("sel"));m.classList.add("sel");mood=m.dataset.m;$("btnStart").disabled=!1});
 
-/* 意图选择 */
-$$("#intents .it").forEach(it=>it.onclick=()=>{
-  $$("#intents .it").forEach(x=>x.classList.remove("sel"));
-  it.classList.add("sel");
-  if(it.dataset.in==="custom"){$("customIn").style.display="block";$("customIn").focus();intent="";$("btnIntent").disabled=!0}
-  else{$("customIn").style.display="none";intent=it.dataset.in;$("btnIntent").disabled=!1}
-});
-$("customIn").oninput=function(){intent=this.value;$("btnIntent").disabled=!this.value.trim()};
-
 function showMsg(m){$("modC").innerHTML='<div style="text-align:center;padding:20px"><p style="font-size:1em;color:var(--tx);margin-bottom:16px">'+m+'</p><button class="bsm" onclick="$(\x27mod\x27).classList.remove(\x27on\x27)">确定</button></div>';$("mod").classList.add("on")}
-
-/* 翻转页面 */
-function goIntent(){if(spread==="1"&&!mood){showMsg("请先选择今日状态");return}scr("scrIntent")}
 
 /* 洗牌 */
 function doShuffle(){
+  intent=$("qi")?$("qi").value.trim():"";
+  if(spread==="1"&&!mood){showMsg("请先选择内心状态");return}
   scr("scrDraw");
   const n=+spread,all=[...DECK];
   for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
