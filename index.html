@@ -589,7 +589,7 @@ function showReading(){
  r.style.display='none';r.offsetHeight;r.style.display='';
  r.classList.add('show');
  const ca=document.getElementById("cardsArea");
- if(spread!=='1'&&cards.length<=3){ca.style.justifyContent="center";ca.style.flexWrap="wrap";}
+ if(spread!=='1'&&cards.length<=3){ca.style.justifyContent="center";}
  if(cards.length>3){requestAnimationFrame(()=>{ca.scrollLeft=0;requestAnimationFrame(()=>{ca.scrollLeft=0;});});}
  const payload={spread:spread,question:q||null,cards:cards.map((c,i)=>({name:c.name,pos:s.pos[i],el:c.el,reversed:c.isReversed,timeHint:timeHint(c),persona:c.persona||null})),pairs:[],elementSummary:null};
  const allPairs=findPairInteractions(Array.from({length:cards.length},(_,i)=>i));
