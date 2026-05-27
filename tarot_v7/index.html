@@ -46,6 +46,12 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .bsm{padding:8px 18px;border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.5);color:var(--dm);font-size:.78em;font-family:inherit;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;gap:5px}
 .bsm:hover{background:rgba(139,92,246,.1);border-color:var(--b2);color:var(--tx)}
 
+/* 模式选择 */
+.modes{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:4px}
+.modes .md{padding:clamp(6px,1.2vw,8px) clamp(12px,2.5vw,16px);border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.45);color:var(--dm);font-size:clamp(.76em,1.4vw,.84em);font-family:inherit;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.modes .md:hover,.modes .md.sel{border-color:var(--b2);background:var(--a3);color:var(--tx);box-shadow:0 0 10px rgba(139,92,246,.06)}
+.modes .md .n{font-weight:700;color:var(--a2)}.modes .md.sel .n{color:var(--g2)}
+
 /* 情绪卡片 */
 .moods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
 .md{padding:12px 10px;border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.45);cursor:pointer;text-align:center;transition:.3s;font-family:inherit}
@@ -139,7 +145,9 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <!-- 首页 -->
 <div class="scr on" id="scrHome">
 <div class="hdr"><div class="orb"></div><h1>塔罗 · 自察指引</h1><p class="sub">不替你决定命运，只帮你更理解自己</p></div>
-<div class="pnl"><p style="text-align:center;font-size:.92em">你好，今天想探索什么？</p><p class="d" style="text-align:center">和自己的内心，安静对话</p><p style="text-align:center;font-size:.74em;color:var(--dm);margin-top:10px">今日状态</p>
+<div class="pnl">
+<div class="modes"><button class="md sel" data-s="1"><span class="n">1</span>今日指引</button><button class="md" data-s="3"><span class="n">3</span>过去·现在·未来</button><button class="md" data-s="5"><span class="n">5</span>关系十字</button><button class="md" data-s="10"><span class="n">10</span>凯尔特十字</button></div>
+<p style="text-align:center;font-size:.92em;margin-top:8px">你好，今天想探索什么？</p><p class="d" style="text-align:center">和自己的内心，安静对话</p><p style="text-align:center;font-size:.74em;color:var(--dm);margin-top:10px">今日状态</p>
 <div class="moods" id="moods">
 <div class="md" data-m="比较焦虑"><div class="mi">😰</div><div class="ml">比较焦虑</div></div>
 <div class="md" data-m="情绪低落"><div class="mi">😔</div><div class="ml">情绪低落</div></div>
@@ -165,11 +173,8 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 
 <!-- 抽牌 -->
 <div class="scr" id="scrDraw">
-<div class="sttl">抽一张指引牌</div>
-<p class="d" style="text-align:center;margin-bottom:12px">先安静下来，感受你的选择</p>
-<div class="cw" id="drawCard"><div class="ci" id="drawCI"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF"></div></div></div>
-<p class="d" style="text-align:center;margin:14px 0 4px">翻牌是一场心灵的开启</p>
-<button class="btn" id="btnFlip" onclick="doFlip()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 8v8"/><path d="M8 12l4 4 4-4"/></svg>翻开这张牌</button>
+<div class="sttl" id="drawTitle">抽一张指引牌</div>
+<div id="drawArea"></div>
 </div>
 
 <!-- 解读 -->
@@ -212,17 +217,35 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <div class="ni sel" data-t="home" onclick="tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">首页</span></div>
 <div class="ni" data-t="review" onclick="tab('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nl">日记</span></div>
 <div class="ni" data-t="recs" onclick="tab('recs')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">记录</span></div>
-<div class="ni" data-t="home" onclick="tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">我的</span></div>
+<div class="ni" data-t="me" onclick="tab('me')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">我的</span></div>
 </div>
+
+<!-- 我的 -->
+<div class="scr" id="scrMe">
+<div class="hdr"><div class="orb"></div><h1>我的</h1></div>
+<div class="pnl" style="text-align:center">
+<p style="font-size:1.05em;font-weight:600">塔罗 · 自察指引</p>
+<p class="d">不替你决定命运，只帮你更理解自己</p>
+<div style="margin:14px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="padding:12px 8px;background:var(--sf2);border-radius:var(--r)"><p style="font-size:1.2em;font-weight:700;color:var(--a2)" id="statN">0</p><p class="d">抽牌次数</p></div>
+<div style="padding:12px 8px;background:var(--sf2);border-radius:var(--r)"><p style="font-size:1.2em;font-weight:700;color:var(--g2)" id="statR">0</p><p class="d">已复盘</p></div>
+</div>
+<button class="bsm" onclick="if(confirm('清除所有记录？')){recs=[];localStorage.clear();upStats()}">清除记录</button>
+</div>
+</div></div>
 
 <script>
 /* 星空 */
 (()=>{const c=document.getElementById("stars");for(let i=0;i<50;i++){const s=document.createElement("div");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";const z=Math.random()*3+1;s.style.width=z+"px";s.style.height=z+"px";s.style.setProperty("--d",(Math.random()*3+2)+"s");s.style.animationDelay=Math.random()*3+"s";c.appendChild(s)}})();
 
 /* 状态 */
-let mood="",intent="",card=null;
+let mood="",intent="",card=null,spread="1",cards=[];
 let recs=JSON.parse(localStorage.getItem("tv7sim")||"[]");
 let calY,calM;
+const SP={1:["今日指引"],3:["过去的影响","当下的状态","未来的方向"],5:["你的立场","关系的障碍","对方/环境","根基与支撑","最终的结果"],10:["现在状况","横交阻碍","基础根基","过往影响","最高目标","不久将来","你的态度","周围环境","希望与恐惧","最终结果"]};
+
+/* 模式选择 */
+$$(".modes .md").forEach(b=>b.onclick=()=>{$$(".modes .md").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");spread=b.dataset.s});
 
 /* 工具 */
 const $=id=>document.getElementById(id);
@@ -234,7 +257,11 @@ function tab(t){
   if(t==="home")scr("scrHome");
   else if(t==="review")scr("scrReview");
   else if(t==="recs"){scr("scrRecs");cal(0)}
+  else if(t==="me"){scr("scrMe");upStats()}
 }
+
+/* 模式选择 */
+$$(".modes .md").forEach(b=>b.onclick=()=>{$$(".modes .md").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");spread=b.dataset.s});
 
 /* 情绪选择 */
 $$("#moods .md").forEach(m=>m.onclick=()=>{$$("#moods .md").forEach(x=>x.classList.remove("sel"));m.classList.add("sel");mood=m.dataset.m;$("btnStart").disabled=!1});
@@ -249,31 +276,40 @@ $$("#intents .it").forEach(it=>it.onclick=()=>{
 $("customIn").oninput=function(){intent=this.value;$("btnIntent").disabled=!this.value.trim()};
 
 /* 切换页面 */
-function goIntent(){if(!mood)return;scr("scrIntent")}
+function goIntent(){if(spread==="1"&&!mood){alert("请先选择今日状态");return}scr("scrIntent")}
 
 /* 洗牌 */
 function doShuffle(){
   scr("scrDraw");
-  // Draw card
-  const all=[...DECK];
+  const n=+spread,all=[...DECK];
   for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
-  card={...all[0],isReversed:Math.random()<0.28};
-  new Image().src=card.img;
-  // Reset
-  $("drawCI").classList.remove("flipped");
-  $("btnFlip").disabled=!1;
-  // Show shuffle
-  const s=$("shfl");s.classList.add("on");
-  setTimeout(()=>{s.classList.remove("on")},2200);
+  cards=all.slice(0,n).map(c=>({...c,isReversed:Math.random()<0.28}));
+  card=cards[0];
+  cards.forEach(c=>{new Image().src=c.img});
+  const s=SP[n];
+  $("drawTitle").textContent=n===1?"抽一张指引牌":"你的"+n+"张牌阵";
+  let h='<p class="d" style="text-align:center;margin-bottom:8px">先安静下来，感受你的选择</p>';
+  h+='<div style="display:flex;justify-content:center;gap:max(6px,1.5vw);flex-wrap:wrap" id="drawGrid">';
+  cards.forEach((c,i)=>{
+    let w=n>5?'100px':'140px',ht=n>5?'152px':'215px';
+    h+='<div class="cw" style="--cw:'+w+';--ch:'+ht+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div></div>';
+  });
+  h+='</div><p class="d" style="text-align:center;margin:10px 0 4px">翻牌是一场心灵的开启</p>';
+  h+='<button class="btn" id="btnFlip" onclick="doFlip()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 8v8"/><path d="M8 12l4 4 4-4"/></svg>'+(n===1?'翻开这张牌':'翻开牌阵')+'</button>';
+  $("drawArea").innerHTML=h;
+  const sh=$("shfl");sh.classList.add("on");
+  setTimeout(()=>{sh.classList.remove("on")},2200);
 }
 
-/* 翻牌 */
 function doFlip(){
-  $("drawCI").classList.add("flipped");
   $("btnFlip").disabled=!0;
-  const d=card.isReversed?card.rev:card.up;
-  $("drawCF").innerHTML='<img src="'+card.img+'" alt="'+card.name+'">'+(card.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+card.name+" · "+card.en+'</div></div>';
-  setTimeout(()=>showReading(),1000);
+  cards.forEach((c,i)=>{
+    setTimeout(()=>{
+      $("drawCI"+i).classList.add("flipped");
+      $("drawCF"+i).innerHTML='<img src="'+c.img+'" alt="'+c.name+'">'+(c.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+c.name+" · "+c.en+'</div></div>';
+    },100+i*580);
+  });
+  setTimeout(()=>showReading(),100+cards.length*580+900);
 }
 
 /* 解读 */
@@ -282,24 +318,32 @@ function showReading(){
   const d=card.isReversed?card.rev:card.up;
   $("readTitle").textContent=card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位");
   $("readCF").innerHTML='<img src="'+card.img+'" alt="'+card.name+'">'+(card.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+card.name+'</div></div>';
+  $("readPanel").innerHTML='<p class="d" style="text-align:center;padding:30px">✦ 牌面正在揭示中…</p>';
 
-  let h='<h3>💡 初始觉察</h3><p>'+d.core+'</p>';
-  if(intent)h+='<p class="d" style="margin-top:6px">你问的是：<i>「'+intent+'」</i><br>'+d.q+'</p>';
-  h+='<h3>📖 牌义参考</h3><p style="font-size:.82em;color:var(--dm)">'+card.kw+' · 元素：'+card.el+'</p><p>'+d.core+'</p>';
-  h+='<h3>🌱 今日行动建议</h3><p>'+d.what+'</p><p class="d">⚠ '+d.warn+'</p>';
-  if(card.persona)h+='<p class="d" style="margin-top:6px">👤 '+card.persona+'</p>';
-  $("readPanel").innerHTML=h;
+  const payload={spread,question:intent||null,cards:cards.map((c,i)=>({name:c.name,pos:SP[+spread][i],el:c.el,reversed:c.isReversed,timeHint:c.isReversed?"3-6个月":"1-3个月",persona:c.persona||null})),pairs:[],elementSummary:null};
+  fetch('/api/tarot-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+  .then(r=>r.json()).then(data=>{
+    let raw=data&&data.reading?data.reading:buildLocal();
+    raw=raw.replace(/\n/g,'<br>');
+    let h=mood?'<p class="d">今日状态：'+mood+'</p>':'';
+    if(intent)h+='<p class="d">你问的是：「'+intent+'」</p>';
+    h+='<div style="line-height:2.1;margin-top:8px">'+raw+'</div>';
+    $("readPanel").innerHTML=h;
+  }).catch(()=>{$("readPanel").innerHTML='<div style="line-height:2.1">'+buildLocal()+'</div>';});
+}
+function buildLocal(){
+  if(cards.length===1){const d=card.isReversed?card.rev:card.up;let h='<h3>💡 初始觉察</h3><p>'+d.core+'</p>';if(intent)h+='<p class="d">'+d.q+'</p>';h+='<h3>📖 牌义参考</h3><p style="font-size:.82em;color:var(--dm)">'+card.kw+' · 元素：'+card.el+'</p>';h+='<h3>🌱 今日行动建议</h3><p>'+d.what+'</p><p class="d">⚠ '+d.warn+'</p>';if(card.persona)h+='<p class="d">👤 '+card.persona+'</p>';return h;}
+  let h='';cards.forEach((c,i)=>{const d=c.isReversed?c.rev:c.up;h+='<h3>'+SP[+spread][i]+' · '+c.name+(c.isReversed?'（逆位）':'（正位）')+'</h3>';h+='<p>'+d.core+'</p>';if(intent)h+='<p class="d">'+d.q+'</p>';h+='<p class="d">🌱 '+d.what+'</p>';if(c.persona)h+='<p class="d">👤 '+c.persona+'</p>';h+='<p class="d" style="margin-bottom:8px">⚠ '+d.warn+'</p>'});return h;
 }
 
 /* 保存/分享 */
 function saveRec(){
-  const r={date:new Date().toISOString().slice(0,10),mood,intent,card:{name:card.name,en:card.en,img:card.img,isReversed:card.isReversed,el:card.el}};
+  const r={date:new Date().toISOString().slice(0,10),mood,intent,spread,cards:cards.map(c=>({name:c.name,en:c.en,img:c.img,isReversed:c.isReversed,el:c.el}))};
   recs.unshift(r);localStorage.setItem("tv7sim",JSON.stringify(recs));
   const b=event.target.closest("button");b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>已保存 ✓';setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存',1500);
 }
 function shareRec(){
-  const d=card.isReversed?card.rev:card.up;
-  const t="🔮 塔罗 · 自察指引\n\n今日状态："+mood+"\n意图："+intent+"\n抽到："+card.name+"（"+(card.isReversed?"逆位":"正位")+"）\n\n💡 "+d.core+"\n\n🌱 "+d.what+"\n\n—— 不替你决定命运，只帮你更理解自己";
+  const t="🔮 塔罗 · 自察指引\n\n"+cards.map((c,i)=>SP[+spread][i]+" · "+c.name+"（"+(c.isReversed?"逆位":"正位")+"）").join("\n")+"\n\n—— 不替你决定命运，只帮你更理解自己";
   navigator.clipboard.writeText(t).then(()=>{const b=event.target.closest("button");b.textContent="已复制!";setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{});
 }
 
@@ -309,6 +353,7 @@ function saveReview(){
   if(recs.length>0){recs[0].review=rv;localStorage.setItem("tv7sim",JSON.stringify(recs))}
   alert("回顾已保存 🌙");
 }
+function upStats(){$("statN").textContent=recs.length;$("statR").textContent=recs.filter(r=>r.review).length;}
 
 /* 日历 */
 function cal(d){
@@ -332,13 +377,13 @@ function cal(d){
 function showDay(ds){
   const r=recs.find(x=>x.date===ds);
   if(!r)return;
-  card=r.card;mood=r.mood;intent=r.intent||"";
+  cards=r.cards;card=cards[0];spread=r.spread||"1";mood=r.mood;intent=r.intent||"";
   showReading();
 }
 function renderRecs(){
   const l=$("recList");
   if(recs.length===0){l.innerHTML='<p class="d" style="text-align:center;padding:18px">暂无记录</p>';return}
-  l.innerHTML=recs.slice(0,30).map(r=>'<div class="rec" onclick="showDay(\x27'+r.date+'\x27)"><div class="ri"><img src="'+r.card.img+'"></div><div class="rr"><div class="rd">'+r.date+'</div><div class="rq">'+r.card.name+(r.card.isReversed?"（逆位）":"（正位）")+'</div><div class="rm">'+r.mood+(r.review?" ✓已复盘":"")+'</div></div></div>').join("");
+  l.innerHTML=recs.slice(0,30).map(r=>'<div class="rec" onclick="showDay(\x27'+r.date+'\x27)"><div class="ri">'+r.cards.filter((_,i)=>i<3).map(c=>'<img src="'+c.img+'">').join("")+'</div><div class="rr"><div class="rd">'+r.date+'</div><div class="rq">'+(r.spread&&r.spread!=='1'?r.spread+"张 · ":"")+r.cards[0].name+(r.cards[0].isReversed?"（逆位）":"（正位）")+'</div><div class="rm">'+r.mood+(r.review?" ✓已复盘":"")+'</div></div></div>').join("");
 }
 
 const DECK=[
