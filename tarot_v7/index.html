@@ -244,9 +244,6 @@ let recs=JSON.parse(localStorage.getItem("tv7sim")||"[]");
 let calY,calM;
 const SP={1:["今日指引"],3:["过去的影响","当下的状态","未来的方向"],5:["你的立场","关系的障碍","对方/环境","根基与支撑","最终的结果"],10:["现在状况","横交阻碍","基础根基","过往影响","最高目标","不久将来","你的态度","周围环境","希望与恐惧","最终结果"]};
 
-/* 模式选择 */
-$$(".modes .md").forEach(b=>b.onclick=()=>{$$(".modes .md").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");spread=b.dataset.s});
-
 /* 工具 */
 const $=id=>document.getElementById(id);
 const $$=sel=>document.querySelectorAll(sel);
