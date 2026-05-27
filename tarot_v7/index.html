@@ -96,7 +96,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .shfl .shb{width:180px;height:2px;background:rgba(139,92,246,.12);border-radius:1px;margin-top:16px;z-index:2;overflow:hidden}
 .shfl .shb .shbf{height:100%;background:linear-gradient(90deg,transparent,var(--a2),transparent);border-radius:1px;animation:shbf 1.5s ease-in-out infinite}
 @keyframes shbf{0%{width:20%;margin-left:0}50%{width:40%;margin-left:30%}to{width:20%;margin-left:80%}}
-@keyframes shP{0%,to{opacity:.55}50%{opacity:1}}@keyframes cbIn{0%{opacity:0;transform:translateX(-50%) translateY(36px) scale(.45)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}@keyframes cT{0%,to{opacity:.55}50%{opacity:1}}@keyframes ballAura{0%,to{transform:scale(.95);opacity:.5}50%{transform:scale(1.08);opacity:.9}}@keyframes ballSpec{0%,to{opacity:.4}50%{opacity:.9}}
+@keyframes shP{0%,to{opacity:.55}50%{opacity:1}}
 
 /* 记录 */
 .rec{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:7px;cursor:pointer;transition:.2s}
@@ -211,14 +211,13 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 </div>
 <div class="pnl"><h3>记录列表</h3><div id="recList"><p class="d" style="text-align:center;padding:18px">暂无记录</p></div></div>
 </div>
-</div>
 
 <div class="mod" id="mod"><div class="mc" id="modC"></div></div>
 
 <div class="nav">
 <div class="ni sel" data-t="home" onclick="tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">首页</span></div>
 <div class="ni" data-t="review" onclick="tab('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nl">日记</span></div>
-<div class="ni orb-center" id="navOrb" onclick="if(this.classList.contains('pulse')){showReading();this.classList.remove('pulse')}"><div class="ball"></div><span class="nl">占卜</span></div>
+<div class="ni orb-center" id="navOrb" onclick="if(hasReading){showReading()}"><div class="ball"></div><span class="nl">占卜</span></div>
 <div class="ni" data-t="recs" onclick="tab('recs')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">记录</span></div>
 <div class="ni" data-t="me" onclick="tab('me')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">我的</span></div>
 </div>
@@ -235,9 +234,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 </div>
 <button class="bsm" onclick="if(confirm('清除所有记录？')){recs=[];localStorage.clear();upStats()}">清除记录</button>
 </div>
-</div></div>
-
-<script>
+</div></div><script>
 /* 星空 */
 (()=>{const c=document.getElementById("stars");for(let i=0;i<50;i++){const s=document.createElement("div");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";const z=Math.random()*3+1;s.style.width=z+"px";s.style.height=z+"px";s.style.setProperty("--d",(Math.random()*3+2)+"s");s.style.animationDelay=Math.random()*3+"s";c.appendChild(s)}})();
 
@@ -254,7 +251,7 @@ function scr(id){$$(".scr").forEach(s=>s.classList.remove("on"));$(id).classList
 function tab(t){
   $$(".nav .ni").forEach(n=>n.classList.remove("sel"));
   document.querySelector('.nav .ni[data-t="'+t+'"]').classList.add("sel");
-  switch(t){case"home":scr("scrHome");break;case"review":scr("scrReview");break;case"recs":scr("scrRecs");cal(0);break;case"me":scr("scrMe");upStats();break}
+  switch(t){case"home":scr("scrHome");break;case"review":scr("scrReview");break;case"recs":scr("scrRecs");calY=calM=undefined;cal(0);break;case"me":scr("scrMe");upStats();break}
 }
 
 /* 模式选择 */
@@ -297,7 +294,7 @@ function doShuffle(){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;max-width:330px;margin:0 auto;justify-items:center" id="drawGrid">';
     const o5=[null,0,null,1,2,3,null,4,null];
     o5.forEach(ci=>{if(ci===null){h+='<div></div>';return}
-      h+='<div class="cw" style="--cw:100px;--ch:152px" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.6em;color:var(--dm);margin-top:2px">'+["核心","阻碍","根基支撑","对方环境","最终结果"][ci]+'</p></div>';
+      h+='<div class="cw" style="--cw:100px;--ch:152px" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.6em;color:var(--dm);margin-top:2px">'+SP[5][ci]+'</p></div>';
     });
     h+='</div>';
   }else if(n===10){
@@ -355,7 +352,7 @@ document.getElementById("mod").onclick=function(e){if(e.target===this)this.class
 
 /* 解读 */
 function showReading(){
-  hasReading=!0;$("readingHint").style.display="block";
+  hasReading=!0;$("readingHint").style.display="block";$("navOrb").classList.add("pulse");
   scr("scrRead");
   // Show all cards in reading page
   $("readCardsRow").innerHTML=cards.map((c,i)=>'<img src="'+c.img+'" style="width:44px;height:68px;border-radius:6px;object-fit:cover;border:1px solid var(--ac);cursor:pointer;'+(c.isReversed?'transform:rotate(180deg)':'')+'" onclick="zoomCard('+i+')" title="'+c.name+'">').join('');
@@ -373,7 +370,7 @@ function showReading(){
     if(intent)h+='<p class="d">你问的是：「'+intent+'」</p>';
     h+='<div style="line-height:2.1;margin-top:8px">'+raw+'</div>';
     $("readPanel").innerHTML=h;
-  }).catch(()=>{readingText=buildLocal();$("readPanel").innerHTML='<div style="line-height:2.1">'+readingText.replace(/\n/g,'<br>')+'</div>';});
+  }).catch(()=>{readingText=buildLocal();$("readPanel").innerHTML='<div style="line-height:2.1">'+readingText+'</div>';});
 }
 function buildLocal(){
   if(cards.length===1){const d=card.isReversed?card.rev:card.up;let h='<h3>💡 初始觉察</h3><p>'+d.core+'</p>';if(intent)h+='<p class="d">'+d.q+'</p>';h+='<h3>📖 牌义参考</h3><p style="font-size:.82em;color:var(--dm)">'+card.kw+' · 元素：'+card.el+'</p>';h+='<h3>🌱 今日行动建议</h3><p>'+d.what+'</p><p class="d">⚠ '+d.warn+'</p>';if(card.persona)h+='<p class="d">👤 '+card.persona+'</p>';return h;}
@@ -381,16 +378,22 @@ function buildLocal(){
 }
 
 /* 保存/分享 */
+let _toSave=0,_toShare=0;
 function saveRec(){
+  clearTimeout(_toSave);clearTimeout(_toShare);
   const r={date:new Date().toISOString().slice(0,10),mood,intent,spread,cards:cards.map(c=>({name:c.name,en:c.en,img:c.img,isReversed:c.isReversed,el:c.el})),reading:readingText};
-  recs.unshift(r);localStorage.setItem("tv7sim",JSON.stringify(recs));
-  const b=event.target.closest("button");b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>已保存 ✓';setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存',1500);
+  const dup=recs.findIndex(x=>x.date===r.date&&x.spread===r.spread);
+  if(dup>=0)recs[dup]=r;else recs.unshift(r);
+  localStorage.setItem("tv7sim",JSON.stringify(recs));
+  const b=event.target.closest("button");b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>已保存 ✓';
+  _toSave=setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存',1500);
 }
 function shareRec(){
+  clearTimeout(_toSave);clearTimeout(_toShare);
   const t="🔮 塔罗 · 自察指引\n"+(mood?"\n状态："+mood:"")+(intent?"\n问：「"+intent+"」":"")+"\n"+cards.map((c,i)=>SP[+spread][i]+" · "+c.name+"（"+(c.isReversed?"逆位":"正位")+"）").join("\n")+"\n\n"+(readingText||"")+"\n\n—— 不替你决定命运，只帮你更理解自己";
-  const b=event.target.closest("button");
+  const b=event.target.closest("button");b.textContent="复制中…";
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t).then(()=>{b.textContent="已复制!";setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{fallbackCopy(t,b)});
+    navigator.clipboard.writeText(t).then(()=>{b.textContent="已复制!";_toShare=setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>{fallbackCopy(t,b)});
   }else{fallbackCopy(t,b)}
 }
 function fallbackCopy(t,b){
