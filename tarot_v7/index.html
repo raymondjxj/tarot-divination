@@ -308,7 +308,7 @@ function doShuffle(){
   }else{
     h+='<div style="display:flex;justify-content:center" id="drawGrid"><div class="cw" style="--cw:150px;--ch:230px"><div class="ci" id="drawCI0"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF0"></div></div></div></div>';
   }
-  h+='<p class="d" style="text-align:center;margin:10px 0 4px">翻牌是一场心灵的开启</p>';
+  h+='<p class="d" style="text-align:center;margin:0 0 2px" id="flipHint">翻牌是一场心灵的开启</p>';
   h+='<button class="btn" id="btnFlip" onclick="doFlip()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 8v8"/><path d="M8 12l4 4 4-4"/></svg>'+(n===1?'翻开这张牌':'翻开牌阵')+'</button>';
   $("drawArea").innerHTML=h;
   const sh=$("shfl");sh.classList.add("on");
@@ -317,13 +317,13 @@ function doShuffle(){
 
 function doFlip(){
   $("btnFlip").style.display="none";
+  const fh=$("flipHint");if(fh)fh.style.display="none";
   cards.forEach((c,i)=>{
     setTimeout(()=>{
       $("drawCI"+i).classList.add("flipped");
       const cf=$("drawCF"+i);
       cf.innerHTML='<img src="'+c.img+'" alt="'+c.name+'">'+(c.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+c.name+" · "+c.en+'</div></div>';
-      cf.style.cursor='pointer';
-      cf.onclick=function(e){e.stopPropagation();zoomCard(i)};
+      const cw=cf.closest(".cw");if(cw){cw.style.cursor="pointer";cw.onclick=function(e){e.stopPropagation();zoomCard(i)};}
     },100+i*580);
   });
   setTimeout(()=>showBall(),100+cards.length*580+900);
@@ -338,9 +338,9 @@ function showBall(){
   '<div style="position:relative;width:80px;height:100px;margin:0 auto 5px">'+
     // Outer breathing glow
     '<div style="position:absolute;top:-4px;left:-4px;right:-4px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(180,150,240,.25) 20%,transparent 65%);animation:ballAura 2.5s ease-in-out infinite"></div>'+
-    // Glass orb body - deep violet with lavender edge
-    '<div style="position:absolute;top:0;left:0;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(240,225,255,.15) 0%,rgba(200,180,240,.12) 15%,rgba(160,130,220,.1) 35%,rgba(120,80,190,.18) 55%,rgba(80,40,140,.25) 75%,rgba(40,15,80,.38) 100%);box-shadow:0 0 0 .5px rgba(140,110,210,.25),inset 0 0 16px rgba(150,120,210,.12)"></div>'+
-    // Inner luminous glow - breathing
+    // Glass orb body - very transparent, subtle purple tint
+    '<div style="position:absolute;top:0;left:0;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(255,250,255,.08) 0%,rgba(230,220,250,.06) 20%,rgba(200,180,240,.05) 45%,rgba(140,100,200,.08) 70%,rgba(60,30,120,.15) 100%);box-shadow:0 0 0 1px rgba(180,150,220,.15),inset 0 0 20px rgba(200,170,240,.08)"></div>'+
+    // Inner luminous glow - breathing, brighter center
     '<div style="position:absolute;top:12px;left:12px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,rgba(220,190,250,.4) 0%,rgba(180,140,230,.2) 35%,transparent 65%);animation:ballBreathe 2.5s ease-in-out infinite"></div>'+
     // Upper-left highlight reflection
     '<div style="position:absolute;top:10px;left:12px;width:20px;height:14px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.65),rgba(255,220,240,.2));transform:rotate(-25deg)"></div>'+
