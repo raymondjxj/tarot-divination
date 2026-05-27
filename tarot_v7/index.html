@@ -64,12 +64,12 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .it{padding:11px 15px;border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.4);cursor:pointer;transition:.3s;font-family:inherit;text-align:left;font-size:.88em;color:var(--tx)}
 .it:hover,.it.sel{border-color:var(--b2);background:var(--a3)}
 
-.inp{width:100%;padding:11px 15px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-size:.88em;font-family:inherit;outline:none;transition:.3s;margin:6px 0}
-.inp:focus{border-color:var(--b2);box-shadow:0 0 18px rgba(139,92,246,.12)}
+.inp,.txt{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:inherit;outline:none;transition:.3s}
+.inp:focus,.txt:focus{border-color:var(--b2)}
+.inp{padding:11px 15px;font-size:.88em;margin:6px 0}
+.inp:focus{box-shadow:0 0 18px rgba(139,92,246,.12)}
 .inp::placeholder{color:var(--mu)}
-
-.txt{width:100%;min-height:55px;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-size:.86em;font-family:inherit;resize:vertical;outline:none;transition:.3s}
-.txt:focus{border-color:var(--b2)}
+.txt{padding:10px 12px;min-height:55px;font-size:.86em;resize:vertical}
 
 /* 卡牌 */
 .cw{perspective:1200px;width:var(--cw);height:var(--ch);margin:0 auto;position:relative}
@@ -96,7 +96,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .shfl .shb{width:180px;height:2px;background:rgba(139,92,246,.12);border-radius:1px;margin-top:16px;z-index:2;overflow:hidden}
 .shfl .shb .shbf{height:100%;background:linear-gradient(90deg,transparent,var(--a2),transparent);border-radius:1px;animation:shbf 1.5s ease-in-out infinite}
 @keyframes shbf{0%{width:20%;margin-left:0}50%{width:40%;margin-left:30%}to{width:20%;margin-left:80%}}
-@keyframes shP{0%,to{opacity:.55}50%{opacity:1}}@keyframes cbIn{0%{opacity:0;transform:translateX(-50%) translateY(36px) scale(.45)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}@keyframes cbGl{0%,to{box-shadow:0 0 26px rgba(155,100,240,.55),0 0 55px rgba(115,55,195,.3)}50%{box-shadow:0 0 40px rgba(175,125,250,.75),0 0 80px rgba(135,75,215,.45)}}@keyframes cT{0%,to{opacity:.55}50%{opacity:1}}@keyframes ballAura{0%,to{transform:scale(.95);opacity:.5}50%{transform:scale(1.08);opacity:.9}}@keyframes ballBreathe{0%,to{opacity:.3;transform:scale(.9)}50%{opacity:.8;transform:scale(1.05)}}@keyframes ballSpec{0%,to{opacity:.4}50%{opacity:.9}}
+@keyframes shP{0%,to{opacity:.55}50%{opacity:1}}@keyframes cbIn{0%{opacity:0;transform:translateX(-50%) translateY(36px) scale(.45)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}@keyframes cT{0%,to{opacity:.55}50%{opacity:1}}@keyframes ballAura{0%,to{transform:scale(.95);opacity:.5}50%{transform:scale(1.08);opacity:.9}}@keyframes ballSpec{0%,to{opacity:.4}50%{opacity:.9}}
 
 /* 记录 */
 .rec{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:7px;cursor:pointer;transition:.2s}
@@ -335,28 +335,23 @@ function showBall(){
   const w=document.createElement("div");w.id="cbw";
   w.style.cssText="position:fixed;bottom:max(20px,4vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:cbIn .65s ease";
   w.innerHTML=
-  '<div style="position:relative;width:80px;height:100px;margin:0 auto 5px">'+
-    // Outer breathing glow
-    '<div style="position:absolute;top:-4px;left:-4px;right:-4px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(180,150,240,.25) 20%,transparent 65%);animation:ballAura 2.5s ease-in-out infinite"></div>'+
-    // Glass orb body - very transparent, subtle purple tint
-    '<div style="position:absolute;top:0;left:0;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(255,250,255,.08) 0%,rgba(230,220,250,.06) 20%,rgba(200,180,240,.05) 45%,rgba(140,100,200,.08) 70%,rgba(60,30,120,.15) 100%);box-shadow:0 0 0 1px rgba(180,150,220,.15),inset 0 0 20px rgba(200,170,240,.08)"></div>'+
-    // Inner luminous glow - breathing, brighter center
-    '<div style="position:absolute;top:12px;left:12px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,rgba(220,190,250,.4) 0%,rgba(180,140,230,.2) 35%,transparent 65%);animation:ballBreathe 2.5s ease-in-out infinite"></div>'+
-    // Upper-left highlight reflection
-    '<div style="position:absolute;top:10px;left:12px;width:20px;height:14px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.65),rgba(255,220,240,.2));transform:rotate(-25deg)"></div>'+
-    // Upper-right small highlight
-    '<div style="position:absolute;top:16px;left:36px;width:7px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)"></div>'+
-    // Bottom-right bounce light
-    '<div style="position:absolute;bottom:14px;right:10px;width:18px;height:12px;border-radius:50%;background:rgba(255,255,255,.08);filter:blur(2px)"></div>'+
-    // Left sparkle star
-    '<div style="position:absolute;top:22px;left:-4px;font-size:10px;color:rgba(255,220,150,.7);animation:ballSpec 2.5s ease-in-out infinite">✦</div>'+
-    // Right sparkle star
-    '<div style="position:absolute;top:34px;right:-4px;font-size:8px;color:rgba(255,220,150,.5);animation:ballSpec 2.5s ease-in-out 1.2s infinite">✦</div>'+
-    // Inner light spec
-    '<div style="position:absolute;top:24px;left:22px;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.85);filter:blur(.5px);animation:ballSpec 2.5s ease-in-out infinite"></div>'+
-    // Golden stand
-    '<div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:18px solid rgba(180,150,80,.55)"></div>'+
-    '<div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:20px;height:4px;border-radius:2px;background:rgba(180,150,80,.45);box-shadow:0 1px 3px rgba(180,150,80,.2)"></div>'+
+  '<div style="position:relative;width:80px;height:102px;margin:0 auto 5px">'+
+    // Breathing lavender aura glow (rgba .08–.18)
+    '<div style="position:absolute;top:-10px;left:-10px;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle,rgba(180,150,240,.15) 25%,rgba(160,130,220,.08) 50%,transparent 70%);animation:ballAura 3s ease-in-out infinite"></div>'+
+    // Glass orb — nearly transparent center, subtle purple edge refraction (.04–.12)
+    '<div style="position:absolute;top:0;left:0;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 50% 50%,transparent 52%,rgba(200,180,240,.04) 68%,rgba(170,140,220,.08) 82%,rgba(130,90,180,.12) 100%);box-shadow:inset 0 0 30px rgba(140,100,180,.05),0 0 0 1px rgba(180,150,220,.08)"></div>'+
+    // Upper-left bright white highlight (linear-gradient, white→transparent)
+    '<div style="position:absolute;top:9px;left:8px;width:24px;height:14px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.2) 35%,transparent 100%);transform:rotate(-22deg)"></div>'+
+    // Tiny secondary highlight
+    '<div style="position:absolute;top:22px;left:28px;width:6px;height:4px;border-radius:50%;background:rgba(255,255,255,.25)"></div>'+
+    // Left golden star
+    '<div style="position:absolute;top:16px;left:-8px;font-size:10px;color:rgba(255,220,150,.7);animation:ballSpec 3s ease-in-out infinite;text-shadow:0 0 4px rgba(255,200,130,.3)">✦</div>'+
+    // Right golden star (alternating delay)
+    '<div style="position:absolute;top:30px;right:-8px;font-size:8px;color:rgba(255,220,150,.7);animation:ballSpec 3s ease-in-out 1.5s infinite;text-shadow:0 0 3px rgba(255,200,130,.25)">✦</div>'+
+    // Golden triangular stand (CSS border trick)
+    '<div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:22px solid rgba(200,170,80,.55)"></div>'+
+    // Stand base platform
+    '<div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:28px;height:5px;border-radius:3px;background:rgba(190,160,70,.45);box-shadow:0 1px 4px rgba(180,150,80,.18)"></div>'+
   '</div>'+
   '<div style="color:rgba(200,180,238,.7);font-size:.68em;letter-spacing:2px;animation:cT 3s ease-in-out infinite;text-shadow:0 0 8px rgba(160,120,240,.3)">触碰水晶球 · 揭示命运</div>';
   w.onclick=()=>{w.remove();showReading()};
