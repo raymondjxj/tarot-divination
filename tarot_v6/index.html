@@ -134,9 +134,9 @@ body::before{
 .batch-hint{width:100%;text-align:center;color:var(--text-dim);font-size:clamp(.82em,1.5vw,.95em);letter-spacing:1px;margin-bottom:6px;animation:fadeUp .5s ease;}
 
 /* 扇形选牌池 */
-.fan-container{position:relative;width:100%;max-width:620px;height:150px;overflow:visible;margin:0 auto 10px;}
+.fan-container{position:relative;width:100%;max-width:680px;height:190px;overflow:visible;margin:0 auto 10px;}
 .fan-card{
-  width:clamp(48px,8vw,64px);height:clamp(72px,12vw,96px);border-radius:5px;cursor:pointer;
+  width:clamp(60px,10vw,82px);height:clamp(92px,16vw,126px);border-radius:7px;cursor:pointer;
   border:2px solid rgba(200,160,240,.2);background:url(/tarot/back.png) center/cover;
   box-shadow:0 3px 12px rgba(0,0,0,.5);transform-origin:bottom center;
   transition:margin-top .15s ease,filter .15s ease,box-shadow .15s ease,border-color .15s ease;
@@ -463,14 +463,14 @@ function renderSelectionSpread(pool,needed){
   a.appendChild(hint);
   const fan=document.createElement('div');fan.className='fan-container';fan.id='fanSpread';
   const total=pool.length;
-  const w=Math.min(window.innerWidth-40,600);
-  const cx=w/2,cy=90;
+  const w=Math.min(window.innerWidth-32,680);
+  const cx=w/2,cy=115;
   const cardStates=[];
   pool.forEach((c,i)=>{
-    const spread=Math.min(w*.75,340);
+    const spread=Math.min(w*.82,480);
     const step=total>1?spread/(total-1):0;
     const x=(w-spread)/2+i*step;
-    const rot=(total>1?(i/(total-1)-.5)*70:0);
+    const rot=(total>1?(i/(total-1)-.5)*55:0);
     cardStates.push({x,rot});
     const card=document.createElement('div');card.className='fan-card';
     card.style.cssText='position:absolute;left:'+cx+'px;top:'+cy+'px;transform:translateX(-50%) rotate(0deg) scale(.3);opacity:0;transition:all .55s cubic-bezier(.34,1.56,.64,1) '+(i*.06)+'s';
