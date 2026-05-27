@@ -180,7 +180,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <!-- 解读 -->
 <div class="scr" id="scrRead">
 <div class="sttl">你的今日指引</div>
-<div class="cw" style="--cw:120px;--ch:185px;margin-bottom:8px"><div class="ci flipped"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="readCF"></div></div></div>
+<div id="readCardsRow" style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px"></div>
 <p style="text-align:center;font-size:.85em;color:var(--dm);margin-bottom:10px" id="readTitle"></p>
 <div class="pnl" id="readPanel"></div>
 <div style="display:flex;gap:8px;justify-content:center;margin:12px 0 40px">
@@ -283,15 +283,33 @@ function doShuffle(){
   cards=all.slice(0,n).map(c=>({...c,isReversed:Math.random()<0.28}));
   card=cards[0];
   cards.forEach(c=>{new Image().src=c.img});
-  const s=SP[n];
   $("drawTitle").textContent=n===1?"抽一张指引牌":"你的"+n+"张牌阵";
   let h='<p class="d" style="text-align:center;margin-bottom:8px">先安静下来，感受你的选择</p>';
-  h+='<div style="display:flex;justify-content:center;gap:max(6px,1.5vw);flex-wrap:wrap" id="drawGrid">';
-  cards.forEach((c,i)=>{
-    let w=n>5?'100px':'140px',ht=n>5?'152px':'215px';
-    h+='<div class="cw" style="--cw:'+w+';--ch:'+ht+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div></div>';
-  });
-  h+='</div><p class="d" style="text-align:center;margin:10px 0 4px">翻牌是一场心灵的开启</p>';
+  // Card layout based on spread
+  if(n===3){
+    h+='<div style="display:flex;justify-content:center;gap:16px;align-items:center" id="drawGrid">';
+    cards.forEach((c,i)=>{
+      h+='<div class="cw" style="--cw:130px;--ch:200px" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.7em;color:var(--dm);margin-top:4px">'+["过去","现在","未来"][i]+'</p></div>';
+    });
+    h+='</div>';
+  }else if(n===5){
+    h+='<div style="position:relative;width:300px;height:380px;margin:0 auto" id="drawGrid">';
+    const pos=[[150,0],[0,130],[150,130],[300,130],[150,260]];
+    cards.forEach((c,i)=>{
+      h+='<div class="cw" style="--cw:100px;--ch:152px;position:absolute;left:'+pos[i][0]+'px;top:'+pos[i][1]+'px;transform:translate(-50%,0)" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.62em;color:var(--dm);margin-top:2px">'+["核心","阻碍","根基支撑","对方环境","最终结果"][i]+'</p></div>';
+    });
+    h+='</div>';
+  }else if(n===10){
+    h+='<div style="position:relative;width:340px;height:440px;margin:0 auto" id="drawGrid">';
+    const pos10=[[170,0],[270,80],[170,80],[70,80],[0,160],[340,160],[70,240],[170,240],[270,240],[170,320]];
+    cards.forEach((c,i)=>{
+      h+='<div class="cw" style="--cw:72px;--ch:112px;position:absolute;left:'+pos10[i][0]+'px;top:'+pos10[i][1]+'px;transform:translate(-50%,0)" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.55em;color:var(--dm);margin-top:1px">'+SP[10][i].substring(0,4)+'</p></div>';
+    });
+    h+='</div>';
+  }else{
+    h+='<div style="display:flex;justify-content:center" id="drawGrid"><div class="cw" style="--cw:150px;--ch:230px"><div class="ci" id="drawCI0"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF0"></div></div></div></div>';
+  }
+  h+='<p class="d" style="text-align:center;margin:10px 0 4px">翻牌是一场心灵的开启</p>';
   h+='<button class="btn" id="btnFlip" onclick="doFlip()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 8v8"/><path d="M8 12l4 4 4-4"/></svg>'+(n===1?'翻开这张牌':'翻开牌阵')+'</button>';
   $("drawArea").innerHTML=h;
   const sh=$("shfl");sh.classList.add("on");
@@ -303,18 +321,29 @@ function doFlip(){
   cards.forEach((c,i)=>{
     setTimeout(()=>{
       $("drawCI"+i).classList.add("flipped");
-      $("drawCF"+i).innerHTML='<img src="'+c.img+'" alt="'+c.name+'">'+(c.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+c.name+" · "+c.en+'</div></div>';
+      const cf=$("drawCF"+i);
+      cf.innerHTML='<img src="'+c.img+'" alt="'+c.name+'">'+(c.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+c.name+" · "+c.en+'</div></div>';
+      cf.style.cursor='pointer';
+      cf.onclick=e=>{e.stopPropagation();zoomCard(c,i)};
     },100+i*580);
   });
   setTimeout(()=>showReading(),100+cards.length*580+900);
 }
 
+/* 放大查看 */
+function zoomCard(c,i){
+  U.e("mod").classList.add("on");
+  const d=c.isReversed?c.rev:c.up;
+  U.e("modC").innerHTML='<button class="mx" onclick="U.shut()">✕</button><img src="'+c.img+'" style="width:100%;max-width:200px;height:auto;border-radius:12px;display:block;margin:0 auto 8px;border:2px solid var(--ac);box-shadow:0 8px 28px rgba(110,60,200,.4);'+(c.isReversed?'transform:rotate(180deg)':'')+'"><p style="color:var(--a2);font-size:.74em;letter-spacing:1px;text-align:center">'+SP[+spread][i]+' '+(c.isReversed?"逆位":"正位")+'</p><p style="font-size:1.05em;font-weight:700;text-align:center">'+c.name+" · "+c.en+'</p><p style="line-height:1.8;font-size:.88em;margin-top:8px">'+d.core+'</p>';
+}
+
 /* 解读 */
 function showReading(){
   scr("scrRead");
+  // Show all cards in reading page
+  $("readCardsRow").innerHTML=cards.map((c,i)=>'<img src="'+c.img+'" style="width:44px;height:68px;border-radius:6px;object-fit:cover;border:1px solid var(--ac);cursor:pointer;'+(c.isReversed?'transform:rotate(180deg)':'')+'" onclick="zoomCard(cards['+i+'],'+i+')" title="'+c.name+'">').join('');
   const d=card.isReversed?card.rev:card.up;
-  $("readTitle").textContent=card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位");
-  $("readCF").innerHTML='<img src="'+card.img+'" alt="'+card.name+'">'+(card.isReversed?'<div class="rtag">逆位</div>':"")+'<div class="cio"><div class="cnm">'+card.name+'</div></div>';
+  $("readTitle").textContent=cards.length===1?card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位"):"共"+cards.length+"张牌";
   $("readPanel").innerHTML='<p class="d" style="text-align:center;padding:30px">✦ 牌面正在揭示中…</p>';
 
   const payload={spread,question:intent||null,cards:cards.map((c,i)=>({name:c.name,pos:SP[+spread][i],el:c.el,reversed:c.isReversed,timeHint:c.isReversed?"3-6个月":"1-3个月",persona:c.persona||null})),pairs:[],elementSummary:null};
