@@ -340,24 +340,31 @@ function showBall(){
   const ex=document.getElementById("cbw");if(ex)ex.remove();
   const w=document.createElement("div");w.id="cbw";
   w.style.cssText="position:fixed;bottom:max(20px,4vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:cbIn .65s ease";
-  // Glass crystal ball with breathing inner glow
-  w.innerHTML='<div style="position:relative;width:72px;height:72px;margin:0 auto 7px">'+
-    // Outer glow aura - breathing
-    '<div style="position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle,rgba(180,150,240,.2) 25%,transparent 65%);animation:ballAura 2.5s ease-in-out infinite"></div>'+
-    // Glass body - mostly transparent with subtle rim
-    '<div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(230,220,255,.2) 0%,rgba(200,180,240,.1) 20%,rgba(160,130,220,.06) 40%,rgba(100,70,180,.1) 65%,rgba(60,30,130,.15) 85%,rgba(30,15,70,.3) 100%);box-shadow:0 0 0 1px rgba(120,90,200,.2),inset 0 0 20px rgba(160,140,220,.1)"></div>'+
-    // Inner breathing glow - pulsing light from within
-    '<div style="position:absolute;inset:20%;border-radius:50%;background:radial-gradient(circle,rgba(200,160,240,.3) 0%,rgba(160,120,220,.15) 40%,transparent 70%);animation:ballBreathe 2.5s ease-in-out infinite"></div>'+
-    // Main highlight - like light hitting glass
-    '<div style="position:absolute;top:12%;left:18%;width:28%;height:18%;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(255,255,255,.15) 60%,transparent);transform:rotate(-25deg);filter:blur(1.5px)"></div>'+
-    // Secondary highlight
-    '<div style="position:absolute;top:20%;left:45%;width:10%;height:7%;border-radius:50%;background:rgba(255,255,255,.35);filter:blur(.5px)"></div>'+
-    // Bottom soft bounce light
-    '<div style="position:absolute;bottom:15%;right:15%;width:22%;height:12%;border-radius:50%;background:rgba(255,255,255,.1);filter:blur(3px)"></div>'+
-    // Sparkle point
-    '<div style="position:absolute;top:32%;left:30%;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.9);filter:blur(.3px);animation:ballSpec 2.5s ease-in-out infinite"></div>'+
+  w.innerHTML=
+  '<div style="position:relative;width:80px;height:100px;margin:0 auto 5px">'+
+    // Outer breathing glow
+    '<div style="position:absolute;top:-4px;left:-4px;right:-4px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(180,150,240,.25) 20%,transparent 65%);animation:ballAura 2.5s ease-in-out infinite"></div>'+
+    // Glass orb body - deep violet with lavender edge
+    '<div style="position:absolute;top:0;left:0;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(240,225,255,.15) 0%,rgba(200,180,240,.12) 15%,rgba(160,130,220,.1) 35%,rgba(120,80,190,.18) 55%,rgba(80,40,140,.25) 75%,rgba(40,15,80,.38) 100%);box-shadow:0 0 0 .5px rgba(140,110,210,.25),inset 0 0 16px rgba(150,120,210,.12)"></div>'+
+    // Inner luminous glow - breathing
+    '<div style="position:absolute;top:12px;left:12px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,rgba(220,190,250,.4) 0%,rgba(180,140,230,.2) 35%,transparent 65%);animation:ballBreathe 2.5s ease-in-out infinite"></div>'+
+    // Upper-left highlight reflection
+    '<div style="position:absolute;top:10px;left:12px;width:20px;height:14px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.65),rgba(255,220,240,.2));transform:rotate(-25deg)"></div>'+
+    // Upper-right small highlight
+    '<div style="position:absolute;top:16px;left:36px;width:7px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)"></div>'+
+    // Bottom-right bounce light
+    '<div style="position:absolute;bottom:14px;right:10px;width:18px;height:12px;border-radius:50%;background:rgba(255,255,255,.08);filter:blur(2px)"></div>'+
+    // Left sparkle star
+    '<div style="position:absolute;top:22px;left:-4px;font-size:10px;color:rgba(255,220,150,.7);animation:ballSpec 2.5s ease-in-out infinite">✦</div>'+
+    // Right sparkle star
+    '<div style="position:absolute;top:34px;right:-4px;font-size:8px;color:rgba(255,220,150,.5);animation:ballSpec 2.5s ease-in-out 1.2s infinite">✦</div>'+
+    // Inner light spec
+    '<div style="position:absolute;top:24px;left:22px;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.85);filter:blur(.5px);animation:ballSpec 2.5s ease-in-out infinite"></div>'+
+    // Golden stand
+    '<div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:18px solid rgba(180,150,80,.55)"></div>'+
+    '<div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:20px;height:4px;border-radius:2px;background:rgba(180,150,80,.45);box-shadow:0 1px 3px rgba(180,150,80,.2)"></div>'+
   '</div>'+
-  '<div style="color:rgba(200,180,238,.7);font-size:.7em;letter-spacing:2px;animation:cT 3s ease-in-out infinite;text-shadow:0 0 8px rgba(160,120,240,.3)">触碰水晶球 · 揭示命运</div>';
+  '<div style="color:rgba(200,180,238,.7);font-size:.68em;letter-spacing:2px;animation:cT 3s ease-in-out infinite;text-shadow:0 0 8px rgba(160,120,240,.3)">触碰水晶球 · 揭示命运</div>';
   w.onclick=()=>{w.remove();showReading()};
   $("drawArea").appendChild(w);
 }
