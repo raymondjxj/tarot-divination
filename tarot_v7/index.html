@@ -284,28 +284,27 @@ function doShuffle(){
   let h='<p class="d" style="text-align:center;margin-bottom:8px">先安静下来，感受你的选择</p>';
   // Card layout based on spread
   if(n===3){
-    h+='<div style="display:flex;justify-content:center;gap:16px;align-items:center" id="drawGrid">';
+    h+='<div style="display:flex;justify-content:center;gap:12px;align-items:flex-start;flex-wrap:wrap" id="drawGrid">';
     cards.forEach((c,i)=>{
-      h+='<div class="cw" style="--cw:130px;--ch:200px" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.7em;color:var(--dm);margin-top:4px">'+["过去","现在","未来"][i]+'</p></div>';
+      h+='<div class="cw" style="--cw:120px;--ch:185px" data-ci="'+i+'"><div class="ci" id="drawCI'+i+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+i+'"></div></div><p style="text-align:center;font-size:.68em;color:var(--dm);margin-top:4px">'+["过去","现在","未来"][i]+'</p></div>';
     });
     h+='</div>';
   }else if(n===5){
-    h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;max-width:340px;margin:0 auto" id="drawGrid">';
-    const order5=[null,0,null,1,2,3,null,4,null];
-    order5.forEach(ci=>{
-      if(ci===null){h+='<div></div>';return}
-      const c=cards[ci];
-      h+='<div class="cw" style="--cw:100px;--ch:152px" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.62em;color:var(--dm);margin-top:2px">'+["核心","阻碍","根基支撑","对方环境","最终结果"][ci]+'</p></div>';
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;max-width:330px;margin:0 auto;justify-items:center" id="drawGrid">';
+    const o5=[null,0,null,1,2,3,null,4,null];
+    o5.forEach(ci=>{if(ci===null){h+='<div></div>';return}
+      h+='<div class="cw" style="--cw:100px;--ch:152px" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.6em;color:var(--dm);margin-top:2px">'+["核心","阻碍","根基支撑","对方环境","最终结果"][ci]+'</p></div>';
     });
     h+='</div>';
   }else if(n===10){
-    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto auto;gap:6px;max-width:360px;margin:0 auto" id="drawGrid">';
-    const o10=[3,0,0,4,1,2,2,5,7,8,8,6,9,9,9,9];
-    const ci10=[null,0,1,2,null,3,4,5,null,6,7,8,9,null,null,null];
-    ci10.forEach(ci=>{
+    // Celtic Cross: 4-col grid, card 1 crosses card 3
+    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:360px;margin:0 auto;justify-items:center" id="drawGrid">';
+    const layout=[null,0,1,2,3,3,4,5,6,7,8,9,null,null,null,null];
+    layout.forEach((ci,gi)=>{
       if(ci===null){h+='<div></div>';return}
-      const c=cards[ci];
-      h+='<div class="cw" style="--cw:68px;--ch:105px" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png" alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.5em;color:var(--dm);margin-top:1px">'+SP[10][ci].substring(0,4)+'</p></div>';
+      const c=cards[ci],w=ci===1?'80px':'74px',hgt=ci===1?'122px':'114px';
+      const rot=ci===1?' style="transform:rotate(90deg)"':'';
+      h+='<div class="cw" style="--cw:'+w+';--ch:'+hgt+'" data-ci="'+ci+'"><div class="ci" id="drawCI'+ci+'"><div class="cb"><img src="/tarot/back.png"'+rot+' alt=""></div><div class="cf" id="drawCF'+ci+'"></div></div><p style="text-align:center;font-size:.48em;color:var(--dm);margin-top:1px;line-height:1.1">'+SP[10][ci].substring(0,4)+'</p></div>';
     });
     h+='</div>';
   }else{
@@ -363,7 +362,7 @@ function showReading(){
   // Show all cards in reading page
   $("readCardsRow").innerHTML=cards.map((c,i)=>'<img src="'+c.img+'" style="width:44px;height:68px;border-radius:6px;object-fit:cover;border:1px solid var(--ac);cursor:pointer;'+(c.isReversed?'transform:rotate(180deg)':'')+'" onclick="zoomCard('+i+')" title="'+c.name+'">').join('');
   const d=card.isReversed?card.rev:card.up;
-  $("readTitle").textContent=cards.length===1?card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位"):"共"+cards.length+"张牌";
+  $("readTitle").textContent=cards.length>1?"共"+cards.length+"张牌 — 点击上方卡牌放大查看":card.name+" · "+card.en+" — "+(card.isReversed?"逆位":"正位");
   $("readPanel").innerHTML='<p class="d" style="text-align:center;padding:30px">✦ 牌面正在揭示中…</p>';
 
   const payload={spread,question:intent||null,cards:cards.map((c,i)=>({name:c.name,pos:SP[+spread][i],el:c.el,reversed:c.isReversed,timeHint:c.isReversed?"3-6个月":"1-3个月",persona:c.persona||null})),pairs:[],elementSummary:null};
