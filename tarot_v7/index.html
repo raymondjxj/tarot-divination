@@ -9,7 +9,7 @@
 :root{--bg:#070312;--sfc:rgba(14,7,36,.88);--sf2:rgba(22,12,50,.7);--ac:#9b6dff;--a2:#b794f6;--a3:rgba(155,109,255,.15);--gd:#d4a853;--g2:#f0d078;--tx:#e6dff5;--dm:rgba(200,190,220,.52);--mu:rgba(160,150,190,.3);--bd:rgba(130,100,200,.14);--b2:rgba(160,130,230,.3);--r:14px;--r2:20px;--cw:180px;--ch:275px}
 *,:before,:after{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Noto Serif SC",sans-serif;min-height:100dvh;background:var(--bg);color:var(--tx);overflow-x:hidden;-webkit-tap-highlight-color:transparent;padding-bottom:76px}
-body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 35% at 50% 0%,rgba(110,60,210,.09) 0%,transparent 55%),radial-gradient(ellipse 35% 45% at 15% 75%,rgba(150,100,210,.04) 0%,transparent 55%),radial-gradient(ellipse 30% 30% at 85% 25%,rgba(190,150,70,.03) 0%,transparent 50%)}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 40% 30% at 50% 30%,rgba(130,80,220,.07) 0%,transparent 55%),radial-gradient(ellipse 55% 35% at 50% 0%,rgba(110,60,210,.09) 0%,transparent 55%),radial-gradient(ellipse 35% 45% at 15% 75%,rgba(150,100,210,.04) 0%,transparent 55%),radial-gradient(ellipse 30% 30% at 85% 25%,rgba(190,150,70,.03) 0%,transparent 50%)}
 
 /* 星空 */
 .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -24,11 +24,9 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 @keyframes fi{0%{opacity:0}to{opacity:1}}
 
 /* 标题 */
-.hdr{text-align:center;padding:clamp(8px,2vh,18px) 0 clamp(4px,1vh,10px)}
-.hdr .orb{display:inline-block;width:clamp(34px,7vw,48px);height:clamp(34px,7vw,48px);border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(210,180,250,.92),rgba(130,80,210,.82) 45%,rgba(45,12,95,.9) 75%);box-shadow:0 0 22px rgba(160,100,240,.45),0 0 48px rgba(100,40,180,.2);margin-bottom:6px;animation:orb 3s ease-in-out infinite}
-@keyframes orb{0%,to{box-shadow:0 0 22px rgba(160,100,240,.45),0 0 48px rgba(100,40,180,.2)}50%{box-shadow:0 0 34px rgba(180,130,255,.65),0 0 65px rgba(120,60,200,.35)}}
-.hdr h1{font-size:clamp(1.4em,4.5vw,1.9em);background:linear-gradient(135deg,#b794f6,#d4c8f0,#9b6dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px;font-weight:700}
-.hdr .sub{color:var(--dm);font-size:clamp(.74em,1.8vw,.84em);letter-spacing:2.5px}
+.hdr{text-align:center;padding:clamp(4px,1.5vh,12px) 0 clamp(2px,.5vh,6px)}
+.hdr h1{font-size:clamp(1.3em,4vw,1.6em);background:linear-gradient(135deg,#c4b5fd,#b794f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1px;font-weight:700;letter-spacing:2px}
+.hdr .sub{color:var(--dm);font-size:clamp(.7em,1.6vw,.78em);letter-spacing:1.5px;opacity:.7}
 .sttl{font-size:1.05em;color:var(--a2);text-align:center;padding:10px 0 6px;letter-spacing:1px;font-weight:600}
 
 /* 面板 */
@@ -46,18 +44,11 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .bsm{padding:8px 18px;border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.5);color:var(--dm);font-size:.78em;font-family:inherit;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;gap:5px}
 .bsm:hover{background:rgba(139,92,246,.1);border-color:var(--b2);color:var(--tx)}
 
-/* 模式选择 */
-.modes{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:4px}
-.modes .md{padding:clamp(6px,1.2vw,8px) clamp(12px,2.5vw,16px);border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.45);color:var(--dm);font-size:clamp(.76em,1.4vw,.84em);font-family:inherit;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:4px;white-space:nowrap}
-.modes .md:hover,.modes .md.sel{border-color:var(--b2);background:var(--a3);color:var(--tx);box-shadow:0 0 10px rgba(139,92,246,.06)}
-.modes .md .n{font-weight:700;color:var(--a2)}.modes .md.sel .n{color:var(--g2)}
+/* 牌阵选择卡片 */
+.spreads{display:grid;grid-template-columns:1fr 1fr;gap:5px}.spd{padding:clamp(8px,1.5vw,10px);border:1px solid rgba(181,140,255,.12);border-radius:var(--r);background:rgba(18,9,40,.55);cursor:pointer;transition:.3s;font-family:inherit;text-align:left}.spd:hover,.spd.sel{border-color:rgba(181,140,255,.25);background:rgba(35,18,70,.65)}.spd .spd-n{font-size:1.2em;font-weight:700;color:rgba(181,140,255,.5);display:block;font-family:"Noto Serif SC",serif}.spd.sel .spd-n{color:var(--g2)}.spd .spd-l{font-size:.82em;color:var(--tx);display:block;margin-top:2px}.spd.sel .spd-l{color:var(--g2)}.spd .spd-d{font-size:.64em;color:var(--dm);display:block;margin-top:1px}
 
-/* 情绪卡片 */
-.moods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
-.md{padding:12px 10px;border:1px solid var(--bd);border-radius:var(--r);background:rgba(14,7,36,.45);cursor:pointer;text-align:center;transition:.3s;font-family:inherit}
-.md:hover,.md.sel{border-color:var(--b2);background:var(--a3);color:var(--tx);box-shadow:0 0 12px rgba(139,92,246,.08)}
-.md .mi{font-size:1.5em;margin-bottom:3px}
-.md .ml{font-size:.85em;color:var(--tx)}
+/* 情绪/方向卡片 */
+.moods{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.md{padding:11px 8px;border:1px solid rgba(181,140,255,.1);border-radius:var(--r);background:rgba(18,9,40,.5);cursor:pointer;text-align:center;transition:.3s;font-family:inherit}.md:hover,.md.sel{border-color:rgba(181,140,255,.22);background:rgba(30,14,60,.6)}.md .mi{display:flex;justify-content:center;margin-bottom:4px;color:rgba(181,140,255,.55)}.md.sel .mi{color:var(--g2)}.md .ml{font-size:.8em;color:var(--tx)}.md .ms{font-size:.64em;color:var(--dm);margin-top:2px}
 
 /* 意图 */
 .intents{display:flex;flex-direction:column;gap:6px}
@@ -145,18 +136,30 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <div class="app">
 <!-- 首页 -->
 <div class="scr on" id="scrHome">
-<div class="hdr"><div class="orb"></div><h1>塔罗 · 自察指引</h1><p class="sub">不替你决定命运，只帮你更理解自己</p></div>
-<div class="pnl">
-<div class="modes"><button class="md sel" data-s="1"><span class="n">1</span>今日指引</button><button class="md" data-s="3"><span class="n">3</span>过去·现在·未来</button><button class="md" data-s="5"><span class="n">5</span>关系十字</button><button class="md" data-s="10"><span class="n">10</span>凯尔特十字</button></div>
-<p style="text-align:center;font-size:.92em;margin-top:8px">你好，今天想探索什么？</p><p class="d" style="text-align:center">和自己的内心，安静对话</p><p style="text-align:center;font-size:.74em;color:var(--dm);margin-top:10px">今日状态</p>
+<div class="hdr"><h1>塔罗自察</h1><p class="sub">在安静中，看见内心的答案</p></div>
+
+<!-- 主视觉：发光的牌背 -->
+<div style="text-align:center;margin:12px 0 6px">
+<div class="cw" style="--cw:100px;--ch:152px;margin:0 auto;opacity:.85"><div class="ci" style="animation:fu 1s ease"><div class="cb" style="box-shadow:0 0 30px rgba(140,100,220,.35),0 0 60px rgba(100,60,180,.15)"><img src="/tarot/back.png" alt=""></div></div></div>
+</div>
+
+<div class="pnl" style="background:rgba(18,9,40,.75);border-color:rgba(181,140,255,.18)">
+<p class="d" style="text-align:center;font-size:.68em;letter-spacing:3px;color:var(--dm);margin-bottom:8px">✦ 选择牌阵 ✦</p>
+<div class="spreads" id="spreads">
+<button class="spd sel" data-s="1"><span class="spd-n">Ⅰ</span><span class="spd-l">今日指引</span><span class="spd-d">1 张牌 · 快速洞察</span></button>
+<button class="spd" data-s="3"><span class="spd-n">Ⅲ</span><span class="spd-l">三张牌阵</span><span class="spd-d">过去 · 现在 · 未来</span></button>
+<button class="spd" data-s="5"><span class="spd-n">Ⅴ</span><span class="spd-l">关系十字</span><span class="spd-d">看清能量流动</span></button>
+<button class="spd" data-s="10"><span class="spd-n">Ⅹ</span><span class="spd-l">凯尔特十字</span><span class="spd-d">深入探索复杂问题</span></button>
+</div>
+<p class="d" style="text-align:center;margin-top:10px">此刻，你最想看清什么？</p>
 <div class="moods" id="moods">
-<div class="md" data-m="比较焦虑"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1 3 4 3 4-3 4-3"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><div class="ml">比较焦虑</div></div>
-<div class="md" data-m="情绪低落"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1-3 4-3 4 3 4 3"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><div class="ml">情绪低落</div></div>
-<div class="md" data-m="空想分心"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="2"/><circle cx="15" cy="10" r="2"/><path d="M8 14c0 0 1.5 2 4 2s4-2 4-2"/></svg><div class="ml">空想/分心</div></div>
-<div class="md" data-m="难以抉择"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/><path d="M9 15h6"/></svg><div class="ml">难以抉择</div></div>
+<div class="md" data-m="内心迷雾"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="ml">内心迷雾</div><div class="ms">理清焦虑与不安</div></div>
+<div class="md" data-m="情绪低潮"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M12 3a6 6 0 0 0-6 6c0 4 6 12 6 12s6-8 6-12a6 6 0 0 0-6-6z"/></svg></div><div class="ml">情绪低潮</div><div class="ms">想要被温柔接住</div></div>
+<div class="md" data-m="思绪游离"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/><path d="M12 2a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"/></svg></div><div class="ml">思绪游离</div><div class="ms">想重新聚焦</div></div>
+<div class="md" data-m="命运岔路"><div class="mi"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M7 7l10 10M17 7v10H7"/></svg></div><div class="ml">命运岔路</div><div class="ms">想看清选择</div></div>
 </div></div>
-<button class="btn" id="btnStart" onclick="goIntent()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>开始今日指引</button>
-<p class="d" style="text-align:center;margin-top:8px;cursor:pointer;display:none" id="readingHint" onclick="if(hasReading)showReading()">🔮 上一次解读仍在 · 点击查看</p>
+<button class="btn" id="btnStart" onclick="goIntent()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3 6 6.5 1-4.5 4.5 1 6.5L12 17l-6 3 1-6.5L2.5 9 9 8z"/></svg>让牌回应此刻</button>
+<p class="d" style="text-align:center;margin-top:8px;cursor:pointer;display:none" id="readingHint" onclick="if(hasReading)showReading()">✦ 上一次解读仍在 · 点击查看</p>
 </div>
 
 <!-- 设定意图 -->
@@ -215,16 +218,16 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <div class="mod" id="mod"><div class="mc" id="modC"></div></div>
 
 <div class="nav">
-<div class="ni sel" data-t="home" onclick="tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">首页</span></div>
-<div class="ni" data-t="review" onclick="tab('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nl">日记</span></div>
-<div class="ni orb-center" id="navOrb" onclick="if(hasReading){showReading()}"><div class="ball"></div><span class="nl">占卜</span></div>
-<div class="ni" data-t="recs" onclick="tab('recs')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">记录</span></div>
-<div class="ni" data-t="me" onclick="tab('me')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">我的</span></div>
+<div class="ni sel" data-t="home" onclick="tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15 8 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 8"/></svg><span class="nl">星辰</span></div>
+<div class="ni" data-t="review" onclick="tab('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4M5.6 5.6l2.8 2.8m7.2 7.2l2.8 2.8M5.6 18.4l2.8-2.8m7.2-7.2l2.8-2.8"/></svg><span class="nl">内省</span></div>
+<div class="ni orb-center" id="navOrb" onclick="if(hasReading){showReading()}"><div class="ball"></div><span class="nl">命运</span></div>
+<div class="ni" data-t="recs" onclick="tab('recs')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="nl">启示</span></div>
+<div class="ni" data-t="me" onclick="tab('me')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/></svg><span class="nl">真我</span></div>
 </div>
 
 <!-- 我的 -->
 <div class="scr" id="scrMe">
-<div class="hdr"><div class="orb"></div><h1>我的</h1></div>
+<div class="hdr"><h1>我的</h1></div>
 <div class="pnl" style="text-align:center">
 <p style="font-size:1.05em;font-weight:600">塔罗 · 自察指引</p>
 <p class="d">不替你决定命运，只帮你更理解自己</p>
@@ -255,7 +258,7 @@ function tab(t){
 }
 
 /* 模式选择 */
-$$(".modes .md").forEach(b=>b.onclick=()=>{$$(".modes .md").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");spread=b.dataset.s});
+$$(".spreads .spd").forEach(b=>b.onclick=()=>{$$(".spreads .spd").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");spread=b.dataset.s});
 
 /* 情绪选择 */
 $$("#moods .md").forEach(m=>m.onclick=()=>{$$("#moods .md").forEach(x=>x.classList.remove("sel"));m.classList.add("sel");mood=m.dataset.m;$("btnStart").disabled=!1});
