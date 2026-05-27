@@ -125,6 +125,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .nav .ni .nl{font-size:.6em;color:var(--dm);transition:.2s}
 .nav .ni.sel .nl{color:var(--a2)}
 .nav .ni.sel svg{filter:drop-shadow(0 0 4px rgba(160,120,240,.4))}
+.orb-center{position:relative;margin-top:-18px}.orb-mini{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(210,180,250,.85),rgba(130,80,210,.75) 45%,rgba(45,12,95,.85) 75%);box-shadow:0 0 16px rgba(160,100,240,.4),0 0 32px rgba(100,40,180,.2);transition:all .4s}.orb-center.pulse .orb-mini{animation:orbPulseNav 1.8s ease-in-out infinite}@keyframes orbPulseNav{0%,to{box-shadow:0 0 16px rgba(160,100,240,.4),0 0 32px rgba(100,40,180,.2)}50%{box-shadow:0 0 28px rgba(180,130,255,.7),0 0 50px rgba(120,60,200,.4),0 0 70px rgba(160,100,240,.25)}}
 
 /* 弹窗 */
 .mod{position:fixed;inset:0;background:rgba(5,0,18,.93);z-index:200;display:none;align-items:center;justify-content:center;padding:18px;animation:fi .28s ease;backdrop-filter:blur(8px)}
@@ -216,6 +217,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <div class="nav">
 <div class="ni sel" data-t="home" onclick="tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">首页</span></div>
 <div class="ni" data-t="review" onclick="tab('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nl">日记</span></div>
+<div class="ni orb-center" id="navOrb" onclick="if(this.classList.contains('pulse')){showReading();this.classList.remove('pulse')}"><div class="orb-mini"></div></div>
 <div class="ni" data-t="recs" onclick="tab('recs')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">记录</span></div>
 <div class="ni" data-t="me" onclick="tab('me')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">我的</span></div>
 </div>
@@ -329,27 +331,9 @@ function doFlip(){
   setTimeout(()=>showBall(),100+cards.length*580+900);
 }
 
-/* 水晶球按钮 */
+/* 水晶球按钮 - 点亮底部导航水晶球 */
 function showBall(){
-  const ex=document.getElementById("cbw");if(ex)ex.remove();
-  const w=document.createElement("div");w.id="cbw";
-  w.style.cssText="position:fixed;bottom:max(20px,4vh);left:50%;transform:translateX(-50%);z-index:50;text-align:center;cursor:pointer;animation:cbIn .65s ease";
-  w.innerHTML=
-  '<div style="position:relative;width:80px;height:95px;margin:0 auto 5px">'+
-    // Breathing aura
-    '<div style="position:absolute;top:-8px;left:-8px;width:88px;height:88px;border-radius:50%;background:radial-gradient(circle,rgba(180,150,240,.12) 25%,transparent 65%);animation:ballAura 3s ease-in-out infinite"></div>'+
-    // Glass orb - clear center, subtle purple rim
-    '<div style="position:absolute;top:0;left:4px;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 50% 50%,transparent 48%,rgba(200,180,240,.03) 62%,rgba(160,130,210,.06) 78%,rgba(110,70,160,.1) 100%);box-shadow:inset 0 0 25px rgba(140,100,180,.04),0 0 0 .5px rgba(180,150,220,.1)"></div>'+
-    // White highlight reflection
-    '<div style="position:absolute;top:10px;left:10px;width:22px;height:13px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.65),transparent 70%);transform:rotate(-20deg)"></div>'+
-    // Golden stand - connected under orb
-    '<div style="position:absolute;top:69px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:16px solid rgba(200,170,80,.5)"></div>'+
-    // Stand base
-    '<div style="position:absolute;top:82px;left:50%;transform:translateX(-50%);width:24px;height:5px;border-radius:3px;background:rgba(190,160,70,.4);box-shadow:0 1px 3px rgba(180,150,80,.15)"></div>'+
-  '</div>'+
-  '<div style="color:rgba(200,180,238,.7);font-size:.68em;letter-spacing:2px;animation:cT 3s ease-in-out infinite;text-shadow:0 0 8px rgba(160,120,240,.3)">触碰水晶球 · 揭示命运</div>';
-  w.onclick=()=>{w.remove();showReading()};
-  $("drawArea").appendChild(w);
+  $("navOrb").classList.add("pulse");
 }
 
 /* 放大查看 - 接受index而非card对象避免闭包问题 */
