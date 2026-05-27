@@ -369,18 +369,26 @@ function draw(){
 function reset(){cards=[];isAnimating=!1;window._pool=[];window._selected=[];window._needed=0;document.getElementById('cardsArea').innerHTML='';document.getElementById('reading').classList.remove('show');}
 
 function startSequentialFlip(){
-  const wrappers=document.querySelectorAll('#cardsArea .card-wrapper');
+  const ca=document.getElementById('cardsArea');
+  const wrappers=ca.querySelectorAll('.card-wrapper');
   if(wrappers.length===0)return;
   isAnimating=!0;
-  const delay=580;
+  const delay=580,count=wrappers.length;
+  const needsScroll=count>3;
+  if(needsScroll)ca.scrollLeft=0;
   wrappers.forEach((w,i)=>{
     setTimeout(()=>{
       const inner=w.querySelector('.card-inner');
       if(inner)inner.classList.add('flipped');
+      if(needsScroll){
+        const r=w.getBoundingClientRect(),cr=ca.getBoundingClientRect();
+        const target=ca.scrollLeft+r.left-cr.left-cr.width*.35;
+        ca.scrollTo({left:Math.max(0,target),behavior:'smooth'});
+      }
     },i*delay);
   });
-  const total=wrappers.length*delay+920;
-  setTimeout(()=>{isAnimating=!1;showReading();},total);
+  const total=count*delay+920;
+  setTimeout(()=>{isAnimating=!1;if(needsScroll)ca.scrollTo({left:0,behavior:'smooth'});showReading();},total);
 }
 
 function renderAllFlippedCards(){
