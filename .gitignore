@@ -19,3 +19,4 @@ minor-arcana.js
 DREAMS.md
 *.md
 !.md
+.openclaw/
