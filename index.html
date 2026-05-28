@@ -213,6 +213,23 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 </style>
 </head>
 <body>
+<svg style="display:none" aria-hidden="true"><defs>
+<symbol id="s-star" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,5 6.2,6.2 5,10 3.8,6.2 0,5 3.8,3.8"/></symbol>
+<symbol id="s-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+<symbol id="s-star5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></symbol>
+<symbol id="s-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M7 7l10 10M17 7v10H7"/></symbol>
+<symbol id="s-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/><path d="M12 2a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"/></symbol>
+<symbol id="s-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></symbol>
+<symbol id="s-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></symbol>
+<symbol id="s-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></symbol>
+<symbol id="s-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15 8 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 8"/></symbol>
+<symbol id="s-review" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4M5.6 5.6l2.8 2.8m7.2 7.2l2.8 2.8M5.6 18.4l2.8-2.8m7.2-7.2l2.8-2.8"/></symbol>
+<symbol id="s-records" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+<symbol id="s-me" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/></symbol>
+<symbol id="s-flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 8v8"/><path d="M8 12l4 4 4-4"/></symbol>
+<symbol id="s-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></symbol>
+</defs></svg>
+
 <div class="stars" id="stars"></div>
 
 <!-- Shuffle Transition -->
@@ -226,7 +243,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
   <div class="title-top-star"><svg viewBox="0 0 18 18"><polygon points="9,0 11,6 18,6 12.5,10 14.5,17 9,12.5 3.5,17 5.5,10 0,6 7,6" fill="rgba(200,170,120,.25)"/></svg></div>
   <div class="title-ornament">
     <div class="to-line"></div>
-    <div class="to-star"><svg viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,5 6.2,6.2 5,10 3.8,6.2 0,5 3.8,3.8" fill="rgba(200,170,120,.3)"/></svg></div>
+    <div class="to-star"><svg width="10" height="10"><use href="#s-star" fill="rgba(200,170,120,.3)"/></svg></div>
     <div class="to-line"></div>
   </div>
   <h1>塔罗自察</h1>
@@ -310,8 +327,8 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 <p style="text-align:center;font-size:.85em;color:var(--dm);margin-bottom:10px" id="readTitle"></p>
 <div class="pnl" id="readPanel"></div>
 <div style="display:flex;gap:8px;justify-content:center;margin:12px 0 40px">
-<button class="bsm" id="btnSave" onclick="saveRec()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存</button>
-<button class="bsm" id="btnShare" onclick="shareRec()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享</button>
+<button class="bsm" id="btnSave" onclick="saveRec()"><svg width="14" height="14"><use href="#s-save"/></svg>保存</button>
+<button class="bsm" id="btnShare" onclick="shareRec()"><svg width="14" height="14"><use href="#s-share"/></svg>分享</button>
 </div>
 </div>
 
@@ -356,7 +373,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 
 <!-- Bottom Nav -->
 <div class="nav">
-<div class="ni sel" data-t="home" onclick="tab('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15 8 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 8"/></svg><span class="nl">星辰</span></div>
+<div class="ni sel" data-t="home" onclick="tab('home')"><svg width="20" height="20"><use href="#s-home"/></svg><span class="nl">星辰</span></div>
 <div class="ni" data-t="review" onclick="tab('review')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4M5.6 5.6l2.8 2.8m7.2 7.2l2.8 2.8M5.6 18.4l2.8-2.8m7.2-7.2l2.8-2.8"/></svg><span class="nl">内省</span></div>
 <div class="ni orb-center" id="navOrb" onclick="if(hasReading){showReading()}"><div class="ball"></div><span class="nl">命运</span></div>
 <div class="ni" data-t="recs" onclick="tab('recs')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="nl">启示</span></div>
@@ -522,18 +539,18 @@ function saveRec(){
   const dupIdx=recs.findIndex(x=>x.date===r.date&&x.spread===r.spread);
   if(dupIdx>=0)recs[dupIdx]=r;else recs.unshift(r);
   localStorage.setItem("tv7sim",JSON.stringify(recs));
-  const b=$("btnSave");b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>已保存 ✓';
-  _saveTimer=setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/></svg>保存',1500);
+  const b=$("btnSave");b.innerHTML='<svg width="14" height="14"><use href="#s-check"/></svg>已保存 ✓';
+  _saveTimer=setTimeout(()=>b.innerHTML='<svg width="14" height="14"><use href="#s-save"/></svg>保存',1500);
 }
 function shareRec(){
   clearTimeout(_saveTimer);clearTimeout(_shareTimer);
   const t="🔮 塔罗 · 自察指引\n"+(mood?"\n此刻能量："+mood:"")+(intent?"\n问：「"+intent+"」":"")+"\n"+cards.map((c,i)=>SP[+spread][i]+" · "+c.name+"（"+(c.isReversed?"逆位":"正位")+"）").join("\n")+"\n\n"+(readingText||buildLocal())+"\n\n—— 不替你决定命运，只帮你更理解自己";
   const b=$("btnShare");b.textContent="复制中…";
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t).then(()=>{b.textContent="已复制!";_shareTimer=setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}).catch(()=>fallbackCopy(t,b));
+    navigator.clipboard.writeText(t).then(()=>{b.textContent="已复制!";_shareTimer=setTimeout(()=>b.innerHTML='<svg width="14" height="14"><use href="#s-share"/></svg>分享',1500)}).catch(()=>fallbackCopy(t,b));
   }else{fallbackCopy(t,b)}
 }
-function fallbackCopy(t,b){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");b.textContent="已复制!"}catch(e){b.textContent="复制失败"}document.body.removeChild(ta);_shareTimer=setTimeout(()=>b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>分享',1500)}
+function fallbackCopy(t,b){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");b.textContent="已复制!"}catch(e){b.textContent="复制失败"}document.body.removeChild(ta);_shareTimer=setTimeout(()=>b.innerHTML='<svg width="14" height="14"><use href="#s-share"/></svg>分享',1500)}
 
 /* ═══════════════ REVIEW ═══════════════ */
 function upReview(){const today=new Date().toISOString().slice(0,10);const ri=recs.find(r=>r.date===today);if(ri){$("rvMood").textContent=ri.mood||"—";if(ri.review){$("rv1").value=ri.review.q1||"";$("rv2").value=ri.review.q2||"";$("rv3").value=ri.review.q3||""}}else{$("rvMood").textContent="—";$("rv1").value="";$("rv2").value="";$("rv3").value=""}}
